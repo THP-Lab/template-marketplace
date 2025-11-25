@@ -21,17 +21,22 @@ class CartProductsController < ApplicationController
 
   # POST /cart_products or /cart_products.json
   def create
-    @cart_product = CartProduct.new(cart_product_params)
+    cart = current_user.cart
+    product = Product.find(params[:product_id])
 
-    respond_to do |format|
-      if @cart_product.save
-        format.html { redirect_to @cart_product, notice: "Cart product was successfully created." }
-        format.json { render :show, status: :created, location: @cart_product }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @cart_product.errors, status: :unprocessable_entity }
-      end
+    cart_product = cart.cart_products.find_by(product_id: product.id)
+
+    if cart_product
+      cart_product.update(quantity: cart_product.quantity + 1)
+    else
+      cart.cart_products.create(
+        product: product,
+        quantity: 1,
+        unit_price: product.price
+      )
     end
+
+    redirect_to products_path, notice: "Produit ajouté au panier."
   end
 
   # PATCH/PUT /cart_products/1 or /cart_products/1.json
