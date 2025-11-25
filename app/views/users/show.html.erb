@@ -1,8 +1,9 @@
 <h1>Profil de <%= @user.email %></h1>
 
-<p>current_user.id : <%= current_user&.id %></p>
-<p>@user.id        : <%= @user.id %></p>
-<p>current_user == @user ? <%= (current_user == @user).inspect %></p>
+<h2>ID :</h2> 
+<p><%= @user.id %></p>
+<h2>Email :</h2> 
+<%= @user.email %></p>
 
 <h2>Commandes : </h2>
 <ul>
