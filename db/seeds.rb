@@ -1,5 +1,10 @@
 require "faker"
 
+CartProduct.destroy_all
+Cart.destroy_all
+Product.destroy_all
+User.destroy_all
+
 SEED_USER_COUNT = 10
 SEED_PRODUCT_COUNT = 200
 SEED_USER_PASSWORD = "123456"
@@ -13,12 +18,11 @@ end
 puts "Purging invalid and previously seeded data..."
 
 # Remove blank or incomplete entries to keep the environment predictable.
-Product.where(title: [nil, ""])
-       .or(Product.where(description: [nil, ""]))
-       .delete_all
-User.where(email: [nil, ""]).delete_all
+Product.where(title: [ nil, "" ])
+      .or(Product.where(description: [ nil, "" ]))
+      .delete_all
+User.where(email: [ nil, "" ]).delete_all
 
-Product.destroy_all
 User.where(email: seed_user_emails).delete_all
 
 puts "Creating #{SEED_USER_COUNT} users..."
