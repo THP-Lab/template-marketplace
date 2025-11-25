@@ -35,10 +35,11 @@ SEED_PRODUCT_COUNT.times do
   Product.create!(
     title: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph(sentence_count: 3),
-    price: Faker::Commerce.price(range: 5.0..999.0),
+    price: rand(500..5000),
     stock: Faker::Number.within(range: 0..250),
     type: PRODUCT_TYPES.sample
   )
 end
+
 
 puts "Seed complete."
