@@ -1,0 +1,37 @@
+<h1>Mon Panier</h1>
+
+<% if @cart_products.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Produit</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @cart_products.each do |cart_product| %>
+        <tr>
+          <td><%= cart_product.product.title %></td>
+          <td><%= number_to_currency(cart_product.unit_price) %></td>
+          <td><%= cart_product.quantity %></td>
+          <td><%= number_to_currency(cart_product.quantity * cart_product.unit_price) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h3>
+    Total panier :
+    <%= number_to_currency(
+      @cart_products.sum { |cp| cp.quantity * cp.unit_price }
+    ) %>
+  </h3>
+
+  <%= button_to "Acheter avec Stripe", checkout_path, method: :post, data: { turbo: false } %>
+
+<% else %>
+  <p>Votre panier est vide.</p>
+<% end %>

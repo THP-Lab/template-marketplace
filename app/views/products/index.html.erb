@@ -15,6 +15,7 @@
     <%= render product %>
     <p>
       <%= link_to "Show this product", product %>
+      <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post %>
     </p>
   <% end %>
 </div>

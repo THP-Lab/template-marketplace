@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :cart_products
+  resources :carts
   resources :products
   devise_for :users
   post 'checkout', to: 'checkout#create'
