@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
 
   # POST /orders or /orders.json
   def create
-    @order = Order.new(order_params)
+    @order = current_user.orders.new(order_params)
 
     respond_to do |format|
       if @order.save
@@ -60,11 +60,11 @@ class OrdersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
-      @order = Order.find(params.expect(:id))
+      @order = Order.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def order_params
-      params.expect(order: [ :user_id, :order_date, :total_amount, :status ])
+      params.require(:order).permit(:order_date, :total_amount, :status)
     end
 end

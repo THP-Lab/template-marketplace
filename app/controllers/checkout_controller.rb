@@ -3,6 +3,23 @@ class CheckoutController < ApplicationController
     cart = current_user.cart
     cart_products = cart.cart_products.includes(:product)
 
+    # Calcule le total et crée une commande liée à l'utilisateur
+    total_amount = cart_products.sum { |cp| cp.quantity * cp.unit_price }
+    order = current_user.orders.create!(
+      order_date: Time.current,
+      status: "pending",
+      total_amount: total_amount
+    )
+
+    # Conserve une trace des produits de la commande
+    cart_products.each do |cp|
+      order.order_products.create!(
+        product: cp.product,
+        quantity: cp.quantity,
+        unit_price: cp.unit_price
+      )
+    end
+
     line_items = cart_products.map do |cp|
       {
         price_data: {
