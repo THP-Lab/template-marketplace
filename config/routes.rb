@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :order_products
   resources :orders
   resources :cart_products
   resources :carts
   resources :products
   resources :users
-  devise_for :users
   post "checkout", to: "checkout#create"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
