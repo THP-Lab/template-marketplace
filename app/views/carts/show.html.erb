@@ -29,6 +29,9 @@
       @cart_products.sum { |cp| cp.quantity * cp.unit_price }
     ) %>
   </h3>
+
+  <%= button_to "Acheter avec Stripe", checkout_path, method: :post, data: { turbo: false } %>
+
 <% else %>
   <p>Votre panier est vide.</p>
 <% end %>
