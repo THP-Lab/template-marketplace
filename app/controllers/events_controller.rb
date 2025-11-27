@@ -1,4 +1,5 @@
 class EventsController < ApplicationController
+  before_action :require_admin!, only: [:edit, :update, :destroy]
   before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
@@ -65,6 +66,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.expect(event: [ :user_id, :title, :description, :event_date, :location, :image_url ])
+      params.expect(event: [ :user_id, :title, :category, :description, :event_date, :location, :image_url ])
     end
 end

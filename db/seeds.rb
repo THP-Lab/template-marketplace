@@ -21,7 +21,7 @@ SEED_EVENT_COUNT     = 200
 SEED_USER_PASSWORD   = "123456"
 USER_EMAIL_DOMAIN    = "mail.com"
 PRODUCT_TYPES        = %w[armure bijoux accesoires vetements armes].freeze
-EVENT_CATEGORIES     = %w[livetwitch calendrier].freeze
+EVENT_CATEGORIES     = %w[Twitch Salon Reconstitution].freeze
 
 def seed_user_emails
   Array.new(SEED_USER_COUNT) { |index| "user#{index + 1}@#{USER_EMAIL_DOMAIN}" }
