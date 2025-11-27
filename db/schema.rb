@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_25_165828) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_27_123620) do
   create_table "cart_products", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.datetime "created_at", null: false
@@ -34,7 +34,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_25_165828) do
     t.datetime "created_at", null: false
     t.integer "order_id", null: false
     t.integer "product_id", null: false
-    t.integer "quantity"
+    t.integer "quantity", default: 1
     t.decimal "unit_price"
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_products_on_order_id"
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_25_165828) do
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.boolean "is_admin", default: false
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
