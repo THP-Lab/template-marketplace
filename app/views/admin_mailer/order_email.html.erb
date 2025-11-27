@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    </head>
+    <body>
+        <h1>Salut une nouvelle commande est arrivée !</h1>
+        <p>
+        Sache que <%= @user.email %> viens de passer la commande n°<%= @order.id %>.
+        </p>
+        <p>
+        Pour consulter la commande, connecte-toi via : <%= @url %>.
+        </p>
+    </body>
+</html>

@@ -19,4 +19,16 @@ class UserMailer < ApplicationMailer
 
     mail(to: @user.email, subject: "Confirmation de commande ##{order.id}")
   end
+
+  def admin_order_email(order)
+    @admins = User.where(is_admin: true)
+    @order = order
+    @user = order.user
+    @url  = "http://localhost:3000/orders/#{order.id}"
+
+    mail(
+      to: @admins.pluck(:email),
+      subject: "Nouvelle commande ##{@order.id} reçue !"
+    )
+  end
 end
