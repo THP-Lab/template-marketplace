@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :require_admin!, only: [:edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
