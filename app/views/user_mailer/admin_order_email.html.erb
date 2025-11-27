@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Nouvelle commande reçue</h1>
+    <p>Commande n°<%= @order.id %> passée par <%= @user.email %>.</p>
+    <p>Consulter : <a href="<%= @url %>"><%= @url %></a></p>
+  </body>
+</html>
