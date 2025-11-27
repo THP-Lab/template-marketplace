@@ -69,6 +69,11 @@ group :test do
   gem "selenium-webdriver"
 end
 
+gem "letter_opener"
+
+# Open sent emails in the browser instead of sending them. http://localhost:3000/letter_opener
+gem "letter_opener_web"
+
 gem "dotenv-rails", "~> 3.1"
 gem "stripe", "~> 18.0"
 gem "table_print", "~> 1.5"

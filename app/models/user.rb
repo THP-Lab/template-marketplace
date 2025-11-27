@@ -7,4 +7,9 @@ class User < ApplicationRecord
   after_create :create_cart
   has_many :orders
   has_many :events
+  after_create :welcome_send
+
+  def welcome_send
+    UserMailer.welcome_email(self).deliver_now
+  end
 end
