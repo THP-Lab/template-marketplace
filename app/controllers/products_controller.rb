@@ -1,4 +1,5 @@
 class ProductsController < ApplicationController
+  before_action :require_admin!, only: [:edit, :update, :destroy]
   before_action :set_product, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
@@ -9,7 +10,6 @@ class ProductsController < ApplicationController
 
   # GET /products/1 or /products/1.json
   def show
-  @product = Product.find(params[:id])
   end
 
   # GET /products/new

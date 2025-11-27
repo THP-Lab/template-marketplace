@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   def require_admin!
     authenticate_user!  # Devise vérifie le login
 
-    unless current_user&.admin?
+    unless current_user&.is_admin?
       redirect_to root_path, alert: "Accès refusé"
     end
   end 
