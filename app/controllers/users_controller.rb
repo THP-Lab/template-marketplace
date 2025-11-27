@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-
+  before_action :authenticate_user! 
+  
   def show
     # On force la consultation du profil connecté uniquement
     @user = current_user
