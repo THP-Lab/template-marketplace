@@ -3,9 +3,14 @@
 <%= render @product %>
 
 <div>
+  <% if user_signed_in? %>
   <%= link_to "Edit this product", edit_product_path(@product) %> |
   <%= link_to "Back to products", products_path %>
   
-  <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post %>
+  <%= button_to "Ajouter au panier", cart_products_path(product_id: @product.id), method: :post %>
   <%= button_to "Destroy this product", @product, method: :delete %>
+
+  <% else %>
+  <%= link_to "Back to products", products_path %>
+  <% end %>
 </div>

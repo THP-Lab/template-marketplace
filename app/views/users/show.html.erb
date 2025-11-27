@@ -1,0 +1,19 @@
+<h1>Profil de <%= @user.email %></h1>
+
+<h2>ID :</h2> 
+<p><%= @user.id %></p>
+<h2>Email :</h2> 
+<%= @user.email %></p>
+
+<h2>Commandes : </h2>
+<ul>
+  <% @orders.each do |order| %>
+    <li>
+      Commande nº <%= order.id %> –
+      user_id de la commande : <%= order.user_id %> –
+      Statut : <%= order.status %> –
+      Montant total : <%= order.total_amount %> –
+      Date : <%= order.order_date %>
+    </li>
+  <% end %>
+</ul>
