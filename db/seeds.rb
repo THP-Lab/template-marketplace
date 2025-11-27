@@ -4,11 +4,12 @@ require "faker"
 
 puts "Nettoyage de la base..."
 
-# IMPORTANT : respecter l'ordre des foreign keys
+# IMPORTANT : respecter l'ordre des foreign keys (enfants -> parents)
 CartProduct.destroy_all
 OrderProduct.destroy_all
 Cart.destroy_all
 Order.destroy_all
+Event.destroy_all
 Product.destroy_all
 User.destroy_all
 
@@ -16,9 +17,11 @@ puts "Base nettoyée."
 
 SEED_USER_COUNT      = 10
 SEED_PRODUCT_COUNT   = 200
+SEED_EVENT_COUNT     = 200
 SEED_USER_PASSWORD   = "123456"
 USER_EMAIL_DOMAIN    = "mail.com"
 PRODUCT_TYPES        = %w[armure bijoux accesoires vetements armes].freeze
+EVENT_CATEGORIES     = %w[Twitch Salon Reconstitution].freeze
 
 def seed_user_emails
   Array.new(SEED_USER_COUNT) { |index| "user#{index + 1}@#{USER_EMAIL_DOMAIN}" }
@@ -34,6 +37,14 @@ users = seed_user_emails.map do |email|
   )
 end
 
+# -------------------------------------------------------------------
+# Admin d'office : user1 si possible
+# -------------------------------------------------------------------
+admin = User.find_by(email: "user1@#{USER_EMAIL_DOMAIN}") || users.first
+admin.update!(is_admin: true)
+
+puts "Admin créé : #{admin.email} (is_admin = #{admin.is_admin})"
+
 puts "Création des produits..."
 
 products = Array.new(SEED_PRODUCT_COUNT) do
@@ -45,6 +56,25 @@ products = Array.new(SEED_PRODUCT_COUNT) do
     type:        PRODUCT_TYPES.sample
   )
 end
+
+# -------------------------------------------------------------------
+# Création des événements
+# -------------------------------------------------------------------
+puts "Création des événements..."
+
+events = Array.new(SEED_EVENT_COUNT) do
+  Event.create!(
+    user:        users.sample, # tu peux mettre admin si tu veux que tout lui appartienne
+    title:       Faker::Lorem.sentence(word_count: 3),
+    description: Faker::Lorem.paragraph(sentence_count: 4),
+    event_date:  Faker::Time.between(from: 6.months.ago, to: 6.months.from_now),
+    location:    Faker::Address.city,
+    image_url:   "https://picsum.photos/seed/#{rand(1000)}/800/400",
+    category:    EVENT_CATEGORIES.sample
+  )
+end
+
+puts "#{events.count} événements créés."
 
 puts "Création des paniers et des produits de panier..."
 
@@ -81,7 +111,7 @@ users.each do |user|
     )
 
     # 1 à 5 produits par commande
-    line_items      = []
+    line_items = []
     rand(1..5).times do
       product  = products.sample
       quantity = rand(1..3)
