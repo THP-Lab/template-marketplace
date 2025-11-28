@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get "/cgu", to: "pages#cgu"
-  get "/confidentialite", to: "pages#confidentialite"
-  resources :events
   devise_for :users
   resources :order_products
   resources :orders
@@ -9,6 +6,10 @@ Rails.application.routes.draw do
   resources :carts
   resources :products
   resources :users
+  get "/cgu", to: "pages#cgu"
+  get "/confidentialite", to: "pages#confidentialite"
+  resources :contacts, only: %i[new create]
+  resources :events
   post "checkout", to: "checkout#create"
   get "checkout/success", to: "checkout#success", as: :checkout_success
 
