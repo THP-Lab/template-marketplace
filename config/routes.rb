@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   post "checkout", to: "checkout#create"
   get "checkout/success", to: "checkout#success", as: :checkout_success
 
+  if Rails.env.development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
