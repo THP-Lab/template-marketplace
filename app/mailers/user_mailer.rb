@@ -31,4 +31,11 @@ class UserMailer < ApplicationMailer
       subject: "Nouvelle commande ##{@order.id} reçue !"
     )
   end
+
+  def request_treatment_email(contact)
+    @contact = contact
+    @url = "http://localhost:3000/contacts/new"
+    mail(to: @contact.email, subject: "Demande en cours de traitement")
+  end
+
 end
