@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "/cgu", to: "pages#cgu"
+  get "/confidentialite", to: "pages#confidentialite"
   resources :events
   devise_for :users
   resources :order_products
