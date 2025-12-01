@@ -1,5 +1,6 @@
-class UserMailer < ApplicationMailer
+class UserMailer < Devise::Mailer
   default from: ENV["GMAIL_LOGIN"]
+  layout "mailer"
 
   def welcome_email(user)
     # on récupère l'instance user pour ensuite pouvoir la passer à la view en @user
