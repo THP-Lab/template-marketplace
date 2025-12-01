@@ -15,7 +15,8 @@
             <%= number_field_tag :quantity, 1, min: 1 %>
           </div>
           <div style="margin-top: 8px;">
-            <%= submit_tag "Ajouter" %>
+            <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products" %>
+            <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart" %>
             <%= button_tag "Annuler", type: "button", data: { action: "click->quantity-modal#close" } %>
           </div>
         <% end %>
@@ -35,7 +36,8 @@
             <%= number_field_tag :quantity, 1, min: 1 %>
           </div>
           <div style="margin-top: 8px;">
-            <%= submit_tag "Ajouter" %>
+            <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products" %>
+            <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart" %>
             <%= button_tag "Annuler", type: "button", data: { action: "click->quantity-modal#close" } %>
           </div>
         <% end %>

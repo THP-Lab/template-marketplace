@@ -21,7 +21,7 @@ class CartProductsController < ApplicationController
 
   # POST /cart_products or /cart_products.json
   def create
-    cart = current_user.cart
+    cart = current_user.cart || current_user.create_cart!(status: "open")
     product = Product.find(params[:product_id])
     quantity = params[:quantity].to_i
     quantity = 1 if quantity < 1
@@ -38,7 +38,14 @@ class CartProductsController < ApplicationController
       )
     end
 
-    redirect_to product_path(product), notice: "Produit ajouté au panier."
+    redirect_path =
+      case params[:redirect_to]
+      when "products" then products_path
+      when "cart" then cart_path(cart)
+      else product_path(product)
+      end
+
+    redirect_to redirect_path, notice: "Produit ajouté au panier."
   end
 
   # PATCH/PUT /cart_products/1 or /cart_products/1.json
