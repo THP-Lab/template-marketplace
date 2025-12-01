@@ -5,7 +5,11 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
+    @categories = Product.distinct.where.not(type: [nil, ""]).order(:type).pluck(:type)
+    @selected_category = params[:category]
+
     @products = Product.all
+    @products = @products.where(type: @selected_category) if @selected_category.present?
   end
 
   # GET /products/1 or /products/1.json

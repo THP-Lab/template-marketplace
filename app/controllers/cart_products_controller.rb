@@ -23,20 +23,22 @@ class CartProductsController < ApplicationController
   def create
     cart = current_user.cart
     product = Product.find(params[:product_id])
+    quantity = params[:quantity].to_i
+    quantity = 1 if quantity < 1
 
     cart_product = cart.cart_products.find_by(product_id: product.id)
 
     if cart_product
-      cart_product.update(quantity: cart_product.quantity + 1)
+      cart_product.update(quantity: cart_product.quantity + quantity)
     else
       cart.cart_products.create(
         product: product,
-        quantity: 1,
+        quantity: quantity,
         unit_price: product.price
       )
     end
 
-    redirect_to products_path, notice: "Produit ajouté au panier."
+    redirect_to product_path(product), notice: "Produit ajouté au panier."
   end
 
   # PATCH/PUT /cart_products/1 or /cart_products/1.json
