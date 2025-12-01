@@ -8,7 +8,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   has_one :cart, dependent: :destroy
   after_create :create_cart
-  has_many :orders
+  has_many :orders, dependent: :nullify
   has_many :events
 
   validates :first_name, :last_name,
