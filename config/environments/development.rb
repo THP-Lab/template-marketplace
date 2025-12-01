@@ -86,7 +86,9 @@ Rails.application.configure do
     authentication: "plain",
     enable_starttls_auto: true,
     user_name: ENV["GMAIL_LOGIN"],
-    password: ENV["GMAIL_PWD"]
+    password: ENV["GMAIL_PWD"],
+    # ne doit pas etre présent en production, permet l'utilisation des test mails et stripe sur mac
+    openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
   }
 
   config.action_mailer.raise_delivery_errors = true

@@ -38,4 +38,15 @@ class UserMailer < ApplicationMailer
     mail(to: @contact.email, subject: "Demande en cours de traitement")
   end
 
+  def admin_contact_email(contact)
+    @admins = User.where(is_admin: true)
+    @contact = contact
+    @url = "http://localhost:3000/contacts/new"
+    
+    mail(
+      to: @admins.pluck(:email),
+      subject: "Nouvelle demande de contact !"
+    )
+  end
+
 end
