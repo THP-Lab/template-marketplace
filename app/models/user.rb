@@ -3,8 +3,10 @@ class User < ApplicationRecord
   EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\z/
   PROFILE_FIELDS = %i[first_name last_name address zipcode city country phone].freeze
 
+
+  # Include default devise modules..
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+          :recoverable, :rememberable, :validatable
 
   has_one :cart, dependent: :destroy
   after_create :create_cart

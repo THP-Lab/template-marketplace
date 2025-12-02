@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_user
 
   def show
-    @user = current_user
     @orders = @user.orders.order(created_at: :desc)
   end
 
@@ -21,7 +21,17 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user.destroy
+    sign_out(@user)
+    redirect_to root_path, notice: "Votre compte a bien été supprimé."
+  end
+
   private
+
+  def set_user
+    @user = current_user
+  end
 
   def user_params
     params.require(:user).permit(
