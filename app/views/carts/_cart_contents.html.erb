@@ -1,0 +1,59 @@
+<div id="cart_contents" data-controller="auto-submit" data-auto-submit-currency-value="EUR">
+<% if cart_products.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Produit</th>
+        <th>Prix</th>
+        <th>Quantité</th>
+        <th>Total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% cart_products.each do |cart_product| %>
+        <tr id="<%= dom_id(cart_product) %>">
+          <td><%= cart_product.product.title %></td>
+          <td><%= number_to_currency(cart_product.unit_price) %></td>
+          <td>
+            <%= form_with model: cart_product,
+                          url: cart_product_path(cart_product),
+                          method: :patch do |f| %>
+              <%= f.number_field :quantity,
+                                 value: cart_product.quantity,
+                                 min: 0,
+                                 class: "cart-quantity-input",
+                                 data: {
+                                   action: "input->auto-submit#handle change->auto-submit#handle",
+                                   unit_price: cart_product.unit_price
+                                 } %>
+            <% end %>
+            <small>Saisir 0 pour retirer l'article.</small>
+          </td>
+          <td data-auto-submit-target="rowTotal"><%= number_to_currency(cart_product.quantity * cart_product.unit_price) %></td>
+          <td>
+            <%= button_to "Supprimer",
+                          cart_product_path(cart_product),
+                          method: :delete,
+                          data: { turbo_confirm: "Supprimer cet article du panier ?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h3>
+    Total panier :
+    <span data-auto-submit-target="overallTotal">
+      <%= number_to_currency(
+        cart_products.sum { |cp| cp.quantity * cp.unit_price }
+      ) %>
+    </span>
+  </h3>
+
+  <%= button_to "Acheter avec Stripe", checkout_path, method: :post, data: { turbo: false } %>
+<% else %>
+  <p>Votre panier est vide.</p>
+<% end %>
+</div>
