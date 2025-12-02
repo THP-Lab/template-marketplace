@@ -1,19 +1,58 @@
-<h1>Profil de <%= @user.email %></h1>
+<header class="profile-header">
+  <h1>Mon profil</h1>
+  <p>Connecté en tant que <strong><%= @user.email %></strong></p>
+</header>
 
-<h2>ID :</h2> 
-<p><%= @user.id %></p>
-<h2>Email :</h2> 
-<%= @user.email %></p>
+<% if notice.present? %>
+  <p class="notice"><%= notice %></p>
+<% end %>
 
-<h2>Commandes : </h2>
-<ul>
-  <% @orders.each do |order| %>
-    <li>
-      Commande nº <%= order.id %> –
-      user_id de la commande : <%= order.user_id %> –
-      Statut : <%= order.status %> –
-      Montant total : <%= order.total_amount %> –
-      Date : <%= order.order_date %>
-    </li>
-  <% end %>
-</ul>
+<% if alert.present? %>
+  <p class="alert"><%= alert %></p>
+<% end %>
+
+<% if @user.errors.any? %>
+  <div class="alert alert-danger">
+    <p><%= pluralize(@user.errors.count, "erreur") %> empêchent l'enregistrement :</p>
+    <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="profile-columns">
+  <section class="profile-form">
+    <h2>Informations personnelles</h2>
+    <%= render partial: "users/profile_form", locals: { user: @user } %>
+  </section>
+
+  <section class="profile-orders">
+    <h2>Historique des commandes</h2>
+    <% if @orders.any? %>
+      <ul>
+        <% @orders.each do |order| %>
+          <li>
+            Commande nº <%= order.id %> –
+            Statut : <%= order.status %> –
+            Montant total : <%= order.total_amount %> –
+            Date : <%= order.order_date&.strftime("%d/%m/%Y") %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>Vous n'avez pas encore passé de commande.</p>
+    <% end %>
+  </section>
+</div>
+
+<section class="account-danger-zone">
+  <h2>Supprimer mon compte</h2>
+  <p>Cette action est définitive. Vos commandes resteront accessibles pour l'administration.</p>
+  <%= button_to "Supprimer mon compte", user_path(@user), method: :delete,
+                data: {
+                  confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?",
+                  turbo_confirm: "Cette action est définitive. Confirmez-vous la suppression de votre compte ?"
+                } %>
+</section>

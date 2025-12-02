@@ -1,7 +1,18 @@
 class CheckoutController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_cart
+
+  def profile
+    @cart_products = @cart.cart_products.includes(:product)
+    @missing_attributes = current_user.missing_profile_fields
+  end
+
   def create
-    cart = current_user.cart
-    cart_products = cart.cart_products.includes(:product)
+    unless profile_complete_for_checkout?
+      redirect_to checkout_profile_path, alert: @profile_alert and return
+    end
+
+    cart_products = @cart.cart_products.includes(:product)
 
     # Calcule le total et crée une commande liée à l'utilisateur
     total_amount = cart_products.sum { |cp| cp.quantity * cp.unit_price }
@@ -62,5 +73,19 @@ class CheckoutController < ApplicationController
     end
 
     redirect_to user_path(current_user), notice: "Paiement confirmé, panier vidé."
+  end
+
+  private
+
+  def profile_complete_for_checkout?
+    return true if current_user.profile_complete?
+
+    missing = current_user.missing_profile_fields.map { |field| User.human_attribute_name(field) }
+    @profile_alert = "Merci de compléter votre profil (#{missing.join(', ')}) avant de passer au paiement."
+    false
+  end
+
+  def set_cart
+    @cart = current_user.cart
   end
 end

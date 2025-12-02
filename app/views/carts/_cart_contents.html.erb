@@ -52,7 +52,9 @@
     </span>
   </h3>
 
-  <%= button_to "Acheter avec Stripe", checkout_path, method: :post, data: { turbo: false } %>
+  <% if defined?(show_checkout_button) ? show_checkout_button : true %>
+    <%= button_to "Acheter avec Stripe", checkout_path, method: :post, data: { turbo: false } %>
+  <% end %>
 <% else %>
   <p>Votre panier est vide.</p>
 <% end %>
