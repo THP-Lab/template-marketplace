@@ -1,11 +1,13 @@
 class User < ApplicationRecord
   NAME_REGEX = /\A[a-zA-Z]+\z/
   EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\z/
+  PROFILE_FIELDS = %i[first_name last_name address zipcode city country phone].freeze
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+
+  # Include default devise modules..
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+          :recoverable, :rememberable, :validatable
+
   has_one :cart, dependent: :destroy
   after_create :create_cart
   has_many :orders, dependent: :nullify
@@ -18,6 +20,14 @@ class User < ApplicationRecord
   validates :cgu_accepted, acceptance: { accept: true }
 
   after_commit :send_welcome_email, on: :create
+
+  def missing_profile_fields
+    PROFILE_FIELDS.select { |field| send(field).blank? }
+  end
+
+  def profile_complete?
+    missing_profile_fields.empty?
+  end
 
   private
 

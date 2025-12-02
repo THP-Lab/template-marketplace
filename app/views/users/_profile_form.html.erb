@@ -1,0 +1,55 @@
+<% cart_context = local_assigns.fetch(:cart_context, false) %>
+<% redirect_path = local_assigns[:redirect_path] || (cart_context ? request.fullpath : nil) %>
+
+<%= form_with model: user,
+              url: user_path(user),
+              method: :patch,
+              local: true,
+              data: (cart_context ? { turbo: false } : {}) do |f| %>
+  <div>
+    <%= f.label :first_name, "Prénom" %>
+    <%= f.text_field :first_name, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :last_name, "Nom" %>
+    <%= f.text_field :last_name, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :email %>
+    <%= f.email_field :email, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :address, "Adresse" %>
+    <%= f.text_field :address %>
+  </div>
+
+  <div>
+    <%= f.label :zipcode, "Code postal" %>
+    <%= f.text_field :zipcode %>
+  </div>
+
+  <div>
+    <%= f.label :city, "Ville" %>
+    <%= f.text_field :city %>
+  </div>
+
+  <div>
+    <%= f.label :country, "Pays" %>
+    <%= f.text_field :country %>
+  </div>
+
+  <div>
+    <%= f.label :phone, "Téléphone" %>
+    <%= f.telephone_field :phone %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Enregistrer mes informations" %>
+  </div>
+  <% if redirect_path.present? %>
+    <%= hidden_field_tag :redirect_to, redirect_path %>
+  <% end %>
+<% end %>

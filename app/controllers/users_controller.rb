@@ -7,11 +7,17 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(user_params)
-      redirect_to user_path(@user), notice: "Profil mis à jour."
-    else
-      @orders = @user.orders.order(created_at: :desc)
-      render :show, status: :unprocessable_entity
+    @user = current_user
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html do
+          destination = params[:redirect_to].presence || user_path(@user)
+          redirect_to destination, notice: "Profil mis à jour."
+        end
+      else
+        @orders = @user.orders.order(created_at: :desc)
+        format.html { render :show, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -31,12 +37,12 @@ class UsersController < ApplicationController
     params.require(:user).permit(
       :first_name,
       :last_name,
+      :email,
       :address,
       :zipcode,
       :city,
       :country,
-      :phone,
-      :email
+      :phone
     )
   end
 end

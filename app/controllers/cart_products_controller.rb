@@ -1,4 +1,5 @@
 class CartProductsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_cart_product, only: %i[ show edit update destroy ]
 
   # GET /cart_products or /cart_products.json
@@ -41,24 +42,40 @@ class CartProductsController < ApplicationController
 
   # PATCH/PUT /cart_products/1 or /cart_products/1.json
   def update
+    cart = current_user.cart
+    quantity = cart_product_params[:quantity].to_i
+    notice = nil
+    alert = nil
+
+    if quantity <= 0
+      @cart_product.destroy
+      notice = "Produit retiré du panier."
+    elsif @cart_product.update(quantity: quantity)
+      notice = "Quantité mise à jour."
+    else
+      alert = "Impossible de mettre à jour cet article."
+    end
+
     respond_to do |format|
-      if @cart_product.update(cart_product_params)
-        format.html { redirect_to @cart_product, notice: "Cart product was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @cart_product }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @cart_product.errors, status: :unprocessable_entity }
+      format.turbo_stream { render_cart_update(cart, notice:, alert:) }
+      format.html do
+        if alert
+          redirect_to cart_path(cart), alert: alert
+        else
+          redirect_to cart_path(cart), notice: notice
+        end
       end
     end
   end
 
   # DELETE /cart_products/1 or /cart_products/1.json
   def destroy
+    cart = current_user.cart
     @cart_product.destroy!
 
     respond_to do |format|
-      format.html { redirect_to cart_products_path, notice: "Cart product was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+      format.turbo_stream { render_cart_update(cart, notice: "Produit supprimé du panier.") }
+      format.html { redirect_to cart_path(cart), notice: "Produit supprimé du panier." }
     end
   end
 
@@ -70,6 +87,17 @@ class CartProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cart_product_params
-      params.expect(cart_product: [ :cart_id, :product_id, :quantity, :unit_price ])
+      params.require(:cart_product).permit(:quantity)
+    end
+
+    def render_cart_update(cart, notice: nil, alert: nil)
+      @cart_products = cart.cart_products.includes(:product)
+      flash.now[:notice] = notice if notice
+      flash.now[:alert] = alert if alert
+      render turbo_stream: turbo_stream.replace(
+        "cart_contents",
+        partial: "carts/cart_contents",
+        locals: { cart_products: @cart_products }
+      )
     end
 end

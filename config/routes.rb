@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get "/confidentialite", to: "pages#confidentialite"
   resources :contacts, only: %i[new create]
   resources :events
+  get "checkout/profile", to: "checkout#profile", as: :checkout_profile
   post "checkout", to: "checkout#create"
   get "checkout/success", to: "checkout#success", as: :checkout_success
 
