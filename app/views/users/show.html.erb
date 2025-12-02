@@ -1,19 +1,89 @@
-<h1>Profil de <%= @user.email %></h1>
+<h1>Mon profil</h1>
 
-<h2>ID :</h2> 
-<p><%= @user.id %></p>
-<h2>Email :</h2> 
-<%= @user.email %></p>
+<% if notice.present? %>
+  <p class="notice"><%= notice %></p>
+<% end %>
 
-<h2>Commandes : </h2>
-<ul>
-  <% @orders.each do |order| %>
-    <li>
-      Commande nº <%= order.id %> –
-      user_id de la commande : <%= order.user_id %> –
-      Statut : <%= order.status %> –
-      Montant total : <%= order.total_amount %> –
-      Date : <%= order.order_date %>
-    </li>
-  <% end %>
-</ul>
+<% if @user.errors.any? %>
+  <div class="alert alert-danger">
+    <p><%= pluralize(@user.errors.count, "erreur") %> empêchent l'enregistrement :</p>
+    <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @user, url: user_path(@user), method: :patch, local: true do |f| %>
+  <div>
+    <%= f.label :first_name, "Prénom" %>
+    <%= f.text_field :first_name, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :last_name, "Nom" %>
+    <%= f.text_field :last_name, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :email %>
+    <%= f.email_field :email, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :address, "Adresse" %>
+    <%= f.text_field :address %>
+  </div>
+
+  <div>
+    <%= f.label :zipcode, "Code postal" %>
+    <%= f.text_field :zipcode %>
+  </div>
+
+  <div>
+    <%= f.label :city, "Ville" %>
+    <%= f.text_field :city %>
+  </div>
+
+  <div>
+    <%= f.label :country, "Pays" %>
+    <%= f.text_field :country %>
+  </div>
+
+  <div>
+    <%= f.label :phone, "Téléphone" %>
+    <%= f.telephone_field :phone %>
+  </div>
+
+  <div>
+    <%= f.submit "Mettre à jour mes informations" %>
+  </div>
+<% end %>
+
+<h2>Historique des commandes</h2>
+<% if @orders.any? %>
+  <ul>
+    <% @orders.each do |order| %>
+      <li>
+        Commande nº <%= order.id %> –
+        Statut : <%= order.status %> –
+        Montant total : <%= order.total_amount %> –
+        Date : <%= order.order_date&.strftime("%d/%m/%Y") %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Vous n'avez pas encore passé de commande.</p>
+<% end %>
+
+<div class="account-danger-zone">
+  <h2>Supprimer mon compte</h2>
+  <p>Cette action est définitive. Vos commandes resteront accessibles pour l'administration.</p>
+  <%= button_to "Supprimer mon compte", user_path(@user), method: :delete,
+                data: {
+                  confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?",
+                  turbo_confirm: "Cette action est définitive. Confirmez-vous la suppression de votre compte ?"
+                } %>
+  <%= link_to "Annuler", root_path %>
+</div>
