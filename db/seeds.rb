@@ -16,8 +16,8 @@ User.destroy_all
 puts "Base nettoyée."
 
 SEED_USER_COUNT      = 10
-SEED_PRODUCT_COUNT   = 200
-SEED_EVENT_COUNT     = 200
+SEED_PRODUCT_COUNT   = 20
+SEED_EVENT_COUNT     = 20
 SEED_USER_PASSWORD   = "123456"
 USER_EMAIL_DOMAIN    = "mail.com"
 PRODUCT_TYPES        = %w[armure bijoux accesoires vetements armes].freeze
