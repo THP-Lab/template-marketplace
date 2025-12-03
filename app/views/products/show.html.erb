@@ -1,7 +1,7 @@
 <%= render @product %>
 
 <div>
-  <% if current_user.is_admin? %>
+  <% if current_user&.is_admin? %>
     <%= link_to "Edit this product", edit_product_path(@product) %> |
     <%= link_to "Back to products", products_path %>
     <div data-controller="quantity-modal">

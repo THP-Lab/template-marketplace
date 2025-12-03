@@ -8,7 +8,7 @@ class ProductsController < ApplicationController
     @categories = Product.distinct.where.not(type: [nil, ""]).order(:type).pluck(:type)
     @selected_category = params[:category]
 
-    @products = Product.all
+    @products = Product.active
     @products = @products.where(type: @selected_category) if @selected_category.present?
   end
 
@@ -55,8 +55,8 @@ class ProductsController < ApplicationController
 
   # DELETE /products/1 or /products/1.json
   def destroy
-    @product.destroy!
-
+    @product.update(deleted_at: Time.current)  # ← Soft delete au lieu de destroy!
+  
     respond_to do |format|
       format.html { redirect_to products_path, notice: "Product was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
