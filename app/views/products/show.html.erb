@@ -1,16 +1,48 @@
-<p style="color: green"><%= notice %></p>
-
 <%= render @product %>
 
 <div>
-  <% if user_signed_in? %>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
-  
-  <%= button_to "Ajouter au panier", cart_products_path(product_id: @product.id), method: :post %>
-  <%= button_to "Destroy this product", @product, method: :delete %>
+  <% if current_user.is_admin? %>
+    <%= link_to "Edit this product", edit_product_path(@product) %> |
+    <%= link_to "Back to products", products_path %>
+    <div data-controller="quantity-modal">
+      <%= button_tag "Ajouter au panier", type: "button", data: { action: "click->quantity-modal#open" } %>
+
+      <dialog data-quantity-modal-target="dialog">
+        <h3>Choisir la quantité</h3>
+        <%= form_with url: cart_products_path, method: :post do %>
+          <%= hidden_field_tag :product_id, @product.id %>
+          <div>
+            <%= number_field_tag :quantity, 1, min: 1 %>
+          </div>
+          <div style="margin-top: 8px;">
+            <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products" %>
+            <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart" %>
+            <%= button_tag "Annuler", type: "button", data: { action: "click->quantity-modal#close" } %>
+          </div>
+        <% end %>
+      </dialog>
+    </div>
+    <%= button_to "Destroy this product", @product, method: :delete %>
 
   <% else %>
-  <%= link_to "Back to products", products_path %>
+    <div data-controller="quantity-modal">
+      <%= button_tag "Ajouter au panier", type: "button", data: { action: "click->quantity-modal#open" } %>
+
+      <dialog data-quantity-modal-target="dialog">
+        <h3>Choisir la quantité</h3>
+        <%= form_with url: cart_products_path, method: :post do %>
+          <%= hidden_field_tag :product_id, @product.id %>
+          <div>
+            <%= number_field_tag :quantity, 1, min: 1 %>
+          </div>
+          <div style="margin-top: 8px;">
+            <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products" %>
+            <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart" %>
+            <%= button_tag "Annuler", type: "button", data: { action: "click->quantity-modal#close" } %>
+          </div>
+        <% end %>
+      </dialog>
+    </div>
+    <%= link_to "Back to products", products_path %>
   <% end %>
 </div>

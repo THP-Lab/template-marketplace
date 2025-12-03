@@ -4,11 +4,19 @@
   <p>Paiement annulé.</p>
 <% end %>
 
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Products" %>
 
 <h1>Products</h1>
+
+<div style="margin-bottom: 16px;">
+  <%= form_with url: products_path, method: :get, local: true do %>
+    <label for="category">Filtrer par catégorie :</label>
+    <%= select_tag :category,
+      options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
+      onchange: "this.form.submit()" %>
+    <noscript><%= submit_tag "Filtrer" %></noscript>
+  <% end %>
+</div>
 
 <div id="products">
   <% @products.each do |product| %>
