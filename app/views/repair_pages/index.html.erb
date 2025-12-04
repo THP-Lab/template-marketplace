@@ -7,10 +7,5 @@
 <div id="repair_pages">
   <% @repair_pages.each do |repair_page| %>
     <%= render repair_page %>
-    <p>
-      <%= link_to "Show this repair page", repair_page %>
-    </p>
   <% end %>
 </div>
-
-<%= link_to "New repair page", new_repair_page_path %>

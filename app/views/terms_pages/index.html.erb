@@ -7,10 +7,5 @@
 <div id="terms_pages">
   <% @terms_pages.each do |terms_page| %>
     <%= render terms_page %>
-    <p>
-      <%= link_to "Show this terms page", terms_page %>
-    </p>
   <% end %>
 </div>
-
-<%= link_to "New terms page", new_terms_page_path %>

@@ -7,10 +7,5 @@
 <div id="privacy_pages">
   <% @privacy_pages.each do |privacy_page| %>
     <%= render privacy_page %>
-    <p>
-      <%= link_to "Show this privacy page", privacy_page %>
-    </p>
   <% end %>
 </div>
-
-<%= link_to "New privacy page", new_privacy_page_path %>

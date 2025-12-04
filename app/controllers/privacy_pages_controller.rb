@@ -1,14 +1,10 @@
 class PrivacyPagesController < ApplicationController
   before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_privacy_page, only: %i[ show edit update destroy ]
+  before_action :set_privacy_page, only: %i[ edit update destroy ]
 
   # GET /privacy_pages or /privacy_pages.json
   def index
     @privacy_pages = PrivacyPage.all
-  end
-
-  # GET /privacy_pages/1 or /privacy_pages/1.json
-  def show
   end
 
   # GET /privacy_pages/new

@@ -1,14 +1,10 @@
 class RepairPagesController < ApplicationController
   before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_repair_page, only: %i[ show edit update destroy ]
+  before_action :set_repair_page, only: %i[ edit update destroy ]
 
   # GET /repair_pages or /repair_pages.json
   def index
     @repair_pages = RepairPage.all
-  end
-
-  # GET /repair_pages/1 or /repair_pages/1.json
-  def show
   end
 
   # GET /repair_pages/new

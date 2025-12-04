@@ -1,6 +1,6 @@
 class HomePagesController < ApplicationController
   before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_home_page, only: %i[ show edit update destroy ]
+  before_action :set_home_page, only: %i[ edit update destroy ]
 
   # GET /home_pages or /home_pages.json
   def index
@@ -8,9 +8,6 @@ class HomePagesController < ApplicationController
     @featured_products = Product.order(Arel.sql("RANDOM()")).limit(5).to_a
   end
 
-  # GET /home_pages/1 or /home_pages/1.json
-  def show
-  end
 
   # GET /home_pages/new
   def new

@@ -1,14 +1,10 @@
 class AboutPagesController < ApplicationController
   before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_about_page, only: %i[ show edit update destroy ]
+  before_action :set_about_page, only: %i[ edit update destroy ]
 
   # GET /about_pages or /about_pages.json
   def index
     @about_pages = AboutPage.all
-  end
-
-  # GET /about_pages/1 or /about_pages/1.json
-  def show
   end
 
   # GET /about_pages/new
