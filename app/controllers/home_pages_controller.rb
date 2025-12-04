@@ -4,6 +4,7 @@ class HomePagesController < ApplicationController
   # GET /home_pages or /home_pages.json
   def index
     @home_pages = HomePage.all
+    @featured_products = Product.order(Arel.sql("RANDOM()")).limit(5).to_a
   end
 
   # GET /home_pages/1 or /home_pages/1.json
