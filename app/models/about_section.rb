@@ -1,0 +1,2 @@
+class AboutSection < ApplicationRecord
+end
