@@ -8,8 +8,6 @@ Rails.application.routes.draw do
   resources :carts
   resources :products
   resources :users
-  get "/cgu", to: "pages#cgu"
-  get "/confidentialite", to: "pages#confidentialite"
   resources :contacts, only: %i[new create]
   resources :events
   get "checkout/profile", to: "checkout#profile", as: :checkout_profile
