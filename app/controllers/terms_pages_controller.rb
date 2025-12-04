@@ -1,4 +1,5 @@
 class TermsPagesController < ApplicationController
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_terms_page, only: %i[ show edit update destroy ]
 
   # GET /terms_pages or /terms_pages.json

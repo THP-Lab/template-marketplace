@@ -1,4 +1,5 @@
 class AboutPagesController < ApplicationController
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_about_page, only: %i[ show edit update destroy ]
 
   # GET /about_pages or /about_pages.json

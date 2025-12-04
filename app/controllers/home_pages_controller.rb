@@ -1,4 +1,5 @@
 class HomePagesController < ApplicationController
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_home_page, only: %i[ show edit update destroy ]
 
   # GET /home_pages or /home_pages.json
