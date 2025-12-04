@@ -1,0 +1,9 @@
+<div class="repair-section mb-4">
+  <% if repair_section.title.present? %>
+    <h2><%= repair_section.title %></h2>
+  <% end %>
+
+  <% if repair_section.content.present? %>
+    <p><%= simple_format(repair_section.content) %></p>
+  <% end %>
+</div>
