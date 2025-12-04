@@ -5,6 +5,7 @@ require "faker"
 puts "Nettoyage de la base..."
 
 # IMPORTANT : respecter l'ordre des foreign keys (enfants -> parents)
+AboutSection.destroy_all
 CartProduct.destroy_all
 OrderProduct.destroy_all
 Cart.destroy_all
@@ -129,5 +130,21 @@ users.each do |user|
     order.update!(total_amount: total)
   end
 end
+
+puts "Création des sections À propos..."
+
+AboutSection.create!(
+  title: "Qui sommes-nous ?",
+  content: "Nous travaillons la maille artisanale avec passion depuis plusieurs années.",
+  position: 1
+)
+
+AboutSection.create!(
+  title: "Notre atelier",
+  content: "Chaque pièce est fabriquée à la main avec des matériaux de qualité.",
+  position: 2
+)
+
+puts "Seed À propos terminée."
 
 puts "Seed terminée."
