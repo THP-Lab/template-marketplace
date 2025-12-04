@@ -15,11 +15,11 @@
     <%= link_to "Réparation", repair_pages_path %>
   </li>
 
-  <li>
-    <%= link_to "Panier", cart_path(current_user.cart) %>
-  </li>
-
   <% if user_signed_in? %>
+    <li>
+      <%= link_to "Panier", cart_path(current_user.cart) %>
+    </li>
+
     <li>
       <%= link_to "Mon profil", user_path(current_user) %>
     </li>
