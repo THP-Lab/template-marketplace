@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :home_pages
   resources :about_sections
   resources :repair_sections
   devise_for :users
@@ -30,5 +31,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root to: "home#index"
+  root to: "home_pages#index"
 end

@@ -1,0 +1,11 @@
+<% content_for :title, "New home page" %>
+
+<h1>New home page</h1>
+
+<%= render "form", home_page: @home_page %>
+
+<br>
+
+<div>
+  <%= link_to "Back to home pages", home_pages_path %>
+</div>
