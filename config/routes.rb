@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :repair_pages
   resources :about_pages
   resources :terms_pages
   resources :privacy_pages
