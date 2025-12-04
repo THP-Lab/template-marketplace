@@ -6,6 +6,7 @@ puts "Nettoyage de la base..."
 
 # IMPORTANT : respecter l'ordre des foreign keys (enfants -> parents)
 AboutSection.destroy_all
+PageSection.where(page_type: "reparation").destroy_all
 CartProduct.destroy_all
 OrderProduct.destroy_all
 Cart.destroy_all
@@ -146,5 +147,22 @@ AboutSection.create!(
 )
 
 puts "Seed À propos terminée."
+puts "Création des sections pour la page réparation..."
+
+PageSection.create!(
+  page_type: "reparation",
+  title: "Réparations artisanales",
+  content: "Nous restaurons vos pièces avec un travail minutieux et fidèle aux techniques traditionnelles.",
+  position: 1
+)
+
+PageSection.create!(
+  page_type: "reparation",
+  title: "Comment ça fonctionne ?",
+  content: "Dépose ton article, nous analysons l’état, puis nous te proposons un devis clair avant toute intervention.",
+  position: 2
+)
+
+puts "Seed réparation terminée."
 
 puts "Seed terminée."
