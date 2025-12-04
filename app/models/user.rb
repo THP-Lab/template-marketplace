@@ -13,9 +13,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :nullify
   has_many :events
 
-  validates :first_name, :last_name,
-            presence: true,
-            format: { with: NAME_REGEX, message: "n'accepte que des lettres" }
+  validates :first_name, :last_name, format: { with: NAME_REGEX, message: "n'accepte que des lettres" }
   validates :email, format: { with: EMAIL_REGEX }
   validates :cgu_accepted, acceptance: { accept: true }
 
