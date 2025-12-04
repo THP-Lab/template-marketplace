@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "About pages" %>
+
+<h1>About pages</h1>
+
+<div id="about_pages">
+  <% @about_pages.each do |about_page| %>
+    <%= render about_page %>
+    <p>
+      <%= link_to "Show this about page", about_page %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New about page", new_about_page_path %>

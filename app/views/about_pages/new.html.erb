@@ -1,0 +1,11 @@
+<% content_for :title, "New about page" %>
+
+<h1>New about page</h1>
+
+<%= render "form", about_page: @about_page %>
+
+<br>
+
+<div>
+  <%= link_to "Back to about pages", about_pages_path %>
+</div>

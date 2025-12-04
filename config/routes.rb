@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
+  resources :about_pages
   resources :terms_pages
   resources :privacy_pages
   resources :home_pages
-  resources :about_sections
-  resources :repair_sections
   devise_for :users
   resources :order_products
   resources :orders
