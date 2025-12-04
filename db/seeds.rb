@@ -6,7 +6,7 @@ Faker::Config.locale = "fr"
 
 SEED_PASSWORD = ENV.fetch("SEED_PASSWORD", "123456")
 USER_EMAIL_DOMAIN = "mail.com"
-PRODUCT_TYPES = %w[armure bijoux accessoires vetements armes].freeze
+PRODUCT_CATEGORIES = %w[armure bijoux accessoires vetements armes].freeze
 EVENT_CATEGORIES = ["Marché médiéval", "Atelier", "Reconstitution", "En ligne"].freeze
 ORDER_STATUSES = %w[pending paid shipped cancelled].freeze
 
@@ -73,18 +73,18 @@ puts "• Utilisateurs créés : #{users.size} dont #{users.count(&:is_admin)} a
 puts "• Les paniers sont générés automatiquement via le callback User#create_cart"
 
 separator("Création des produits")
-products = PRODUCT_TYPES.flat_map do |category|
+products = PRODUCT_CATEGORIES.flat_map do |category|
   Array.new(5) do
     Product.create!(
       title: "#{category.capitalize} #{Faker::Commerce.product_name}",
       description: Faker::Lorem.paragraph(sentence_count: 3),
       price: Faker::Commerce.price(range: 40.0..400.0, as_string: false),
       stock: rand(5..80),
-      type: category
+      category: category
     )
   end
 end
-puts "• #{products.size} produits créés (types : #{PRODUCT_TYPES.join(', ')})"
+puts "• #{products.size} produits créés (catégories : #{PRODUCT_CATEGORIES.join(', ')})"
 
 separator("Paniers en cours")
 users.each do |user|

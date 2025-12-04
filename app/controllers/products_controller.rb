@@ -5,11 +5,11 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
-    @categories = Product.distinct.where.not(type: [nil, ""]).order(:type).pluck(:type)
+    @categories = Product.distinct.where.not(category: [nil, ""]).order(:category).pluck(:category)
     @selected_category = params[:category]
 
     @products = Product.all
-    @products = @products.where(type: @selected_category) if @selected_category.present?
+    @products = @products.where(category: @selected_category) if @selected_category.present?
   end
 
   # GET /products/1 or /products/1.json
@@ -71,6 +71,6 @@ class ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.expect(product: [ :title, :description, :type, :price, :stock ])
+      params.expect(product: [ :title, :description, :category, :price, :stock ])
     end
 end

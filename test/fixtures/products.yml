@@ -3,13 +3,13 @@
 one:
   title: MyString
   description: MyText
-  type: 
+  category:
   price: 9.99
   stock: 1
 
 two:
   title: MyString
   description: MyText
-  type: 
+  category:
   price: 9.99
   stock: 1
