@@ -10,8 +10,6 @@ Rails.application.routes.draw do
   resources :users
   get "/cgu", to: "pages#cgu"
   get "/confidentialite", to: "pages#confidentialite"
-  get "/about", to: "pages#about"
-  get "reparation", to: "pages#reparation"
   resources :contacts, only: %i[new create]
   resources :events
   get "checkout/profile", to: "checkout#profile", as: :checkout_profile
