@@ -1,33 +1,30 @@
 <ul>
+  <li>
+    <%= link_to "Accueil", root_path %>
+  </li>
+
+  <li>
+    <%= link_to "Boutique", products_path %>
+  </li>
+
+  <li>
+    <%= link_to "Event", events_path %>
+  </li>
+
+  <li>
+    <%= link_to "A propos", about_path %>
+  </li>
+
+  # modifier les données accessible sur la page contact de façon dinamique
+  # <li>
+  #   <%= link_to "Réparation", new_contact_path %>
+  # </li>
+
+  <li>
+    <%= link_to "Panier", cart_path(current_user.cart) %>
+  </li>
+
   <% if user_signed_in? %>
-    <li>
-      <%= link_to "Accueil", root_path %>
-    </li>
-
-    <li>
-      <%= link_to "Boutique", products_path %>
-    </li>
-
-    <li>
-      <%= link_to "Event", events_path %>
-    </li>
-
-    <li>
-      <%= link_to "Réparation", reparation_path, class: "nav-link" %>
-    </li>
-
-    <li>
-      <%= link_to "A propos", about_path %>
-    </li>
-
-    <li>
-      <%= link_to "Panier", cart_path(current_user.cart) %>
-    </li>
-
-    <li>
-      <%= link_to "Contact", new_contact_path %>
-    </li>
-    
     <li>
       <%= link_to "Mon profil", user_path(current_user) %>
     </li>
@@ -37,30 +34,7 @@
     </li>
 
   <% else %>
-    <li>
-      <%= link_to "Accueil", root_path %>
-    </li>
-
-    <li>
-      <%= link_to "Boutique", products_path %>
-    </li>
-
-    <li>
-      <%= link_to "Event", events_path %>
-    </li>
-
-    <li>
-      <%= link_to "Réparation", reparation_path %>
-    </li>
-
-    <li>
-      <%= link_to "A propos", about_path %>
-    </li>
-
-    <li>
-      <%= link_to "Contact", new_contact_path %>
-    </li>
-
+    
     <li>    
       <%= link_to "Sign in", new_user_session_path %>
     </li>
