@@ -35,7 +35,16 @@ users = seed_user_emails.map do |email|
   User.create!(
     email: email,
     password: SEED_USER_PASSWORD,
-    password_confirmation: SEED_USER_PASSWORD
+    password_confirmation: SEED_USER_PASSWORD,
+    first_name: Faker::Name.first_name.gsub(/[^a-zA-ZÀ-ÿ]/, ''),
+    last_name: Faker::Name.last_name.gsub(/[^a-zA-ZÀ-ÿ]/, ''),
+    address: Faker::Address.street_address,
+    city: Faker::Address.city,
+    country: "France",
+    zipcode: Faker::Address.zip_code,
+    phone: Faker::PhoneNumber.cell_phone,
+    cgu_accepted: true,
+    is_admin: false
   )
 end
 
