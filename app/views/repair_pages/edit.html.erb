@@ -1,0 +1,12 @@
+<% content_for :title, "Editing repair page" %>
+
+<h1>Editing repair page</h1>
+
+<%= render "form", repair_page: @repair_page %>
+
+<br>
+
+<div>
+  <%= link_to "Show this repair page", @repair_page %> |
+  <%= link_to "Back to repair pages", repair_pages_path %>
+</div>

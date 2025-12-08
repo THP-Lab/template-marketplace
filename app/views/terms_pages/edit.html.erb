@@ -1,0 +1,12 @@
+<% content_for :title, "Editing terms page" %>
+
+<h1>Editing terms page</h1>
+
+<%= render "form", terms_page: @terms_page %>
+
+<br>
+
+<div>
+  <%= link_to "Show this terms page", @terms_page %> |
+  <%= link_to "Back to terms pages", terms_pages_path %>
+</div>

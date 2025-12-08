@@ -1,177 +1,216 @@
-# db/seeds.rb
+# frozen_string_literal: true
 
 require "faker"
 
-puts "Nettoyage de la base..."
+Faker::Config.locale = "fr"
 
-# IMPORTANT : respecter l'ordre des foreign keys (enfants -> parents)
-AboutSection.destroy_all
-PageSection.where(page_type: "reparation").destroy_all
-CartProduct.destroy_all
-OrderProduct.destroy_all
-Cart.destroy_all
-Order.destroy_all
-Event.destroy_all
-Product.destroy_all
-User.destroy_all
+SEED_PASSWORD = ENV.fetch("SEED_PASSWORD", "123456")
+USER_EMAIL_DOMAIN = "mail.com"
+PRODUCT_CATEGORIES = %w[armure bijoux accessoires vetements armes].freeze
+EVENT_CATEGORIES = ["Marché médiéval", "Atelier", "Reconstitution", "En ligne"].freeze
+ORDER_STATUSES = %w[pending paid shipped cancelled].freeze
 
-puts "Base nettoyée."
-
-SEED_USER_COUNT      = 10
-SEED_PRODUCT_COUNT   = 20
-SEED_EVENT_COUNT     = 20
-SEED_USER_PASSWORD   = "123456"
-USER_EMAIL_DOMAIN    = "mail.com"
-PRODUCT_TYPES        = %w[armure bijoux accesoires vetements armes].freeze
-EVENT_CATEGORIES     = %w[Twitch Salon Reconstitution].freeze
-
-def seed_user_emails
-  Array.new(SEED_USER_COUNT) { |index| "user#{index + 1}@#{USER_EMAIL_DOMAIN}" }
+def separator(title)
+  puts "\n#{'-' * 70}"
+  puts title
+  puts "#{'-' * 70}"
 end
 
-puts "Création des utilisateurs..."
+def clean_table(model)
+  before = model.count
+  model.destroy_all
+  puts format("• %-16s supprimés : %d", model.name, before)
+end
 
-users = seed_user_emails.map do |email|
+def sanitize_name(value, fallback)
+  cleaned = I18n.transliterate(value.to_s).gsub(/[^a-zA-Z]/, "")
+  cleaned.presence || fallback
+end
+
+separator("Nettoyage de la base")
+[CartProduct, OrderProduct, Cart, Order, Event, Contact, Product, AboutPage, HomePage, PrivacyPage, RepairPage, TermsPage].each do |model|
+  clean_table(model)
+end
+clean_table(User)
+
+separator("Création des utilisateurs")
+admin = User.create!(
+  email: "admin@#{USER_EMAIL_DOMAIN}",
+  password: SEED_PASSWORD,
+  password_confirmation: SEED_PASSWORD,
+  first_name: "Admin",
+  last_name: "Templier",
+  address: Faker::Address.street_address,
+  city: Faker::Address.city,
+  country: "France",
+  zipcode: Faker::Address.zip_code,
+  phone: Faker::PhoneNumber.cell_phone,
+  cgu_accepted: true,
+  is_admin: true
+)
+puts "• Admin : #{admin.email} (mot de passe: #{SEED_PASSWORD})"
+
+regular_users = Array.new(8) do |index|
+  first_name = sanitize_name(Faker::Name.first_name, "User#{index + 1}")
+  last_name = sanitize_name(Faker::Name.last_name, "Demo#{index + 1}")
   User.create!(
-    email: email,
-    password: SEED_USER_PASSWORD,
-    password_confirmation: SEED_USER_PASSWORD,
-    first_name: Faker::Name.first_name.gsub(/[^a-zA-ZÀ-ÿ]/, ''),
-    last_name: Faker::Name.last_name.gsub(/[^a-zA-ZÀ-ÿ]/, ''),
+    email: "user#{index + 1}@#{USER_EMAIL_DOMAIN}",
+    password: SEED_PASSWORD,
+    password_confirmation: SEED_PASSWORD,
+    first_name: first_name,
+    last_name: last_name,
     address: Faker::Address.street_address,
     city: Faker::Address.city,
     country: "France",
     zipcode: Faker::Address.zip_code,
     phone: Faker::PhoneNumber.cell_phone,
-    cgu_accepted: true,
-    is_admin: false
+    cgu_accepted: true
   )
 end
 
-# -------------------------------------------------------------------
-# Admin d'office : user1 si possible
-# -------------------------------------------------------------------
-admin = User.find_by(email: "user1@#{USER_EMAIL_DOMAIN}") || users.first
-admin.update!(is_admin: true)
+users = [admin] + regular_users
+puts "• Utilisateurs créés : #{users.size} dont #{users.count(&:is_admin)} admin"
+puts "• Les paniers sont générés automatiquement via le callback User#create_cart"
 
-puts "Admin créé : #{admin.email} (is_admin = #{admin.is_admin})"
-
-puts "Création des produits..."
-
-products = Array.new(SEED_PRODUCT_COUNT) do
-  Product.create!(
-    title:       Faker::Commerce.product_name,
-    description: Faker::Lorem.paragraph(sentence_count: 3),
-    price:       rand(500..5000),
-    stock:       Faker::Number.within(range: 0..250),
-    type:        PRODUCT_TYPES.sample
-  )
-end
-
-# -------------------------------------------------------------------
-# Création des événements
-# -------------------------------------------------------------------
-puts "Création des événements..."
-
-events = Array.new(SEED_EVENT_COUNT) do
-  Event.create!(
-    user:        users.sample, # tu peux mettre admin si tu veux que tout lui appartienne
-    title:       Faker::Lorem.sentence(word_count: 3),
-    description: Faker::Lorem.paragraph(sentence_count: 4),
-    event_date:  Faker::Time.between(from: 6.months.ago, to: 6.months.from_now),
-    location:    Faker::Address.city,
-    image_url:   "https://picsum.photos/seed/#{rand(1000)}/800/400",
-    category:    EVENT_CATEGORIES.sample
-  )
-end
-
-puts "#{events.count} événements créés."
-
-puts "Création des paniers et des produits de panier..."
-
-users.each do |user|
-  cart = Cart.create!(
-    user:   user,
-    status: "open"
-  )
-
-  # 0 à 5 produits par panier
-  rand(0..5).times do
-    product  = products.sample
-    quantity = rand(1..3)
-
-    CartProduct.create!(
-      cart:       cart,
-      product:    product,
-      quantity:   quantity,
-      unit_price: product.price
+separator("Création des produits")
+products = PRODUCT_CATEGORIES.flat_map do |category|
+  Array.new(5) do
+    Product.create!(
+      title: "#{category.capitalize} #{Faker::Commerce.product_name}",
+      description: Faker::Lorem.paragraph(sentence_count: 3),
+      price: Faker::Commerce.price(range: 40.0..400.0, as_string: false),
+      stock: rand(5..80),
+      category: category
     )
   end
 end
+puts "• #{products.size} produits créés (catégories : #{PRODUCT_CATEGORIES.join(', ')})"
 
-puts "Création des commandes et des produits de commande..."
-
+separator("Paniers en cours")
 users.each do |user|
-  # 0 à 3 commandes par utilisateur
-  rand(0..3).times do
-    order = Order.create!(
-      user:         user,
-      order_date:   Faker::Date.between(from: 1.year.ago, to: Date.today),
-      status:       %w[pending paid shipped cancelled].sample,
-      total_amount: 0 # calculé juste après
+  cart = user.cart || user.create_cart
+  cart.update!(status: "open")
+  cart.cart_products.destroy_all
+
+  sampled_products = products.sample(rand(1..4))
+  sampled_products.each do |product|
+    CartProduct.create!(
+      cart: cart,
+      product: product,
+      quantity: rand(1..3),
+      unit_price: product.price
+    )
+  end
+
+  total = cart.cart_products.sum { |cp| cp.quantity * cp.unit_price }
+  puts format("• %-25s : %2d articles (%6.2f €)", user.email, cart.cart_products.count, total)
+end
+
+separator("Commandes passées")
+orders = []
+users.each do |user|
+  rand(1..2).times do
+    order = user.orders.create!(
+      order_date: Faker::Date.between(from: 5.months.ago, to: Date.today),
+      status: ORDER_STATUSES.sample,
+      total_amount: 0
     )
 
-    # 1 à 5 produits par commande
-    line_items = []
-    rand(1..5).times do
-      product  = products.sample
-      quantity = rand(1..3)
-
-      line_items << OrderProduct.create!(
-        order:      order,
-        product:    product,
-        quantity:   quantity,
+    line_items = products.sample(rand(1..4)).map do |product|
+      order.order_products.create!(
+        product: product,
+        quantity: rand(1..3),
         unit_price: product.price
       )
     end
 
-    # Mise à jour du total de la commande
     total = line_items.sum { |li| li.quantity * li.unit_price }
     order.update!(total_amount: total)
+    orders << order
   end
 end
+puts "• #{orders.count} commandes générées (statuts : #{ORDER_STATUSES.join(', ')})"
 
-puts "Création des sections À propos..."
+separator("Événements programmés")
+events = Array.new(6) do |index|
+  Event.create!(
+    user: users.sample,
+    title: "Événement #{index + 1} - #{Faker::Ancient.primordial}",
+    description: Faker::Lorem.paragraph(sentence_count: 4),
+    event_date: Faker::Time.between(from: 2.months.ago, to: 3.months.from_now),
+    location: Faker::Address.city,
+    image_url: "https://picsum.photos/seed/event#{index}/900/450",
+    category: EVENT_CATEGORIES.sample
+  )
+end
+puts "• #{events.count} événements créés"
 
-AboutSection.create!(
-  title: "Qui sommes-nous ?",
-  content: "Nous travaillons la maille artisanale avec passion depuis plusieurs années.",
-  position: 1
-)
+separator("Messages de contact")
+contacts = [
+  {
+    name: "Clara",
+    email: users[2].email,
+    subject: "Demande de devis",
+    message: "Je souhaiterais restaurer une cotte de mailles familiale. Pouvez-vous me rappeler ?"
+  },
+  {
+    name: "Mathieu",
+    email: users[3].email,
+    subject: "Personnalisation",
+    message: "Est-il possible de graver un motif sur une dague existante ?"
+  },
+  {
+    name: "Anais",
+    email: users[4].email,
+    subject: "Disponibilité atelier",
+    message: "Avez-vous des créneaux pour une visite de l'atelier ce mois-ci ?"
+  }
+].map { |attrs| Contact.create!(attrs) }
+puts "• #{contacts.count} messages de contact enregistrés"
 
-AboutSection.create!(
-  title: "Notre atelier",
-  content: "Chaque pièce est fabriquée à la main avec des matériaux de qualité.",
-  position: 2
-)
+separator("Pages statiques")
+def seed_page(model, entries)
+  entries.each_with_index do |attrs, index|
+    model.create!(attrs.merge(position: attrs[:position] || index + 1))
+  end
+  puts format("• %-14s : %d entrées", model.name, model.count)
+end
 
-puts "Seed À propos terminée."
-puts "Création des sections pour la page réparation..."
+seed_page(HomePage, [
+  { title: "Atelier & créations", content: "Forger la maille, c'est mêler patience et précision. Découvrez nos pièces uniques et les coulisses de l'atelier." },
+  { title: "Commandes sur mesure", content: "Parlez-nous de votre projet : armure complète, bijoux ou accessoire, nous créons à partir de vos envies." },
+  { title: "Engagés pour la qualité", content: "Acier, cuir, bois : nous choisissons des matériaux durables et vérifions chaque détail avant livraison." }
+])
 
-PageSection.create!(
-  page_type: "reparation",
-  title: "Réparations artisanales",
-  content: "Nous restaurons vos pièces avec un travail minutieux et fidèle aux techniques traditionnelles.",
-  position: 1
-)
+seed_page(AboutPage, [
+  { title: "Notre histoire", content: "Templiers par passion, artisans par vocation. Nous façonnons chaque pièce pour qu'elle traverse le temps." },
+  { title: "L'atelier", content: "Entre enclumes et maillets, nous testons, polissons et renforçons chaque création pour un rendu authentique." },
+  { title: "Rencontrez l'équipe", content: "Des forgerons aux couteliers, nous partageons le même désir : créer des objets qui racontent une histoire." }
+])
 
-PageSection.create!(
-  page_type: "reparation",
-  title: "Comment ça fonctionne ?",
-  content: "Dépose ton article, nous analysons l’état, puis nous te proposons un devis clair avant toute intervention.",
-  position: 2
-)
+seed_page(RepairPage, [
+  { title: "Diagnostic complet", content: "Avant toute réparation, nous évaluons l'état de votre pièce et proposons un devis clair." },
+  { title: "Restauration fidèle", content: "Nous respectons les techniques d'époque pour redonner vie à vos équipements." },
+  { title: "Suivi transparent", content: "Vous recevez des photos des étapes clés : démontage, remplacement, finitions." }
+])
 
-puts "Seed réparation terminée."
+seed_page(PrivacyPage, [
+  { title: "Protection des données", content: "Vos informations sont utilisées uniquement pour traiter vos commandes et demandes de contact." },
+  { title: "Transparence", content: "Vous pouvez demander la suppression ou la modification de vos données à tout moment." }
+])
 
-puts "Seed terminée."
+seed_page(TermsPage, [
+  { title: "Conditions générales", content: "En validant une commande, vous acceptez nos délais de fabrication et nos politiques de retour." },
+  { title: "Paiements & sécurité", content: "Les transactions sont sécurisées et vos coordonnées bancaires ne sont jamais conservées." },
+  { title: "Livraison", content: "Chaque envoi est protégé et suivi. Nous vous communiquons les informations de suivi dès l'expédition." }
+])
+
+separator("Résumé")
+puts "Utilisateurs : #{User.count} (password commun : #{SEED_PASSWORD})"
+puts "Produits     : #{Product.count}"
+puts "Paniers      : #{Cart.count}"
+puts "Commandes    : #{Order.count}"
+puts "Événements   : #{Event.count}"
+puts "Contacts     : #{Contact.count}"
+puts "Pages        : #{HomePage.count} home, #{AboutPage.count} about, #{RepairPage.count} réparation, #{PrivacyPage.count} privacy, #{TermsPage.count} CGU"
+puts "\nSeed terminée. Lance `bin/rails db:seed` pour charger ces données."

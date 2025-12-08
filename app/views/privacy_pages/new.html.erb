@@ -1,0 +1,11 @@
+<% content_for :title, "New privacy page" %>
+
+<h1>New privacy page</h1>
+
+<%= render "form", privacy_page: @privacy_page %>
+
+<br>
+
+<div>
+  <%= link_to "Back to privacy pages", privacy_pages_path %>
+</div>

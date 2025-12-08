@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_04_132558) do
-  create_table "about_sections", force: :cascade do |t|
+ActiveRecord::Schema[8.1].define(version: 2025_12_05_000000) do
+  create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
@@ -61,6 +61,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_04_132558) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
+  create_table "home_pages", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "order_products", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "order_id", null: false
@@ -82,17 +90,33 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_04_132558) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "privacy_pages", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "products", force: :cascade do |t|
+    t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
     t.decimal "price"
     t.integer "stock"
     t.string "title"
-    t.string "type"
     t.datetime "updated_at", null: false
   end
 
-  create_table "repair_sections", force: :cascade do |t|
+  create_table "repair_pages", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "terms_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
