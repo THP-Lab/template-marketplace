@@ -1,0 +1,19 @@
+<% accordion_id = "adminSidebarAccordion" %>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+    <i class="bi bi-speedometer2"></i>
+    <span>Navigation admin</span>
+  </div>
+  <div class="card-body p-0">
+    <div class="accordion accordion-flush"
+         id="<%= accordion_id %>"
+         data-controller="admin-accordion"
+         data-admin-accordion-parent-value="<%= "##{accordion_id}" %>">
+      <% (admin_sections || []).each do |section| %>
+        <%= render partial: "admin/dashboard/menu_section",
+                   locals: { accordion_id: accordion_id, section: section } %>
+      <% end %>
+    </div>
+  </div>
+</div>
