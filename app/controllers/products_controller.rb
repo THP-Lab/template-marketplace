@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_product, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
@@ -62,6 +62,8 @@ class ProductsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.

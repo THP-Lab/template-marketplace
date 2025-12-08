@@ -1,0 +1,11 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Privacy pages" %>
+
+<h1>Privacy pages</h1>
+
+<div id="privacy_pages">
+  <% @privacy_pages.each do |privacy_page| %>
+    <%= render privacy_page %>
+  <% end %>
+</div>

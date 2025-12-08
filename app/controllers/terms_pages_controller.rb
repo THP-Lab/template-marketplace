@@ -1,5 +1,5 @@
 class TermsPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_terms_page, only: %i[ edit update destroy ]
 
   # GET /terms_pages or /terms_pages.json
@@ -53,6 +53,8 @@ class TermsPagesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.

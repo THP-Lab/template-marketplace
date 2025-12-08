@@ -1,5 +1,5 @@
 class PrivacyPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_privacy_page, only: %i[ edit update destroy ]
 
   # GET /privacy_pages or /privacy_pages.json
@@ -53,6 +53,8 @@ class PrivacyPagesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.

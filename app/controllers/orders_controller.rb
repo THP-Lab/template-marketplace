@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+  before_action :require_admin!, only: [:admin]
   before_action :set_order, only: %i[ show edit update destroy ]
 
   # GET /orders or /orders.json
@@ -56,6 +57,8 @@ class OrdersController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.
