@@ -22,6 +22,26 @@ module ApplicationHelper
         ]
       },
       {
+        id: "carts",
+        title: "Paniers",
+        icon: "bi-bag",
+        description: "Consultez les paniers des utilisateurs et leurs contenus.",
+        links: [
+          { label: "Liste des paniers", path: admin_carts_path },
+          { label: "Produits des paniers", path: admin_cart_products_path }
+        ]
+      },
+      {
+        id: "orders",
+        title: "Commandes",
+        icon: "bi-receipt",
+        description: "Suivez et gérez les commandes et leurs statuts.",
+        links: [
+          { label: "Commandes", path: admin_orders_path },
+          { label: "Produits de commande", path: admin_order_products_path }
+        ]
+      },
+      {
         id: "repair-pages",
         title: "Service réparation",
         icon: "bi-tools",
