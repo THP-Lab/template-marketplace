@@ -1,11 +1,44 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Admin - Réparation" %>
 
-<% content_for :title, "Repair pages" %>
+<h1 class="mb-4">Pages réparation (administration)</h1>
 
-<h1>Repair pages</h1>
+<% if notice.present? %>
+  <div class="alert alert-success"><%= notice %></div>
+<% end %>
 
-<div id="repair_pages">
-  <% @repair_pages.each do |repair_page| %>
-    <%= render repair_page %>
-  <% end %>
+<% if @repair_pages.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Position</th>
+          <th>Contenu</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @repair_pages.each do |repair_page| %>
+          <tr id="<%= dom_id(repair_page) %>">
+            <td><%= repair_page.id %></td>
+            <td><%= repair_page.title %></td>
+            <td><%= repair_page.position %></td>
+            <td><%= truncate(repair_page.content.to_s, length: 100) %></td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <%= link_to "Modifier", edit_repair_page_path(repair_page), class: "btn btn-primary" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">Aucune page de réparation.</p>
+<% end %>
+
+<div class="d-flex justify-content-end mt-3">
+  <%= link_to "Nouvelle page réparation", new_repair_page_path, class: "btn btn-success" %>
 </div>

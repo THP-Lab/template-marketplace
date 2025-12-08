@@ -1,16 +1,44 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Admin - Paniers" %>
 
-<% content_for :title, "Carts" %>
+<h1 class="mb-4">Paniers (administration)</h1>
 
-<h1>Carts</h1>
+<% if notice.present? %>
+  <div class="alert alert-success"><%= notice %></div>
+<% end %>
 
-<div id="carts">
-  <% @carts.each do |cart| %>
-    <%= render cart %>
-    <p>
-      <%= link_to "Show this cart", cart %>
-    </p>
-  <% end %>
+<% if @carts.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Utilisateur</th>
+          <th>Statut</th>
+          <th>Créé le</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @carts.each do |cart| %>
+          <tr id="<%= dom_id(cart) %>">
+            <td><%= cart.id %></td>
+            <td><%= cart.user_id %></td>
+            <td><%= cart.status %></td>
+            <td><%= cart.created_at&.strftime("%d/%m/%Y %H:%M") %></td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <%= link_to "Modifier", edit_cart_path(cart), class: "btn btn-primary" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">Aucun panier.</p>
+<% end %>
+
+<div class="d-flex justify-content-end mt-3">
+  <%= link_to "Créer un panier", new_cart_path, class: "btn btn-success" %>
 </div>
-
-<%= link_to "New cart", new_cart_path %>

@@ -1,14 +1,48 @@
 
+<% content_for :title, "Admin - Produits" %>
 
-<% content_for :title, "Products" %>
+<h1 class="mb-4">Produits (administration)</h1>
 
-<h1>Products</h1>
+<% if notice.present? %>
+  <div class="alert alert-success"><%= notice %></div>
+<% end %>
 
-<div id="products">
-  <% @products.each do |product| %>
-    <%= render product %>
-  <% end %>
+<% if @products.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Catégorie</th>
+          <th class="text-end">Prix</th>
+          <th class="text-end">Stock</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <tr id="<%= dom_id(product) %>">
+            <td><%= product.id %></td>
+            <td><%= product.title %></td>
+            <td><%= product.category.presence || "—" %></td>
+            <td class="text-end"><%= product.price.present? ? number_to_currency(product.price, unit: "€") : "—" %></td>
+            <td class="text-end"><%= product.stock %></td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <%= link_to "Voir", product_path(product), class: "btn btn-outline-secondary" %>
+                <%= link_to "Modifier", edit_product_path(product), class: "btn btn-primary" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">Aucun produit trouvé.</p>
+<% end %>
+
+<div class="d-flex justify-content-end mt-3">
+  <%= link_to "Créer un produit", new_product_path, class: "btn btn-success" %>
 </div>
-
-
-<%= link_to "New product", new_product_path %>

@@ -1,11 +1,44 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Admin - À propos" %>
 
-<% content_for :title, "About pages" %>
+<h1 class="mb-4">Sections “À propos” (administration)</h1>
 
-<h1>About pages</h1>
+<% if notice.present? %>
+  <div class="alert alert-success"><%= notice %></div>
+<% end %>
 
-<div id="about_pages">
-  <% @about_pages.each do |about_page| %>
-    <%= render about_page %>
-  <% end %>
+<% if @about_pages.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Position</th>
+          <th>Contenu</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @about_pages.each do |about_page| %>
+          <tr id="<%= dom_id(about_page) %>">
+            <td><%= about_page.id %></td>
+            <td><%= about_page.title %></td>
+            <td><%= about_page.position %></td>
+            <td><%= truncate(about_page.content.to_s, length: 100) %></td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <%= link_to "Modifier", edit_about_page_path(about_page), class: "btn btn-primary" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">Aucune section “À propos”.</p>
+<% end %>
+
+<div class="d-flex justify-content-end mt-3">
+  <%= link_to "Ajouter une section", new_about_page_path, class: "btn btn-success" %>
 </div>

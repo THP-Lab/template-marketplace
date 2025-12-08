@@ -1,40 +1,44 @@
-<% content_for :title, "Accueil" %>
+<% content_for :title, "Admin - Accueil" %>
 
-<h1>Home pages</h1>
+<h1 class="mb-4">Blocs d’accueil (administration)</h1>
 
-<div id="home_pages">
-  <% @home_pages.each do |home_page| %>
-    <%= render home_page %>
-  <% end %>
+<% if notice.present? %>
+  <div class="alert alert-success"><%= notice %></div>
+<% end %>
+
+<% if @home_pages.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Position</th>
+          <th>Contenu</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @home_pages.each do |home_page| %>
+          <tr id="<%= dom_id(home_page) %>">
+            <td><%= home_page.id %></td>
+            <td><%= home_page.title %></td>
+            <td><%= home_page.position %></td>
+            <td><%= truncate(home_page.content.to_s, length: 100) %></td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <%= link_to "Modifier", edit_home_page_path(home_page), class: "btn btn-primary" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">Aucun bloc d’accueil.</p>
+<% end %>
+
+<div class="d-flex justify-content-end mt-3">
+  <%= link_to "Ajouter un bloc d’accueil", new_home_page_path, class: "btn btn-success" %>
 </div>
-
-
-<section>
-  <% if @featured_products.any? %>
-    <div>
-      <h1>Produits à découvrir</h1>
-      <%= link_to "continuer sur la boutique", products_path %>
-    </div>
-
-    <div id="home-featured-products">
-      <% @featured_products.each do |product| %>
-        <div>
-          <h5><%= product.title %></h5>
-          <% if product.description.present? %>
-            <p><%= truncate(product.description, length: 140) %></p>
-          <% else %>
-            <div></div>
-          <% end %>
-          <% if product.price.present? %>
-            <p><%= number_to_currency(product.price, unit: "€") %></p>
-          <% end %>
-          <%= link_to "Voir le produit", product_path(product) %>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-    <div>
-      <%= link_to "continuer sur la boutique", products_path %>
-    </div>
-  <% end %>
-</section>
