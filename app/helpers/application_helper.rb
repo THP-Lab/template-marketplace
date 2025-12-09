@@ -97,4 +97,9 @@ module ApplicationHelper
   def render_admin_sidebar
     render partial: "admin/dashboard/sidebar", locals: { admin_sections: admin_navigation_sections }
   end
+
+  def admin_page(title:, &block)
+    content = capture(&block)
+    render partial: "admin/shared/page_layout", locals: { title: title, content: content }
+  end
 end
