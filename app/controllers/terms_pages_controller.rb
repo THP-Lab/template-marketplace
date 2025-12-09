@@ -4,7 +4,10 @@ class TermsPagesController < ApplicationController
 
   # GET /terms_pages or /terms_pages.json
   def index
-    @terms_pages = TermsPage.all
+    @terms_pages = TermsPage.order(:position)
+    if action_name == "admin"
+      @terms_pages, @pagination = paginate(@terms_pages)
+    end
   end
 
   # GET /terms_pages/new

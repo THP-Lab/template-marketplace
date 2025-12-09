@@ -34,9 +34,18 @@
                   <td><%= product.category.presence || "—" %></td>
                   <td class="text-end"><%= product.price.present? ? number_to_currency(product.price, unit: "€") : "—" %></td>
                   <td class="text-end">
-                    <%= form_with(model: product, url: product_path(product), method: :patch, local: true, class: "d-flex justify-content-end align-items-center gap-2") do |f| %>
-                      <%= f.number_field :stock, value: product.stock, class: "form-control form-control-sm text-end", style: "width: 90px;", min: 0 %>
-                      <%= f.submit "Mettre à jour", class: "btn btn-sm btn-outline-primary" %>
+                    <%= form_with(model: product,
+                                  url: product_path(product),
+                                  method: :patch,
+                                  data: { controller: "auto-submit" },
+                                  html: { class: "d-flex justify-content-end align-items-center gap-2" }) do |f| %>
+                      <%= hidden_field_tag :redirect_to, admin_products_path(page: @pagination&.dig(:page) || params[:page]) %>
+                      <%= f.number_field :stock,
+                                          value: product.stock,
+                                          class: "form-control form-control-sm text-end",
+                                          style: "width: 90px;",
+                                          min: 0,
+                                          data: { action: "input->auto-submit#handle change->auto-submit#handle" } %>
                     <% end %>
                   </td>
                   <td class="text-end">
@@ -57,6 +66,7 @@
       <div class="d-flex justify-content-end mt-3">
         <%= link_to "Créer un produit", new_product_path, class: "btn btn-success" %>
       </div>
+      <%= admin_pagination(@pagination) %>
     </div>
   </div>
 </div>

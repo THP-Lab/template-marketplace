@@ -4,7 +4,10 @@ class AboutPagesController < ApplicationController
 
   # GET /about_pages or /about_pages.json
   def index
-    @about_pages = AboutPage.all
+    @about_pages = AboutPage.order(:position)
+    if action_name == "admin"
+      @about_pages, @pagination = paginate(@about_pages)
+    end
   end
 
   # GET /about_pages/new

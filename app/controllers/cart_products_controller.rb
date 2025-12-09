@@ -6,6 +6,9 @@ class CartProductsController < ApplicationController
   # GET /cart_products or /cart_products.json
   def index
     @cart_products = CartProduct.all
+    if action_name == "admin"
+      @cart_products, @pagination = paginate(@cart_products)
+    end
   end
 
   # GET /cart_products/1 or /cart_products/1.json

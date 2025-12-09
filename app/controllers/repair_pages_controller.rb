@@ -4,7 +4,10 @@ class RepairPagesController < ApplicationController
 
   # GET /repair_pages or /repair_pages.json
   def index
-    @repair_pages = RepairPage.all
+    @repair_pages = RepairPage.order(:position)
+    if action_name == "admin"
+      @repair_pages, @pagination = paginate(@repair_pages)
+    end
   end
 
   # GET /repair_pages/new

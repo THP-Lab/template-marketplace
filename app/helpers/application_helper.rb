@@ -102,4 +102,12 @@ module ApplicationHelper
     content = capture(&block)
     render partial: "admin/shared/page_layout", locals: { title: title, content: content }
   end
+
+  def admin_pagination(pagination)
+    return unless pagination
+    return if pagination[:total_pages].to_i <= 1
+
+    render partial: "admin/shared/pagination",
+           locals: { pagination: pagination, query_params: request.query_parameters }
+  end
 end

@@ -5,6 +5,9 @@ class OrdersController < ApplicationController
   # GET /orders or /orders.json
   def index
     @orders = Order.all
+    if action_name == "admin"
+      @orders, @pagination = paginate(@orders)
+    end
   end
 
   # GET /orders/1 or /orders/1.json

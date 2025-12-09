@@ -1,0 +1,28 @@
+<nav aria-label="Pagination admin" class="mt-3">
+  <ul class="pagination pagination-sm mb-0">
+    <% prev_page = pagination[:page].to_i - 1 %>
+    <% next_page = pagination[:page].to_i + 1 %>
+    <% total_pages = pagination[:total_pages].to_i %>
+    <% base_params = (query_params || {}).dup %>
+
+    <li class="page-item <%= "disabled" if prev_page < 1 %>">
+      <%= link_to "Précédent",
+                  base_params.merge(page: [prev_page, 1].max),
+                  class: "page-link",
+                  data: { turbo: false } %>
+    </li>
+
+    <li class="page-item disabled">
+      <span class="page-link">
+        Page <%= pagination[:page] %> / <%= total_pages %>
+      </span>
+    </li>
+
+    <li class="page-item <%= "disabled" if next_page > total_pages %>">
+      <%= link_to "Suivant",
+                  base_params.merge(page: [next_page, total_pages].min),
+                  class: "page-link",
+                  data: { turbo: false } %>
+    </li>
+  </ul>
+</nav>

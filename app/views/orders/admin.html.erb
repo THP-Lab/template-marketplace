@@ -51,6 +51,7 @@
       <div class="d-flex justify-content-end mt-3">
         <%= link_to "Créer une commande", new_order_path, class: "btn btn-success" %>
       </div>
+      <%= admin_pagination(@pagination) %>
     </div>
   </div>
 </div>

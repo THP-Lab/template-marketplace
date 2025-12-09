@@ -4,7 +4,10 @@ class PrivacyPagesController < ApplicationController
 
   # GET /privacy_pages or /privacy_pages.json
   def index
-    @privacy_pages = PrivacyPage.all
+    @privacy_pages = PrivacyPage.order(:position)
+    if action_name == "admin"
+      @privacy_pages, @pagination = paginate(@privacy_pages)
+    end
   end
 
   # GET /privacy_pages/new

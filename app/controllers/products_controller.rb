@@ -10,6 +10,9 @@ class ProductsController < ApplicationController
 
     @products = Product.all
     @products = @products.where(category: @selected_category) if @selected_category.present?
+    if action_name == "admin"
+      @products, @pagination = paginate(@products)
+    end
   end
 
   # GET /products/1 or /products/1.json
@@ -44,7 +47,8 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to @product, notice: "Product was successfully updated.", status: :see_other }
+        redirect_path = params[:redirect_to].presence || @product
+        format.html { redirect_to redirect_path, notice: "Product was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
