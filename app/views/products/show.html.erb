@@ -1,23 +1,45 @@
-<%= render @product %>
-
-<div>
-  <%= link_to "Back to products", products_path %>
-  <div data-controller="quantity-modal">
-    <%= button_tag "Ajouter au panier", type: "button", data: { action: "click->quantity-modal#open" } %>
-
-    <dialog data-quantity-modal-target="dialog">
-      <h3>Choisir la quantité</h3>
-      <%= form_with url: cart_products_path, method: :post do %>
-        <%= hidden_field_tag :product_id, @product.id %>
-        <div>
-          <%= number_field_tag :quantity, 1, min: 1 %>
-        </div>
-        <div style="margin-top: 8px;">
-          <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products" %>
-          <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart" %>
-          <%= button_tag "Annuler", type: "button", data: { action: "click->quantity-modal#close" } %>
-        </div>
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-md-6">
+      <% if @product.image.attached? %>
+        <%= attachment_thumb(@product.image, variant_options: { resize_to_limit: [800, 600] }, class: "img-fluid rounded") %>
+      <% else %>
+        <div class="border rounded p-4 text-center text-muted">Aucune image</div>
       <% end %>
-    </dialog>
+    </div>
+    <div class="col-md-6">
+      <h1 class="h4 mb-3"><%= @product.title %></h1>
+      <% if @product.description.present? %>
+        <p class="text-muted"><%= simple_format(@product.description) %></p>
+      <% end %>
+      <p class="fw-semibold">
+        Catégorie : <%= @product.category.presence || "—" %><br>
+        Prix : <%= @product.price.present? ? number_to_currency(@product.price, unit: "€") : "—" %><br>
+        Stock : <%= @product.stock %>
+      </p>
+
+      <div class="d-flex flex-column gap-2 mt-3" data-controller="quantity-modal">
+        <%= button_tag "Ajouter au panier", type: "button", class: "btn btn-primary", data: { action: "click->quantity-modal#open" } %>
+
+        <dialog data-quantity-modal-target="dialog" class="p-3 rounded">
+          <h3 class="h6 mb-3">Choisir la quantité</h3>
+          <%= form_with url: cart_products_path, method: :post do %>
+            <%= hidden_field_tag :product_id, @product.id %>
+            <div class="mb-2">
+              <%= number_field_tag :quantity, 1, min: 1, class: "form-control" %>
+            </div>
+            <div class="d-flex gap-2">
+              <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products", class: "btn btn-outline-primary btn-sm" %>
+              <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart", class: "btn btn-primary btn-sm" %>
+              <%= button_tag "Annuler", type: "button", class: "btn btn-light btn-sm", data: { action: "click->quantity-modal#close" } %>
+            </div>
+          <% end %>
+        </dialog>
+      </div>
+    </div>
   </div>
+</div>
+
+<div class="container pb-4">
+  <%= link_to "Retour aux produits", products_path, class: "btn btn-link" %>
 </div>
