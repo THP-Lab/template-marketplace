@@ -18,6 +18,7 @@
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Image</th>
                 <th>Titre</th>
                 <th>Position</th>
                 <th>Contenu</th>
@@ -28,6 +29,9 @@
               <% @about_pages.each do |about_page| %>
                 <tr id="<%= dom_id(about_page) %>">
                   <td><%= about_page.id %></td>
+                  <td>
+                    <%= attachment_thumb(about_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
+                  </td>
                   <td><%= about_page.title %></td>
                   <td><%= about_page.position %></td>
                   <td><%= truncate(about_page.content.to_s, length: 100) %></td>

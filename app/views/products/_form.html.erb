@@ -1,9 +1,8 @@
 <%= form_with(model: product) do |form| %>
   <% if product.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h2 class="h6 mb-2"><%= pluralize(product.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
+      <ul class="mb-0">
         <% product.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,32 +10,42 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="mb-3">
+    <%= form.label :title, "Titre", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.textarea :description %>
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 4 %>
   </div>
 
-  <div>
-    <%= form.label :category, style: "display: block" %>
-    <%= form.text_field :category %>
+  <div class="mb-3">
+    <%= form.label :category, "Catégorie", class: "form-label" %>
+    <%= form.text_field :category, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :price, style: "display: block" %>
-    <%= form.text_field :price %>
+  <div class="mb-3">
+    <%= form.label :price, "Prix", class: "form-label" %>
+    <%= form.number_field :price, class: "form-control", step: 0.01 %>
   </div>
 
-  <div>
-    <%= form.label :stock, style: "display: block" %>
-    <%= form.number_field :stock %>
+  <div class="mb-3">
+    <%= form.label :stock, "Stock", class: "form-label" %>
+    <%= form.number_field :stock, class: "form-control", min: 0 %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mb-3">
+    <%= form.label :image, "Image", class: "form-label" %>
+    <%= form.file_field :image, class: "form-control" %>
+    <% if product.image.attached? %>
+      <div class="mt-2">
+        <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail" ) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
   </div>
 <% end %>

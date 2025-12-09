@@ -67,6 +67,6 @@ class AboutPagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def about_page_params
-      params.expect(about_page: [ :title, :content, :position ])
+      params.expect(about_page: [ :title, :content, :position, :image ])
     end
 end

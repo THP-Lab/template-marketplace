@@ -64,6 +64,16 @@
   </div>
 
   <div class="mb-3">
+    <%= form.label :image, "Image du bloc", class: "form-label" %>
+    <%= form.file_field :image, class: "form-control" %>
+    <% if home_page.image.attached? %>
+      <div class="mt-2">
+        <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail") %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
     <%= form.label :position, "Position", class: "form-label" %>
     <%= form.number_field :position, class: "form-control" %>
   </div>

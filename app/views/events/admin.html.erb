@@ -18,6 +18,7 @@
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Image</th>
                 <th>Titre</th>
                 <th>Catégorie</th>
                 <th>Date</th>
@@ -26,11 +27,14 @@
               </tr>
             </thead>
             <tbody>
-              <% @events.each do |event| %>
-                <tr id="<%= dom_id(event) %>">
-                  <td><%= event.id %></td>
-                  <td><%= event.title %></td>
-                  <td><%= event.category.presence || "—" %></td>
+            <% @events.each do |event| %>
+              <tr id="<%= dom_id(event) %>">
+                <td><%= event.id %></td>
+                <td>
+                  <%= attachment_thumb(event.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
+                </td>
+                <td><%= event.title %></td>
+                <td><%= event.category.presence || "—" %></td>
                   <td><%= event.event_date.present? ? l(event.event_date, format: :short) : "—" %></td>
                   <td><%= event.location.presence || "—" %></td>
                   <td class="text-end">

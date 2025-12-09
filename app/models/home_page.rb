@@ -12,6 +12,8 @@ class HomePage < ApplicationRecord
     top_sellers: "top_sellers"
   }, suffix: true
 
+  has_one_attached :image
+
   def target_record
     case bloc_type
     when "about" then AboutPage.find_by(id: target_id)

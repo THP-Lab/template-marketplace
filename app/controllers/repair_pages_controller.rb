@@ -67,6 +67,6 @@ class RepairPagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def repair_page_params
-      params.expect(repair_page: [ :title, :content, :position ])
+      params.expect(repair_page: [ :title, :content, :position, :image ])
     end
 end

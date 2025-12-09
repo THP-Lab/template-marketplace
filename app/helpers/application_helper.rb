@@ -110,4 +110,14 @@ module ApplicationHelper
     render partial: "admin/shared/pagination",
            locals: { pagination: pagination, query_params: request.query_parameters }
   end
+
+  def attachment_thumb(attachment, variant_options: nil, **options)
+    return unless attachment&.attached?
+
+    if variant_options && attachment.variable?
+      image_tag attachment.variant(variant_options), **options
+    else
+      image_tag attachment, **options
+    end
+  end
 end

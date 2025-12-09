@@ -19,6 +19,7 @@
               <tr>
                 <th>ID</th>
                 <th>Titre</th>
+                <th>Image</th>
                 <th>Type</th>
                 <th>Source / portée</th>
                 <th>Position</th>
@@ -45,6 +46,9 @@
                 <tr id="<%= dom_id(home_page) %>">
                   <td><%= home_page.id %></td>
                   <td><%= home_page.title %></td>
+                  <td>
+                    <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
+                  </td>
                   <td><%= home_page.bloc_type %></td>
                   <td><%= target_label %></td>
                   <td><%= home_page.position %></td>

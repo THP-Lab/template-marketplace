@@ -9,6 +9,11 @@
           <% case home_page.bloc_type %>
           <% when "about", "repair" %>
             <% if (target = home_page.target_record) %>
+              <% if target.image.attached? %>
+                <div class="mb-3">
+                  <%= attachment_thumb(target.image, variant_options: { resize_to_limit: [800, 400] }, class: "img-fluid rounded") %>
+                </div>
+              <% end %>
               <p class="text-muted"><%= simple_format(target.content) %></p>
             <% else %>
               <p class="text-muted">Bloc cible introuvable.</p>
@@ -20,6 +25,9 @@
                 <% products.each do |product| %>
                   <div class="col">
                     <div class="card h-100 shadow-sm">
+                      <% if product.image.attached? %>
+                        <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [600, 360] }, class: "card-img-top") %>
+                      <% end %>
                       <div class="card-body d-flex flex-column">
                         <h5 class="card-title"><%= product.title %></h5>
                         <% if product.description.present? %>
@@ -41,6 +49,11 @@
               <p class="text-muted">Aucun produit disponible pour ce bloc.</p>
             <% end %>
           <% else %>
+            <% if home_page.image.attached? %>
+              <div class="mb-3">
+                <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [800, 400] }, class: "img-fluid rounded") %>
+              </div>
+            <% end %>
             <p class="text-muted"><%= simple_format(home_page.content) %></p>
           <% end %>
         </section>
