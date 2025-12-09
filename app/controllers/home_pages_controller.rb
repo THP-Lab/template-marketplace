@@ -4,8 +4,7 @@ class HomePagesController < ApplicationController
 
   # GET /home_pages or /home_pages.json
   def index
-    @home_pages = HomePage.all
-    @featured_products = Product.order(Arel.sql("RANDOM()")).limit(5).to_a
+    @home_pages = HomePage.order(:position)
   end
 
 
@@ -66,6 +65,6 @@ class HomePagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def home_page_params
-      params.expect(home_page: [ :title, :content, :position ])
+      params.expect(home_page: [ :title, :content, :position, :bloc_type, :target_id, :shop_scope ])
     end
 end

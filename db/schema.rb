@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_05_000000) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_07_000000) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -62,11 +62,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_05_000000) do
   end
 
   create_table "home_pages", force: :cascade do |t|
+    t.string "bloc_type", default: "custom", null: false
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
+    t.string "shop_scope", default: "first", null: false
+    t.integer "target_id"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["target_id"], name: "index_home_pages_on_target_id"
   end
 
   create_table "order_products", force: :cascade do |t|

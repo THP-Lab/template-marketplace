@@ -1,9 +1,11 @@
-<%= form_with(model: home_page) do |form| %>
-  <% if home_page.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(home_page.errors.count, "error") %> prohibited this home_page from being saved:</h2>
+<% about_options = AboutPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
+<% repair_options = RepairPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
 
-      <ul>
+<%= form_with(model: home_page, data: { controller: "home-block-form" }) do |form| %>
+  <% if home_page.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h6 mb-2"><%= pluralize(home_page.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
+      <ul class="mb-0">
         <% home_page.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,22 +13,62 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="mb-3">
+    <%= form.label :title, "Titre", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.textarea :content %>
+  <div class="mb-3">
+    <%= form.label :bloc_type, "Type de bloc", class: "form-label" %>
+    <%= form.select :bloc_type,
+                    [["Bloc personnalisé", "custom"],
+                     ["Bloc À propos", "about"],
+                     ["Bloc réparation", "repair"],
+                     ["Bloc boutique", "shop"]],
+                    {},
+                    class: "form-select",
+                    data: { "home-block-form-target": "blocType", action: "change->home-block-form#toggle" } %>
+    <div class="form-text">Choisissez la source du contenu affiché sur la home.</div>
   </div>
 
-  <div>
-    <%= form.label :position, style: "display: block" %>
-    <%= form.number_field :position %>
+  <div class="mb-3" data-home-block-form-target="targetSection">
+    <%= form.label :target_id, "Bloc cible (À propos / Réparation)", class: "form-label" %>
+    <%= form.select :target_id,
+                    [],
+                    {},
+                    class: "form-select",
+                    data: {
+                      "home-block-form-target": "targetSelect",
+                      about_options: about_options.to_json,
+                      repair_options: repair_options.to_json,
+                      selected_value: home_page.target_id
+                    } %>
+    <div class="form-text">Utilisé uniquement si le type est “Bloc À propos” ou “Bloc réparation”.</div>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mb-3" data-home-block-form-target="shopSection">
+    <%= form.label :shop_scope, "Sélection boutique", class: "form-label" %>
+    <%= form.select :shop_scope,
+                    [["5 premiers", "first"],
+                     ["5 derniers", "last"],
+                     ["5 plus achetés", "top_sellers"]],
+                    {},
+                    class: "form-select" %>
+    <div class="form-text">Utilisé si le type est “Bloc boutique”.</div>
+  </div>
+
+  <div class="mb-3" data-home-block-form-target="contentSection">
+    <%= form.label :content, "Contenu (bloc personnalisé)", class: "form-label" %>
+    <%= form.text_area :content, class: "form-control", rows: 4 %>
+    <div class="form-text">S’affiche uniquement pour les blocs personnalisés.</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :position, "Position", class: "form-label" %>
+    <%= form.number_field :position, class: "form-control" %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
   </div>
 <% end %>

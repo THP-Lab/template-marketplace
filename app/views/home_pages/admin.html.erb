@@ -19,6 +19,8 @@
               <tr>
                 <th>ID</th>
                 <th>Titre</th>
+                <th>Type</th>
+                <th>Source / portée</th>
                 <th>Position</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
@@ -26,9 +28,25 @@
             </thead>
             <tbody>
               <% @home_pages.each do |home_page| %>
+                <% target_label =
+                     case home_page.bloc_type
+                     when "about" then "Bloc À propos ##{home_page.target_id}"
+                     when "repair" then "Bloc Réparation ##{home_page.target_id}"
+                     when "shop"
+                       case home_page.shop_scope
+                       when "first" then "Boutique - 5 premiers"
+                       when "last" then "Boutique - 5 derniers"
+                       else "Boutique - 5 plus achetés"
+                       end
+                     else
+                       "Bloc personnalisé"
+                     end
+                %>
                 <tr id="<%= dom_id(home_page) %>">
                   <td><%= home_page.id %></td>
                   <td><%= home_page.title %></td>
+                  <td><%= home_page.bloc_type %></td>
+                  <td><%= target_label %></td>
                   <td><%= home_page.position %></td>
                   <td><%= truncate(home_page.content.to_s, length: 100) %></td>
                   <td class="text-end">

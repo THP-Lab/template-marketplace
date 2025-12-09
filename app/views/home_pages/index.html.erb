@@ -1,40 +1,50 @@
 <% content_for :title, "Accueil" %>
 
-<h1>Home pages</h1>
-
-<div id="home_pages">
-  <% @home_pages.each do |home_page| %>
-    <%= render home_page %>
-  <% end %>
-</div>
-
-
-<section>
-  <% if @featured_products.any? %>
-    <div>
-      <h1>Produits à découvrir</h1>
-      <%= link_to "continuer sur la boutique", products_path %>
-    </div>
-
-    <div id="home-featured-products">
-      <% @featured_products.each do |product| %>
-        <div>
-          <h5><%= product.title %></h5>
-          <% if product.description.present? %>
-            <p><%= truncate(product.description, length: 140) %></p>
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <% @home_pages.each do |home_page| %>
+        <section class="mb-5 border-bottom pb-4">
+          <h2 class="h4 mb-3"><%= home_page.title %></h2>
+          <% case home_page.bloc_type %>
+          <% when "about", "repair" %>
+            <% if (target = home_page.target_record) %>
+              <p class="text-muted"><%= simple_format(target.content) %></p>
+            <% else %>
+              <p class="text-muted">Bloc cible introuvable.</p>
+            <% end %>
+          <% when "shop" %>
+            <% products = home_page.shop_products %>
+            <% if products.any? %>
+              <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <% products.each do |product| %>
+                  <div class="col">
+                    <div class="card h-100 shadow-sm">
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title"><%= product.title %></h5>
+                        <% if product.description.present? %>
+                          <p class="card-text text-muted"><%= truncate(product.description, length: 120) %></p>
+                        <% end %>
+                        <% if product.price.present? %>
+                          <p class="fw-semibold mt-auto"><%= number_to_currency(product.price, unit: "€") %></p>
+                        <% end %>
+                        <%= link_to "Voir le produit", product_path(product), class: "btn btn-outline-primary btn-sm mt-2" %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="mt-3">
+                <%= link_to "Accéder à la boutique", products_path, class: "btn btn-primary" %>
+              </div>
+            <% else %>
+              <p class="text-muted">Aucun produit disponible pour ce bloc.</p>
+            <% end %>
           <% else %>
-            <div></div>
+            <p class="text-muted"><%= simple_format(home_page.content) %></p>
           <% end %>
-          <% if product.price.present? %>
-            <p><%= number_to_currency(product.price, unit: "€") %></p>
-          <% end %>
-          <%= link_to "Voir le produit", product_path(product) %>
-        </div>
+        </section>
       <% end %>
     </div>
-  <% else %>
-    <div>
-      <%= link_to "continuer sur la boutique", products_path %>
-    </div>
-  <% end %>
-</section>
+  </div>
+</div>
