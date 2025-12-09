@@ -120,4 +120,15 @@ module ApplicationHelper
       image_tag attachment, **options
     end
   end
+
+  def order_status_options
+    [
+      ["En attente", "pending"],
+      ["Payée", "paid"],
+      ["En préparation", "processing"],
+      ["Expédiée", "shipped"],
+      ["Livrée", "delivered"],
+      ["Annulée", "canceled"]
+    ]
+  end
 end

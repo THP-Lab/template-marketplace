@@ -32,7 +32,20 @@
                   <td><%= order.user_id %></td>
                   <td><%= order.order_date.present? ? l(order.order_date, format: :short) : "—" %></td>
                   <td class="text-end"><%= order.total_amount.present? ? number_to_currency(order.total_amount, unit: "€") : "—" %></td>
-                  <td><%= order.status %></td>
+                  <td>
+                    <%= form_with(model: order,
+                                  url: order_path(order),
+                                  method: :patch,
+                                  data: { controller: "auto-submit" },
+                                  html: { class: "d-flex align-items-center gap-2" }) do |f| %>
+                      <%= hidden_field_tag :redirect_to, admin_orders_path(page: @pagination&.dig(:page) || params[:page]) %>
+                      <%= f.select :status,
+                                   options_for_select(order_status_options, order.status),
+                                   {},
+                                   class: "form-select form-select-sm",
+                                   data: { action: "change->auto-submit#handle" } %>
+                    <% end %>
+                  </td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
                       <%= link_to "Voir", order_path(order), class: "btn btn-outline-secondary" %>

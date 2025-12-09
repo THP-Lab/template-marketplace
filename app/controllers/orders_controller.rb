@@ -42,7 +42,8 @@ class OrdersController < ApplicationController
   def update
     respond_to do |format|
       if @order.update(order_params)
-        format.html { redirect_to @order, notice: "Order was successfully updated.", status: :see_other }
+        redirect_path = params[:redirect_to].presence || @order
+        format.html { redirect_to redirect_path, notice: "Order was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @order }
       else
         format.html { render :edit, status: :unprocessable_entity }

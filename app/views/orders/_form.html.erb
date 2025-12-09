@@ -1,9 +1,8 @@
 <%= form_with(model: order) do |form| %>
   <% if order.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h2 class="h6 mb-2"><%= pluralize(order.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
+      <ul class="mb-0">
         <% order.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,27 +10,27 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+  <div class="mb-3">
+    <%= form.label :user_id, "Utilisateur", class: "form-label" %>
+    <%= form.number_field :user_id, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :order_date, style: "display: block" %>
-    <%= form.datetime_field :order_date %>
+  <div class="mb-3">
+    <%= form.label :order_date, "Date de commande", class: "form-label" %>
+    <%= form.datetime_field :order_date, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :total_amount, style: "display: block" %>
-    <%= form.text_field :total_amount %>
+  <div class="mb-3">
+    <%= form.label :total_amount, "Montant total", class: "form-label" %>
+    <%= form.number_field :total_amount, step: 0.01, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
+  <div class="mb-3">
+    <%= form.label :status, "Statut", class: "form-label" %>
+    <%= form.select :status, options_for_select(order_status_options, order.status), {}, class: "form-select" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="d-flex gap-2">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
   </div>
 <% end %>
