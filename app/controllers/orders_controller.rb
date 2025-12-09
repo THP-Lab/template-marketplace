@@ -50,11 +50,13 @@ class OrdersController < ApplicationController
 
   # DELETE /orders/1 or /orders/1.json
   def destroy
-    @order.destroy!
-
     respond_to do |format|
-      format.html { redirect_to orders_path, notice: "Order was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+      format.html do
+        redirect_to orders_path,
+                    alert: "La suppression des commandes est désactivée.",
+                    status: :see_other
+      end
+      format.json { head :method_not_allowed }
     end
   end
 
