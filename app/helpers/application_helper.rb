@@ -47,8 +47,8 @@ module ApplicationHelper
         icon: "bi-tools",
         description: "Pages dédiées aux offres de réparation.",
         links: [
-          { label: "Pages réparation", path: admin_repair_pages_path },
-          { label: "Nouvelle page réparation", path: new_repair_page_path }
+          { label: "Blocs réparation", path: admin_repair_pages_path },
+          { label: "Nouveau bloc réparation", path: new_repair_page_path }
         ]
       },
       {
@@ -67,8 +67,8 @@ module ApplicationHelper
         icon: "bi-people",
         description: "Sections de la page À propos.",
         links: [
-          { label: "Contenus À propos", path: admin_about_pages_path },
-          { label: "Ajouter une section", path: new_about_page_path }
+          { label: "Blocs À propos", path: admin_about_pages_path },
+          { label: "Nouveau bloc À propos", path: new_about_page_path }
         ]
       },
       {
@@ -77,8 +77,8 @@ module ApplicationHelper
         icon: "bi-shield-lock",
         description: "Contenus de politique de confidentialité.",
         links: [
-          { label: "Pages confidentialité", path: admin_privacy_pages_path },
-          { label: "Nouvelle page confidentialité", path: new_privacy_page_path }
+          { label: "Blocs confidentialité", path: admin_privacy_pages_path },
+          { label: "Nouveau bloc confidentialité", path: new_privacy_page_path }
         ]
       },
       {
@@ -87,8 +87,8 @@ module ApplicationHelper
         icon: "bi-file-earmark-text",
         description: "Pages de conditions d’utilisation et ventes.",
         links: [
-          { label: "Liste des pages légales", path: admin_terms_pages_path },
-          { label: "Ajouter une page légale", path: new_terms_page_path }
+          { label: "Blocs légaux", path: admin_terms_pages_path },
+          { label: "Nouveau bloc légal", path: new_terms_page_path }
         ]
       }
     ]

@@ -15,6 +15,12 @@
     <%= link_to "Réparation", repair_pages_path %>
   </li>
 
+  <% if user_signed_in? && current_user.is_admin? %>
+    <li>
+      <%= link_to "Admin", admin_dashboard_index_path %>
+    </li>
+  <% end %>
+
   <% if user_signed_in? %>
     <li>
       <%= link_to "Panier", cart_path(current_user.cart) %>
