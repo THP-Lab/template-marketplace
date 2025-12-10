@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_admin!, only: [:admin]
   before_action :set_user
 
   def show
@@ -7,8 +8,8 @@ class UsersController < ApplicationController
   end
 
   def admin
-    require_admin!
     @users = User.order(created_at: :desc)
+    @users, @pagination = paginate(@users)
   end
 
   def update
