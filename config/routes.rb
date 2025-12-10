@@ -38,7 +38,9 @@ Rails.application.routes.draw do
   resources :products do
     collection { get :admin }
   end
-  resources :users
+  resources :users do
+    collection { get :admin }
+  end
   resources :contacts, only: %i[new create]
   resources :events do
     collection { get :admin }

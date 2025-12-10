@@ -14,6 +14,29 @@
         <%= render partial: "admin/dashboard/menu_section",
                    locals: { accordion_id: accordion_id, section: section } %>
       <% end %>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="users-heading">
+          <button class="accordion-button collapsed d-flex align-items-center gap-2"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#users-collapse"
+                  aria-expanded="false"
+                  aria-controls="users-collapse">
+            <i class="bi bi-people"></i>
+            <span>Utilisateurs</span>
+          </button>
+        </h2>
+        <div id="users-collapse"
+             class="accordion-collapse collapse"
+             aria-labelledby="users-heading"
+             data-bs-parent="<%= "##{accordion_id}" %>">
+          <div class="accordion-body py-3">
+            <div class="d-grid gap-2">
+              <%= link_to "Liste des utilisateurs", admin_users_path, class: "btn btn-outline-primary btn-sm text-start" %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

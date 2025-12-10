@@ -131,4 +131,16 @@ module ApplicationHelper
       ["Annulée", "canceled"]
     ]
   end
+
+  def mask_email(email)
+    return "****" unless email.present?
+    local, domain = email.split("@", 2)
+    masked_local = local[0].to_s + "****"
+    "#{masked_local}@#{domain}"
+  end
+
+  def mask_name(first_name, last_name)
+    return "****" if first_name.blank? && last_name.blank?
+    "#{first_name.to_s.first}*** #{last_name.to_s.first}***".strip
+  end
 end
