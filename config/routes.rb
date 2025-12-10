@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   namespace :admin do
-    get "dashboard/index"
+    root to: "dashboard#index"
   end
   resources :repair_pages do
     collection { patch :reorder }
