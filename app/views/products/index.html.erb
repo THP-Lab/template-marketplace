@@ -4,53 +4,38 @@
   <p>Paiement annulé.</p>
 <% end %>
 
-<% content_for :title, "Produits" %>
+<% if params[:success] %>
+  <p>Paiement réussi ! </p>
+<% elsif params[:canceled] %>
+  <p>Paiement annulé.</p>
+<% end %>
 
-<div class="container py-4">
-  <div class="row">
-    <div class="col-lg-10 mx-auto">
-      <h1 class="mb-4">Produits</h1>
+<% content_for :title, "Products" %>
 
-      <div class="mb-3">
-        <%= form_with url: products_path, method: :get, local: true, class: "row g-2 align-items-end" do %>
-          <div class="col-sm-6 col-md-4">
-            <label for="category" class="form-label">Filtrer par catégorie</label>
-            <%= select_tag :category,
-              options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
-              onchange: "this.form.submit()",
-              class: "form-select" %>
-          </div>
-        <% end %>
-      </div>
+<h1>Products</h1>
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="products">
-        <% @products.each do |product| %>
-          <div class="col">
-            <div class="card h-100 shadow-sm">
-              <% if product.image.attached? %>
-                <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [600, 360] }, class: "card-img-top") %>
-              <% end %>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title"><%= product.title %></h5>
-                <% if product.description.present? %>
-                  <p class="card-text text-muted"><%= truncate(product.description, length: 100) %></p>
-                <% end %>
-                <p class="fw-semibold mt-auto"><%= product.price.present? ? number_to_currency(product.price, unit: "€") : "—" %></p>
-                <div class="d-flex gap-2">
-                  <%= link_to "Voir", product, class: "btn btn-outline-primary btn-sm" %>
-                  <% if user_signed_in? %>
-                    <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class: "btn btn-primary btn-sm" %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-
-      <div class="d-flex justify-content-end mt-4">
-        <%= link_to "Créer un produit", new_product_path, class: "btn btn-success" %>
-      </div>
-    </div>
-  </div>
+<div style="margin-bottom: 16px;">
+  <%= form_with url: products_path, method: :get, local: true do %>
+    <label for="category">Filtrer par catégorie :</label>
+    <%= select_tag :category,
+      options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
+      onchange: "this.form.submit()" %>
+    <noscript><%= submit_tag "Filtrer" %></noscript>
+  <% end %>
 </div>
+
+<div id="products">
+  <% @products.each do |product| %>
+    <%= render product %>
+    
+    <p>
+      <%= link_to "Show this product", product %>
+      <% if user_signed_in? %>
+      <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post %>
+      <% end %>
+    </p>
+  <% end %>
+</div>
+
+
+<%= link_to "New product", new_product_path %>
