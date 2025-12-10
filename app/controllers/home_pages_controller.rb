@@ -60,6 +60,17 @@ class HomePagesController < ApplicationController
 
   alias_method :admin, :index
 
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    HomePage.transaction do
+      ids.each_with_index do |id, idx|
+        HomePage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_home_page

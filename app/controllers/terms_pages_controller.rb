@@ -59,6 +59,17 @@ class TermsPagesController < ApplicationController
 
   alias_method :admin, :index
 
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    TermsPage.transaction do
+      ids.each_with_index do |id, idx|
+        TermsPage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_terms_page

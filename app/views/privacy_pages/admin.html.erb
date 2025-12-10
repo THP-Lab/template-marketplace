@@ -14,7 +14,9 @@
 
       <% if @privacy_pages.any? %>
         <div class="table-responsive">
-          <table class="table table-striped table-hover align-middle">
+          <table class="table table-striped table-hover align-middle"
+                 data-controller="reorder"
+                 data-reorder-url-value="<%= reorder_privacy_pages_path %>">
             <thead>
               <tr>
                 <th>ID</th>
@@ -26,15 +28,20 @@
             </thead>
             <tbody>
               <% @privacy_pages.each do |privacy_page| %>
-                <tr id="<%= dom_id(privacy_page) %>">
+                <tr id="<%= dom_id(privacy_page) %>"
+                    data-reorder-target="item"
+                    data-id="<%= privacy_page.id %>">
                   <td><%= privacy_page.id %></td>
                   <td><%= privacy_page.title %></td>
-                  <td><%= privacy_page.position %></td>
+                  <td data-position-cell><%= privacy_page.position %></td>
                   <td><%= truncate(privacy_page.content.to_s, length: 100) %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
                       <%= link_to "Modifier", edit_privacy_page_path(privacy_page), class: "btn btn-primary" %>
                     </div>
+                  </td>
+                  <td class="text-end text-muted" style="width: 40px;">
+                    <span class="reorder-handle" title="Déplacer">&#8942;</span>
                   </td>
                 </tr>
               <% end %>

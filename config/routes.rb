@@ -3,18 +3,23 @@ Rails.application.routes.draw do
     get "dashboard/index"
   end
   resources :repair_pages do
+    collection { patch :reorder }
     collection { get :admin }
   end
   resources :about_pages do
+    collection { patch :reorder }
     collection { get :admin }
   end
   resources :terms_pages do
+    collection { patch :reorder }
     collection { get :admin }
   end
   resources :privacy_pages do
+    collection { patch :reorder }
     collection { get :admin }
   end
   resources :home_pages do
+    collection { patch :reorder }
     collection { get :admin }
   end
   devise_for :users
