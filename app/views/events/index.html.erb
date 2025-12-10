@@ -1,40 +1,27 @@
 <p style="color: green"><%= notice %></p>
 
-<% content_for :title, "Événements" %>
+<% content_for :title, "Events" %>
 
-<div class="container py-4">
-  <div class="row">
-    <div class="col-lg-10 mx-auto">
-      <h1 class="mb-4">Événements</h1>
+<h1>Events</h1>
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="events">
-        <% @events.each do |event| %>
-          <div class="col">
-            <div class="card h-100 shadow-sm">
-              <% if event.image.attached? %>
-                <%= attachment_thumb(event.image, variant_options: { resize_to_limit: [600, 360] }, class: "card-img-top") %>
-              <% end %>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title"><%= event.title %></h5>
-                <% if event.description.present? %>
-                  <p class="card-text text-muted"><%= truncate(event.description, length: 120) %></p>
-                <% end %>
-                <p class="mb-2 small text-muted">
-                  <%= event.event_date.present? ? l(event.event_date, format: :long) : "Date à venir" %><br>
-                  <%= event.location.presence || "Lieu à définir" %>
-                </p>
-                <div class="mt-auto">
-                  <%= link_to "Voir l’événement", event, class: "btn btn-outline-primary btn-sm" %>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
+<div style="margin-bottom: 24px;">
+  <%= month_calendar(events: @events) do |date, events| %>
+    <div><%= date.day %></div>
+    <% events.each do |event| %>
+      <div>
+        <%= link_to event.title, event %>
       </div>
-
-      <div class="d-flex justify-content-end mt-4">
-        <%= link_to "Nouvel événement", new_event_path, class: "btn btn-success" %>
-      </div>
-    </div>
-  </div>
+    <% end %>
+  <% end %>
 </div>
+
+<div id="events">
+  <% @events.each do |event| %>
+    <%= render event %>
+    <p>
+      <%= link_to "Show this event", event %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New event", new_event_path %>

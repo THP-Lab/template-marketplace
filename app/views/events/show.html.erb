@@ -1,30 +1,7 @@
 <p style="color: green"><%= notice %></p>
 
-<div class="container py-4">
-  <div class="row g-4">
-    <div class="col-md-6">
-      <% if @event.image.attached? %>
-        <%= attachment_thumb(@event.image, variant_options: { resize_to_limit: [800, 600] }, class: "img-fluid rounded") %>
-      <% else %>
-        <div class="border rounded p-4 text-center text-muted">Aucune image</div>
-      <% end %>
-    </div>
-    <div class="col-md-6">
-      <h1 class="h4 mb-3"><%= @event.title %></h1>
-      <p class="mb-2 text-muted">
-        <%= @event.event_date.present? ? l(@event.event_date, format: :long) : "Date à venir" %><br>
-        <%= @event.location.presence || "Lieu à définir" %>
-      </p>
-      <% if @event.description.present? %>
-        <p class="text-muted"><%= simple_format(@event.description) %></p>
-      <% end %>
-      <% if @event.category.present? %>
-        <p class="mb-0"><strong>Catégorie :</strong> <%= @event.category %></p>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render @event %>
 
-<div class="container pb-4">
-  <%= link_to "Retour aux événements", events_path, class: "btn btn-link" %>
+<div>
+  <%= link_to "Back to events", events_path %>
 </div>

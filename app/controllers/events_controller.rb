@@ -4,10 +4,12 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
-    @events = Event.all
-    if action_name == "admin"
-      @events, @pagination = paginate(@events)
+    scope = Event.order(event_date: :asc)
+    unless action_name == "admin"
+      scope = scope.where("event_date IS NULL OR event_date >= ?", Time.current)
     end
+    @events = scope
+    @events, @pagination = paginate(@events) if action_name == "admin"
   end
 
   # GET /events/1 or /events/1.json
