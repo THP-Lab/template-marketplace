@@ -22,9 +22,9 @@
                 <th>ID</th>
                 <th>Image</th>
                 <th>Titre</th>
-                <th>Position</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
+                <th class="text-end" style="width: 40px;">Ordre</th>
               </tr>
             </thead>
             <tbody>
@@ -37,7 +37,6 @@
                     <%= attachment_thumb(repair_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
                   </td>
                   <td><%= repair_page.title %></td>
-                  <td data-position-cell><%= repair_page.position %></td>
                   <td><%= truncate(repair_page.content.to_s, length: 100) %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">

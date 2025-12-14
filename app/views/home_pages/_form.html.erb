@@ -73,10 +73,12 @@
     <% end %>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :position, "Position", class: "form-label" %>
-    <%= form.number_field :position, class: "form-control" %>
-  </div>
+  <% if home_page.persisted? %>
+    <div class="mb-3">
+      <%= form.label :position, "Position", class: "form-label" %>
+      <%= form.number_field :position, class: "form-control" %>
+    </div>
+  <% end %>
 
   <div class="d-flex gap-2">
     <%= form.submit "Enregistrer", class: "btn btn-primary" %>

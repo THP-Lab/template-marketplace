@@ -1,4 +1,5 @@
 class HomePage < ApplicationRecord
+  include Positionable
   enum :bloc_type, {
     custom: "custom",
     about: "about",

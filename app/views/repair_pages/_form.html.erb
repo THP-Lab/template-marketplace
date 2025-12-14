@@ -20,10 +20,12 @@
     <%= form.text_area :content, class: "form-control", rows: 4 %>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :position, "Position", class: "form-label" %>
-    <%= form.number_field :position, class: "form-control" %>
-  </div>
+  <% if repair_page.persisted? %>
+    <div class="mb-3">
+      <%= form.label :position, "Position", class: "form-label" %>
+      <%= form.number_field :position, class: "form-control" %>
+    </div>
+  <% end %>
 
   <div class="mb-3">
     <%= form.label :image, "Image", class: "form-label" %>

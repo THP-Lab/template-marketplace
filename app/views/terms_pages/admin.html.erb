@@ -21,9 +21,9 @@
               <tr>
                 <th>ID</th>
                 <th>Titre</th>
-                <th>Position</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
+                <th class="text-end" style="width: 40px;">Ordre</th>
               </tr>
             </thead>
             <tbody>
@@ -33,7 +33,6 @@
                     data-id="<%= terms_page.id %>">
                   <td><%= terms_page.id %></td>
                   <td><%= terms_page.title %></td>
-                  <td data-position-cell><%= terms_page.position %></td>
                   <td><%= truncate(terms_page.content.to_s, length: 100) %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">

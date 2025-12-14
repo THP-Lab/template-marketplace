@@ -24,9 +24,9 @@
                 <th>Image</th>
                 <th>Type</th>
                 <th>Source / portée</th>
-                <th>Position</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
+                <th class="text-end" style="width: 40px;">Ordre</th>
               </tr>
             </thead>
             <tbody>
@@ -55,7 +55,6 @@
                   </td>
                   <td><%= home_page.bloc_type %></td>
                   <td><%= target_label %></td>
-                  <td data-position-cell><%= home_page.position %></td>
                   <td><%= truncate(home_page.content.to_s, length: 100) %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
