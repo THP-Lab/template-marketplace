@@ -9,6 +9,14 @@ Le statut est passé de <%= @previous_status %> à <%= @current_status %>.
 Le statut de votre commande est maintenant : <%= @current_status %>.
 <% end %>
 
+<% if @tracking_number.present? %>
+<% if @order.status == "shipped" %>
+Votre commande est expédiée. Numéro de suivi : <%= @tracking_number %>.
+<% else %>
+Numéro de suivi : <%= @tracking_number %>.
+<% end %>
+<% end %>
+
 Consultez le détail et le suivi : <%= @url %>
 
 Merci pour votre confiance.

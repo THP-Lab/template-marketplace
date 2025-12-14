@@ -1,4 +1,7 @@
 <% content_for :title, "Accueil" %>
+<% content_for :meta_description,
+                meta_description_from(@home_pages.map(&:content).join(" ")) ||
+                "Découvrir l'atelier, nos créations sur mesure et les engagements qualité de Template Marketplace." %>
 
 <div class="container py-4">
   <div class="row">

@@ -18,7 +18,7 @@ class Order < ApplicationRecord
 
   after_create :order_send
   after_create :notify_admins
-  after_update_commit :notify_status_change, if: :saved_change_to_status?
+  after_update_commit :notify_status_change, if: :notify_status_update?
 
   def order_send
     UserMailer.order_email(self).deliver_now
@@ -41,5 +41,9 @@ class Order < ApplicationRecord
   def notify_status_change
     previous_status = status_before_last_save
     UserMailer.order_status_update_email(self, previous_status: previous_status).deliver_now
+  end
+
+  def notify_status_update?
+    saved_change_to_status? || (status == "shipped" && saved_change_to_tracking_number?)
   end
 end

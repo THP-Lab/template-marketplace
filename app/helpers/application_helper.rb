@@ -136,4 +136,60 @@ module ApplicationHelper
     return "****" if first_name.blank? && last_name.blank?
     "#{first_name.to_s.first}*** #{last_name.to_s.first}***".strip
   end
+
+  def site_name
+    "Template Marketplace"
+  end
+
+  def page_title_value
+    raw_title = content_for(:title).presence || default_page_title
+    [raw_title, site_name].compact.uniq.join(" | ")
+  end
+
+  def page_meta_description
+    content_for(:meta_description).presence || default_meta_description
+  end
+
+  def default_page_title
+    resource_label = controller_page_label
+    action_label = page_action_label
+    [resource_label, action_label].compact.join(" - ").presence || site_name
+  end
+
+  def default_meta_description
+    base = "Boutique et atelier d'inspiration médiévale : créations sur mesure, réparations et équipements prêts à l'emploi."
+    title = content_for(:title).presence || default_page_title
+    [title, base].compact.join(" — ")
+  end
+
+  def controller_page_label
+    {
+      "home_pages" => "Accueil",
+      "products" => "Boutique",
+      "events" => "Événements",
+      "repair_pages" => "Réparation",
+      "about_pages" => "À propos",
+      "privacy_pages" => "Confidentialité",
+      "terms_pages" => "Conditions générales",
+      "contacts" => "Contact",
+      "carts" => "Panier",
+      "checkout" => "Paiement",
+      "orders" => "Commandes"
+    }.fetch(controller_name, controller_name.to_s.humanize)
+  end
+
+  def page_action_label
+    return nil if action_name == "index"
+    {
+      "new" => "Nouveau",
+      "edit" => "Édition",
+      "show" => "Détail",
+      "admin" => "Administration"
+    }.fetch(action_name, action_name.to_s.humanize)
+  end
+
+  def meta_description_from(text)
+    truncated = truncate(strip_tags(text.to_s).squish, length: 155)
+    truncated.presence
+  end
 end

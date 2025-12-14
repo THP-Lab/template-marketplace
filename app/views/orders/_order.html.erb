@@ -16,7 +16,14 @@
 
   <div>
     <strong>Status:</strong>
-    <%= order.status %>
+    <%= order.status_label %>
   </div>
+
+  <% if order.tracking_number.present? %>
+    <div>
+      <strong>Numéro de suivi:</strong>
+      <%= order.tracking_number %>
+    </div>
+  <% end %>
 
 </div>

@@ -10,7 +10,12 @@
   <p>Paiement annulé.</p>
 <% end %>
 
-<% content_for :title, "Products" %>
+<% content_for :title, "Boutique" %>
+<% if @selected_category.present? %>
+  <% content_for :meta_description, "Créations #{@selected_category.to_s.titleize} : armures, bijoux et accessoires artisanaux en vente." %>
+<% else %>
+  <% content_for :meta_description, "Boutique médiévale : armures, bijoux, accessoires et vêtements forgés ou cousus à la main." %>
+<% end %>
 
 <h1>Products</h1>
 

@@ -38,7 +38,10 @@ class UserMailer < Devise::Mailer
     @user = order.user
     @url = "http://localhost:3000/orders/#{order.id}"
     @current_status = order.status_label
-    @previous_status = order.status_label(previous_status) if previous_status.present?
+    if previous_status.present? && previous_status != order.status
+      @previous_status = order.status_label(previous_status)
+    end
+    @tracking_number = order.tracking_number.presence
 
     mail(
       to: @user.email,

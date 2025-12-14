@@ -1,3 +1,6 @@
+<% content_for :title, "Mon panier" %>
+<% content_for :meta_description, "Vérifiez vos articles, quantités et montant avant de passer au paiement." %>
+
 <h1>Mon Panier</h1>
 
 <%= render partial: "carts/cart_contents", locals: { cart_products: @cart_products } %>

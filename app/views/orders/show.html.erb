@@ -1,4 +1,7 @@
 <p style="color: green"><%= notice %></p>
+<% content_for :title, "Commande ##{@order.id}" %>
+<% content_for :meta_description,
+                "Détails de la commande ##{@order.id} : statut #{@order.status}, montant #{number_to_currency(@order.total_amount, unit: '€')}." %>
 
 <%= render @order %>
 

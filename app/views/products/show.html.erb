@@ -1,3 +1,8 @@
+<% content_for :title, @product.title %>
+<% content_for :meta_description,
+                meta_description_from(@product.description) ||
+                "Découvrir #{@product.title}, une création artisanale disponible dans notre boutique médiévale." %>
+
 <%= render @product %>
 
 <div>

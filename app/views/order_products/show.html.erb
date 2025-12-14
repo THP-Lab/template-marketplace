@@ -1,4 +1,7 @@
 <p style="color: green"><%= notice %></p>
+<% content_for :title, "Produit de commande ##{@order_product.id}" %>
+<% content_for :meta_description,
+                "Ligne de commande ##{@order_product.id} pour la commande #{@order_product.order_id} : #{@order_product.product&.title || 'produit'}." %>
 
 <%= render @order_product %>
 

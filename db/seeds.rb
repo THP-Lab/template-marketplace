@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "faker"
+require "securerandom"
 
 Faker::Config.locale = "fr"
 
@@ -8,7 +9,7 @@ SEED_PASSWORD = ENV.fetch("SEED_PASSWORD", "123456")
 USER_EMAIL_DOMAIN = "mail.com"
 PRODUCT_CATEGORIES = %w[armure bijoux accessoires vetements armes].freeze
 EVENT_CATEGORIES = ["Marché médiéval", "Atelier", "Reconstitution", "En ligne"].freeze
-ORDER_STATUSES = %w[pending paid shipped cancelled].freeze
+ORDER_STATUSES = %w[pending paid processing shipped delivered canceled].freeze
 
 def separator(title)
   puts "\n#{'-' * 70}"
@@ -125,7 +126,8 @@ users.each do |user|
     end
 
     total = line_items.sum { |li| li.quantity * li.unit_price }
-    order.update!(total_amount: total)
+    tracking = order.status == "shipped" ? "TRK-#{SecureRandom.hex(5).upcase}" : nil
+    order.update!(total_amount: total, tracking_number: tracking)
     orders << order
   end
 end

@@ -16,6 +16,16 @@
     <% else %>
       <p>Le statut de votre commande est maintenant : <strong><%= @current_status %></strong>.</p>
     <% end %>
+    <% if @tracking_number.present? %>
+      <% if @order.status == "shipped" %>
+        <p>
+          Votre commande est expédiée. Voici votre numéro de suivi :
+          <strong><%= @tracking_number %></strong>.
+        </p>
+      <% else %>
+        <p>Numéro de suivi : <strong><%= @tracking_number %></strong>.</p>
+      <% end %>
+    <% end %>
     <p>
       Consultez le détail et le suivi : <a href="<%= @url %>"><%= @url %></a>
     </p>
