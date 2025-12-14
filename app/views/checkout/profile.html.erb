@@ -1,5 +1,8 @@
 <% content_for :title, "Coordonnées de commande" %>
 <% content_for :meta_description, "Complétez vos informations avant de procéder au paiement sécurisé de votre panier." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(checkout_page_schema(title: page_title_value, description: page_meta_description)) %>
+<% end %>
 
 <h1>Finaliser votre commande</h1>
 

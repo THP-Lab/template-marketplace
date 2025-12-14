@@ -2,6 +2,13 @@
 
 <% content_for :title, "Événements" %>
 <% content_for :meta_description, "Calendrier des marchés médiévaux, ateliers et rencontres à venir organisés par l'atelier." %>
+<% content_for :structured_data do %>
+  <% listed_events = @events.respond_to?(:limit) ? @events.first(20) : Array(@events).first(20) %>
+  <%= jsonld_tag(item_list_schema(listed_events,
+                                  type: "Event",
+                                  name: "Calendrier des événements",
+                                  url_proc: ->(event) { event_url(event) })) %>
+<% end %>
 
 <h1>Events</h1>
 

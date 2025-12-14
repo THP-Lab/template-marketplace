@@ -1,5 +1,8 @@
 <% content_for :title, "Contact" %>
 <% content_for :meta_description, "Envoyez vos demandes de devis, personnalisations ou questions via notre formulaire de contact." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(contact_page_schema) %>
+<% end %>
 
 <h1>Contactez-nous</h1>
 

@@ -2,6 +2,9 @@
 <% content_for :meta_description,
                 meta_description_from(@product.description) ||
                 "Découvrir #{@product.title}, une création artisanale disponible dans notre boutique médiévale." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(product_schema(@product)) %>
+<% end %>
 
 <%= render @product %>
 

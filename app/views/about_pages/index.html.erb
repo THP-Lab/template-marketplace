@@ -2,6 +2,19 @@
 
 <% content_for :title, "À propos" %>
 <% content_for :meta_description, "Notre histoire, l'atelier et l'équipe qui façonnent vos pièces médiévales sur mesure." %>
+<% content_for :structured_data do %>
+  <% sections = @about_pages.map { |about_page|
+    {
+      "@type": "CreativeWork",
+      "name": about_page.title,
+      "description": meta_description_from(about_page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: sections.presence,
+                                type: "AboutPage")) %>
+<% end %>
 
 <h1>About pages</h1>
 

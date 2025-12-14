@@ -2,6 +2,9 @@
 <% content_for :title, "Produit de commande ##{@order_product.id}" %>
 <% content_for :meta_description,
                 "Ligne de commande ##{@order_product.id} pour la commande #{@order_product.order_id} : #{@order_product.product&.title || 'produit'}." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(order_item_schema(@order_product)) %>
+<% end %>
 
 <%= render @order_product %>
 

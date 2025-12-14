@@ -2,6 +2,18 @@
 <% content_for :meta_description,
                 meta_description_from(@home_pages.map(&:content).join(" ")) ||
                 "Découvrir l'atelier, nos créations sur mesure et les engagements qualité de Template Marketplace." %>
+<% content_for :structured_data do %>
+  <% sections = @home_pages.map { |home_page|
+    {
+      "@type": "CreativeWork",
+      "name": home_page.title,
+      "description": meta_description_from(home_page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: sections.presence)) %>
+<% end %>
 
 <div class="container py-4">
   <div class="row">

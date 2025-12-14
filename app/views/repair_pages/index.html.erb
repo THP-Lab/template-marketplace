@@ -2,6 +2,22 @@
 
 <% content_for :title, "Réparation" %>
 <% content_for :meta_description, "Diagnostic, restauration fidèle et suivi transparent pour vos équipements médiévaux." %>
+<% content_for :structured_data do %>
+  <% repair_blocks = @repair_pages.map { |page|
+    {
+      "@type": "CreativeWork",
+      "name": page.title,
+      "description": meta_description_from(page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(service_schema(name: "Service de réparation médiévale",
+                                description: page_meta_description,
+                                area_served: "France")) %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: repair_blocks.presence,
+                                type: "CollectionPage")) %>
+<% end %>
 
 <h1>Repair pages</h1>
 
