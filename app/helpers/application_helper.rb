@@ -201,6 +201,35 @@ module ApplicationHelper
     safe_join(parts.compact, "\n")
   end
 
+  def canonical_link_tag
+    url = canonical_url
+    tag.link rel: "canonical", href: url if url.present?
+  end
+
+  def canonical_url
+    explicit = content_for(:canonical).presence if content_for?(:canonical)
+    return explicit if explicit
+    return unless respond_to?(:request) && request.present?
+
+    uri = URI.join(request.base_url, request.path.presence || "/")
+    query = canonical_query_string
+    uri.query = query if query.present?
+    uri.to_s
+  rescue StandardError
+    nil
+  end
+
+  def canonical_query_string
+    return if request.query_parameters.blank?
+
+    filtered = request.query_parameters.except(
+      :utm_source, :utm_medium, :utm_campaign, :utm_term, :utm_content,
+      :utm_id, :utm_source_platform, :utm_creative_format, :utm_marketing_tactic,
+      :fbclid, :gclid, :yclid
+    )
+    filtered.present? ? filtered.to_query : nil
+  end
+
   def jsonld_tag(payload)
     return if payload.blank?
 
