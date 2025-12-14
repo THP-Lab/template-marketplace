@@ -122,14 +122,7 @@ module ApplicationHelper
   end
 
   def order_status_options
-    [
-      ["En attente", "pending"],
-      ["Payée", "paid"],
-      ["En préparation", "processing"],
-      ["Expédiée", "shipped"],
-      ["Livrée", "delivered"],
-      ["Annulée", "canceled"]
-    ]
+    Order.status_options_for_select
   end
 
   def mask_email(email)

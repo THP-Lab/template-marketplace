@@ -33,6 +33,19 @@ class UserMailer < Devise::Mailer
     )
   end
 
+  def order_status_update_email(order, previous_status:)
+    @order = order
+    @user = order.user
+    @url = "http://localhost:3000/orders/#{order.id}"
+    @current_status = order.status_label
+    @previous_status = order.status_label(previous_status) if previous_status.present?
+
+    mail(
+      to: @user.email,
+      subject: "Mise à jour de votre commande ##{order.id} : #{@current_status}"
+    )
+  end
+
   def request_treatment_email(contact)
     @contact = contact
     @url = "http://localhost:3000/contacts/new"

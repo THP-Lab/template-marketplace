@@ -1,0 +1,14 @@
+Mise à jour de votre commande n°<%= @order.id %>
+================================================
+
+Bonjour <%= @user.email %>,
+
+<% if @previous_status.present? %>
+Le statut est passé de <%= @previous_status %> à <%= @current_status %>.
+<% else %>
+Le statut de votre commande est maintenant : <%= @current_status %>.
+<% end %>
+
+Consultez le détail et le suivi : <%= @url %>
+
+Merci pour votre confiance.
