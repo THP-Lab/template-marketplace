@@ -18,27 +18,42 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Utilisateur</th>
+                <th>Email utilisateur</th>
                 <th>Statut</th>
                 <th>Créé le</th>
                 <th class="text-end">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <% @carts.each do |cart| %>
+            <% @carts.each do |cart| %>
+              <tbody data-controller="toggle-details">
                 <tr id="<%= dom_id(cart) %>">
                   <td><%= cart.id %></td>
-                  <td><%= cart.user_id %></td>
+                  <td><%= cart.user.present? ? mask_email(cart.user.email) : "—" %></td>
                   <td><%= cart.status %></td>
                   <td><%= cart.created_at&.strftime("%d/%m/%Y %H:%M") %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
                       <%= link_to "Modifier", edit_cart_path(cart), class: "btn btn-primary" %>
+                      <button class="btn btn-outline-secondary" data-action="toggle-details#toggle" type="button">👁️</button>
                     </div>
                   </td>
                 </tr>
-              <% end %>
-            </tbody>
+                <tr class="d-none" data-toggle-details-target="details">
+                  <td colspan="5">
+                    <% if cart.user.present? %>
+                      <div class="small text-muted">
+                        <strong>Email:</strong> <%= cart.user.email %> |
+                        <strong>Prénom:</strong> <%= cart.user.first_name.presence || "—" %> |
+                        <strong>Nom:</strong> <%= cart.user.last_name.presence || "—" %> |
+                        <strong>ID utilisateur:</strong> <%= cart.user.id %>
+                      </div>
+                    <% else %>
+                      <div class="small text-muted">Utilisateur introuvable</div>
+                    <% end %>
+                  </td>
+                </tr>
+              </tbody>
+            <% end %>
           </table>
         </div>
       <% else %>
