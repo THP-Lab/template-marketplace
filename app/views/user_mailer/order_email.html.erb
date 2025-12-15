@@ -5,6 +5,9 @@
     </head>
     <body>
         <h1>Salut <%= @user.email %> et merci pour ta commande jeune templier !</h1>
+        <% if @order.order_date.present? %>
+          <p>Date de commande : <strong><%= @order.order_date.strftime("%d/%m/%Y") %></strong></p>
+        <% end %>
         <p>
         Tu viens de gagner 30 points d'armure grâce à ta commande n°<%= @order.id %>.
         </p>

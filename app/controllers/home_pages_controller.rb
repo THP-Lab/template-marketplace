@@ -1,11 +1,13 @@
 class HomePagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_home_page, only: %i[ edit update destroy ]
 
   # GET /home_pages or /home_pages.json
   def index
-    @home_pages = HomePage.all
-    @featured_products = Product.order(Arel.sql("RANDOM()")).limit(5).to_a
+    @home_pages = HomePage.order(:position)
+    if action_name == "admin"
+      @home_pages, @pagination = paginate(@home_pages)
+    end
   end
 
 
@@ -56,6 +58,19 @@ class HomePagesController < ApplicationController
     end
   end
 
+  alias_method :admin, :index
+
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    HomePage.transaction do
+      ids.each_with_index do |id, idx|
+        HomePage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_home_page
@@ -64,6 +79,6 @@ class HomePagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def home_page_params
-      params.expect(home_page: [ :title, :content, :position ])
+      params.expect(home_page: [ :title, :content, :position, :bloc_type, :target_id, :shop_scope, :image, :button_label ])
     end
 end

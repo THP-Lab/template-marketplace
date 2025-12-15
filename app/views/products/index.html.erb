@@ -4,7 +4,25 @@
   <p>Paiement annulé.</p>
 <% end %>
 
-<% content_for :title, "Products" %>
+<% if params[:success] %>
+  <p>Paiement réussi ! </p>
+<% elsif params[:canceled] %>
+  <p>Paiement annulé.</p>
+<% end %>
+
+<% content_for :title, "Boutique" %>
+<% if @selected_category.present? %>
+  <% content_for :meta_description, "Créations #{@selected_category.to_s.titleize} : armures, bijoux et accessoires artisanaux en vente." %>
+<% else %>
+  <% content_for :meta_description, "Boutique médiévale : armures, bijoux, accessoires et vêtements forgés ou cousus à la main." %>
+<% end %>
+<% content_for :structured_data do %>
+  <% listed_products = @products.respond_to?(:limit) ? @products.first(20) : Array(@products).first(20) %>
+  <%= jsonld_tag(item_list_schema(listed_products,
+                                  type: "Product",
+                                  name: "Catalogue produits",
+                                  url_proc: ->(product) { product_url(product) })) %>
+<% end %>
 
 <h1>Products</h1>
 

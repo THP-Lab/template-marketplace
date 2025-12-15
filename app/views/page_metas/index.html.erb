@@ -1,0 +1,57 @@
+<% content_for :title, "Admin - Descriptions" %>
+
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-4 col-xl-3">
+      <%= render_admin_sidebar %>
+    </div>
+    <div class="col-lg-8 col-xl-9">
+      <h1 class="mb-4">Descriptions & titres (SEO)</h1>
+
+      <% if notice.present? %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+
+      <div class="d-flex justify-content-end mb-3">
+        <%= link_to "Ajouter une description", new_page_meta_path, class: "btn btn-success" %>
+      </div>
+
+      <% if @page_metas.any? %>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @page_metas.each do |page_meta| %>
+                <tr>
+                  <td><code><%= page_meta.page_key %></code></td>
+                  <td><%= truncate(page_meta.meta_title.to_s, length: 60) %></td>
+                  <td><%= truncate(page_meta.meta_description.to_s, length: 120) %></td>
+                  <td class="text-end">
+                    <div class="btn-group btn-group-sm" role="group">
+                      <%= link_to "Modifier", edit_page_meta_path(page_meta), class: "btn btn-primary" %>
+                      <%= button_to "Supprimer",
+                                    page_meta_path(page_meta),
+                                    method: :delete,
+                                    data: { confirm: "Supprimer cette description ?" },
+                                    class: "btn btn-danger" %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <%= admin_pagination(@pagination) %>
+      <% else %>
+        <p class="text-muted">Aucune description enregistrée.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

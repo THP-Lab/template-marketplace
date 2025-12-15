@@ -1,10 +1,15 @@
 class EventsController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_event, only: %i[ show edit update destroy ]
 
   # GET /events or /events.json
   def index
-    @events = Event.all
+    scope = Event.order(event_date: :asc)
+    unless action_name == "admin"
+      scope = scope.where("event_date IS NULL OR event_date >= ?", Time.current)
+    end
+    @events = scope
+    @events, @pagination = paginate(@events) if action_name == "admin"
   end
 
   # GET /events/1 or /events/1.json
@@ -58,6 +63,8 @@ class EventsController < ApplicationController
     end
   end
 
+  alias_method :admin, :index
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
@@ -66,6 +73,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.expect(event: [ :user_id, :title, :category, :description, :event_date, :location, :image_url ])
+      params.expect(event: [ :user_id, :title, :category, :description, :event_date, :location, :image_url, :image ])
     end
 end

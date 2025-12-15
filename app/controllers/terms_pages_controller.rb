@@ -1,10 +1,13 @@
 class TermsPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_terms_page, only: %i[ edit update destroy ]
 
   # GET /terms_pages or /terms_pages.json
   def index
-    @terms_pages = TermsPage.all
+    @terms_pages = TermsPage.order(:position)
+    if action_name == "admin"
+      @terms_pages, @pagination = paginate(@terms_pages)
+    end
   end
 
   # GET /terms_pages/new
@@ -52,6 +55,19 @@ class TermsPagesController < ApplicationController
       format.html { redirect_to terms_pages_path, notice: "Terms page was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  alias_method :admin, :index
+
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    TermsPage.transaction do
+      ids.each_with_index do |id, idx|
+        TermsPage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
   end
 
   private

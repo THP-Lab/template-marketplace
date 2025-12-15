@@ -1,9 +1,13 @@
 class OrderProductsController < ApplicationController
+  before_action :require_admin!, only: [:admin]
   before_action :set_order_product, only: %i[ show edit update destroy ]
 
   # GET /order_products or /order_products.json
   def index
     @order_products = OrderProduct.all
+    if action_name == "admin"
+      @order_products, @pagination = paginate(@order_products)
+    end
   end
 
   # GET /order_products/1 or /order_products/1.json
@@ -56,6 +60,8 @@ class OrderProductsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.

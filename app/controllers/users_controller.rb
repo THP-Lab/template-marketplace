@@ -1,13 +1,19 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_admin!, only: [:admin]
   before_action :set_user
 
   def show
     @orders = @user.orders.order(created_at: :desc)
   end
 
+  def admin
+    @users = User.order(created_at: :desc)
+    @users, @pagination = paginate(@users)
+  end
+
   def update
-    @user = current_user
+    require_admin! unless @user == current_user
     respond_to do |format|
       if @user.update(user_params)
         format.html do
@@ -22,6 +28,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    require_admin! unless @user == current_user
     @user.destroy
     sign_out(@user)
     redirect_to root_path, notice: "Votre compte a bien été supprimé."
@@ -30,7 +37,11 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    @user = current_user
+    if current_user&.is_admin? && params[:id].present?
+      @user = User.find(params[:id])
+    else
+      @user = current_user
+    end
   end
 
   def user_params

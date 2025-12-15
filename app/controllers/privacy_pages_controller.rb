@@ -1,10 +1,13 @@
 class PrivacyPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_privacy_page, only: %i[ edit update destroy ]
 
   # GET /privacy_pages or /privacy_pages.json
   def index
-    @privacy_pages = PrivacyPage.all
+    @privacy_pages = PrivacyPage.order(:position)
+    if action_name == "admin"
+      @privacy_pages, @pagination = paginate(@privacy_pages)
+    end
   end
 
   # GET /privacy_pages/new
@@ -52,6 +55,19 @@ class PrivacyPagesController < ApplicationController
       format.html { redirect_to privacy_pages_path, notice: "Privacy page was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  alias_method :admin, :index
+
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    PrivacyPage.transaction do
+      ids.each_with_index do |id, idx|
+        PrivacyPage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
   end
 
   private

@@ -1,40 +1,85 @@
 <% content_for :title, "Accueil" %>
+<% content_for :meta_description,
+                meta_description_from(@home_pages.map(&:content).join(" ")) ||
+                "Découvrir l'atelier, nos créations sur mesure et les engagements qualité de Template Marketplace." %>
+<% content_for :structured_data do %>
+  <% sections = @home_pages.map { |home_page|
+    {
+      "@type": "CreativeWork",
+      "name": home_page.title,
+      "description": meta_description_from(home_page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: sections.presence)) %>
+<% end %>
 
-<h1>Home pages</h1>
-
-<div id="home_pages">
-  <% @home_pages.each do |home_page| %>
-    <%= render home_page %>
-  <% end %>
-</div>
-
-
-<section>
-  <% if @featured_products.any? %>
-    <div>
-      <h1>Produits à découvrir</h1>
-      <%= link_to "continuer sur la boutique", products_path %>
-    </div>
-
-    <div id="home-featured-products">
-      <% @featured_products.each do |product| %>
-        <div>
-          <h5><%= product.title %></h5>
-          <% if product.description.present? %>
-            <p><%= truncate(product.description, length: 140) %></p>
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <% @home_pages.each do |home_page| %>
+        <section class="mb-5 border-bottom pb-4">
+          <h2 class="h4 mb-3"><%= home_page.title %></h2>
+          <% case home_page.bloc_type %>
+          <% when "about", "repair" %>
+            <% if (target = home_page.target_record) %>
+              <% if target.image.attached? %>
+                <div class="mb-3">
+                  <%= attachment_thumb(target.image, variant_options: { resize_to_limit: [800, 400] }, class: "img-fluid rounded") %>
+                </div>
+              <% end %>
+              <p class="text-muted"><%= simple_format(target.content) %></p>
+              <% button_label = home_page.button_label.presence || "Découvrir" %>
+              <div class="mt-2">
+                <%= link_to button_label,
+                            home_page.bloc_type == "about" ? about_pages_path : repair_pages_path,
+                            class: "btn btn-primary" %>
+              </div>
+            <% else %>
+              <p class="text-muted">Bloc cible introuvable.</p>
+            <% end %>
+          <% when "shop" %>
+            <% products = home_page.shop_products %>
+            <% if products.any? %>
+              <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <% products.each do |product| %>
+                  <div class="col">
+                    <div class="card h-100 shadow-sm">
+                      <% if product.image.attached? %>
+                        <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [600, 360] }, class: "card-img-top") %>
+                      <% end %>
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title"><%= product.title %></h5>
+                        <% if product.description.present? %>
+                          <p class="card-text text-muted"><%= truncate(product.description, length: 120) %></p>
+                        <% end %>
+                        <% if product.price.present? %>
+                          <p class="fw-semibold mt-auto"><%= number_to_currency(product.price, unit: "€") %></p>
+                        <% end %>
+                        <%= link_to "Voir le produit", product_path(product), class: "btn btn-outline-primary btn-sm mt-2" %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="mt-3">
+                <% button_label = home_page.button_label.presence || "Accéder à la boutique" %>
+                <%= link_to button_label, products_path, class: "btn btn-primary" %>
+              </div>
+            <% else %>
+              <p class="text-muted">Aucun produit disponible pour ce bloc.</p>
+            <% end %>
           <% else %>
-            <div></div>
+            <% if home_page.image.attached? %>
+              <div class="mb-3">
+                <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [800, 400] }, class: "img-fluid rounded") %>
+              </div>
+            <% end %>
+            <p class="text-muted"><%= simple_format(home_page.content) %></p>
           <% end %>
-          <% if product.price.present? %>
-            <p><%= number_to_currency(product.price, unit: "€") %></p>
-          <% end %>
-          <%= link_to "Voir le produit", product_path(product) %>
-        </div>
+        </section>
       <% end %>
     </div>
-  <% else %>
-    <div>
-      <%= link_to "continuer sur la boutique", products_path %>
-    </div>
-  <% end %>
-</section>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Mise à jour de votre commande n°<%= @order.id %></h1>
+    <p>Bonjour <%= @user.email %>,</p>
+    <% if @order.order_date.present? %>
+      <p>Date de commande : <strong><%= @order.order_date.strftime("%d/%m/%Y") %></strong></p>
+    <% end %>
+    <% if @previous_status.present? %>
+      <p>
+        Le statut est passé de
+        <strong><%= @previous_status %></strong>
+        à
+        <strong><%= @current_status %></strong>.
+      </p>
+    <% else %>
+      <p>Le statut de votre commande est maintenant : <strong><%= @current_status %></strong>.</p>
+    <% end %>
+    <% if @tracking_number.present? %>
+      <% if @order.status == "shipped" %>
+        <p>
+          Votre commande est expédiée. Voici votre numéro de suivi :
+          <strong><%= @tracking_number %></strong>.
+        </p>
+      <% else %>
+        <p>Numéro de suivi : <strong><%= @tracking_number %></strong>.</p>
+      <% end %>
+    <% end %>
+    <p>
+      Consultez le détail et le suivi : <a href="<%= @url %>"><%= @url %></a>
+    </p>
+    <p>Merci pour votre confiance.</p>
+  </body>
+</html>

@@ -1,10 +1,13 @@
 class RepairPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_repair_page, only: %i[ edit update destroy ]
 
   # GET /repair_pages or /repair_pages.json
   def index
-    @repair_pages = RepairPage.all
+    @repair_pages = RepairPage.order(:position)
+    if action_name == "admin"
+      @repair_pages, @pagination = paginate(@repair_pages)
+    end
   end
 
   # GET /repair_pages/new
@@ -54,6 +57,19 @@ class RepairPagesController < ApplicationController
     end
   end
 
+  alias_method :admin, :index
+
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    RepairPage.transaction do
+      ids.each_with_index do |id, idx|
+        RepairPage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_repair_page
@@ -62,6 +78,6 @@ class RepairPagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def repair_page_params
-      params.expect(repair_page: [ :title, :content, :position ])
+      params.expect(repair_page: [ :title, :content, :position, :image ])
     end
 end

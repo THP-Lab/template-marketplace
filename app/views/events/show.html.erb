@@ -1,4 +1,12 @@
 <p style="color: green"><%= notice %></p>
+<% content_for :title, @event.title %>
+<% category_label = @event.category.presence || "événement" %>
+<% content_for :meta_description,
+                meta_description_from(@event.description) ||
+                "#{@event.title} : #{category_label.downcase} animé par notre atelier#{@event.location.presence ? " à #{@event.location}" : ""}." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(event_schema(@event)) %>
+<% end %>
 
 <%= render @event %>
 

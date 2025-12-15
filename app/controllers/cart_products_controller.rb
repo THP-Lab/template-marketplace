@@ -1,10 +1,16 @@
 class CartProductsController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_admin!, only: [:admin]
   before_action :set_cart_product, only: %i[ show edit update destroy ]
 
   # GET /cart_products or /cart_products.json
   def index
-    @cart_products = CartProduct.all
+    if action_name == "admin"
+      cart_scope = Cart.includes(:user, cart_products: :product).order(created_at: :desc)
+      @carts, @pagination = paginate(cart_scope)
+    else
+      @cart_products = CartProduct.includes(:cart, :product).all
+    end
   end
 
   # GET /cart_products/1 or /cart_products/1.json
@@ -87,6 +93,8 @@ class CartProductsController < ApplicationController
       format.html { redirect_to cart_path(cart), notice: "Produit supprimé du panier." }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.

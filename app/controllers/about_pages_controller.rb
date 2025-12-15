@@ -1,10 +1,13 @@
 class AboutPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_about_page, only: %i[ edit update destroy ]
 
   # GET /about_pages or /about_pages.json
   def index
-    @about_pages = AboutPage.all
+    @about_pages = AboutPage.order(:position)
+    if action_name == "admin"
+      @about_pages, @pagination = paginate(@about_pages)
+    end
   end
 
   # GET /about_pages/new
@@ -54,6 +57,19 @@ class AboutPagesController < ApplicationController
     end
   end
 
+  alias_method :admin, :index
+
+  def reorder
+    require_admin!
+    ids = params[:ids] || []
+    AboutPage.transaction do
+      ids.each_with_index do |id, idx|
+        AboutPage.where(id: id).update_all(position: idx + 1)
+      end
+    end
+    head :ok
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_about_page
@@ -62,6 +78,6 @@ class AboutPagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def about_page_params
-      params.expect(about_page: [ :title, :content, :position ])
+      params.expect(about_page: [ :title, :content, :position, :image ])
     end
 end

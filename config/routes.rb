@@ -1,18 +1,55 @@
 Rails.application.routes.draw do
-  resources :repair_pages
-  resources :about_pages
-  resources :terms_pages
-  resources :privacy_pages
-  resources :home_pages
+  namespace :admin do
+    root to: "dashboard#index"
+  end
+  resources :repair_pages do
+    collection { patch :reorder }
+    collection { get :admin }
+  end
+  resources :page_metas, path: "descriptions"
+  resources :about_pages do
+    collection { patch :reorder }
+    collection { get :admin }
+  end
+  resources :terms_pages do
+    collection { patch :reorder }
+    collection { get :admin }
+  end
+  resources :privacy_pages do
+    collection { patch :reorder }
+    collection { get :admin }
+  end
+  resources :home_pages do
+    collection { patch :reorder }
+    collection { get :admin }
+  end
   devise_for :users
-  resources :order_products
-  resources :orders
-  resources :cart_products
-  resources :carts
-  resources :products
-  resources :users
+  resources :order_products do
+    collection { get :admin }
+  end
+  resources :orders do
+    member { get :invoice }
+    collection { get :admin }
+  end
+  resource :company_information, only: [:update], path: "information" do
+    get :admin
+  end
+  resources :cart_products do
+    collection { get :admin }
+  end
+  resources :carts do
+    collection { get :admin }
+  end
+  resources :products do
+    collection { get :admin }
+  end
+  resources :users do
+    collection { get :admin }
+  end
   resources :contacts, only: %i[new create]
-  resources :events
+  resources :events do
+    collection { get :admin }
+  end
   get "checkout/profile", to: "checkout#profile", as: :checkout_profile
   post "checkout", to: "checkout#create"
   get "checkout/success", to: "checkout#success", as: :checkout_success

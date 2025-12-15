@@ -1,4 +1,7 @@
 <p style="color: green"><%= notice %></p>
+<% content_for :title, "Produit du panier ##{@cart_product.id}" %>
+<% content_for :meta_description,
+                "Détail du produit #{@cart_product.product&.title || 'associé'} dans un panier client." %>
 
 <%= render @cart_product %>
 

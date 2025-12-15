@@ -1,0 +1,36 @@
+<% heading_id = "#{section[:id]}-heading" %>
+<% collapse_id = "#{section[:id]}-collapse" %>
+
+<div class="accordion-item">
+  <h2 class="accordion-header" id="<%= heading_id %>">
+    <button class="accordion-button collapsed d-flex align-items-center gap-2"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="<%= "##{collapse_id}" %>"
+            data-action="click->admin-accordion#toggle"
+            data-admin-accordion-target="button"
+            data-turbo="false"
+            aria-expanded="false"
+            aria-controls="<%= collapse_id %>">
+      <% if section[:icon].present? %>
+        <i class="bi <%= section[:icon] %>"></i>
+      <% end %>
+      <span><%= section[:title] %></span>
+    </button>
+  </h2>
+  <div id="<%= collapse_id %>"
+       class="accordion-collapse collapse"
+       aria-labelledby="<%= heading_id %>"
+       data-bs-parent="<%= "##{accordion_id}" %>">
+    <div class="accordion-body py-3">
+      <% if section[:description].present? %>
+        <p class="small text-muted mb-3"><%= section[:description] %></p>
+      <% end %>
+      <div class="d-grid gap-2">
+        <% section.fetch(:links, []).each do |link| %>
+          <%= link_to link[:label], link[:path], class: "btn btn-outline-primary btn-sm text-start" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

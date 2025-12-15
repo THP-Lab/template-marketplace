@@ -1,9 +1,13 @@
 class CartsController < ApplicationController
+  before_action :require_admin!, only: [:admin]
   before_action :set_cart, only: %i[ show edit update destroy ]
 
   # GET /carts or /carts.json
   def index
-    @carts = Cart.all
+    @carts = Cart.includes(:user)
+    if action_name == "admin"
+      @carts, @pagination = paginate(@carts)
+    end
   end
 
   # GET /carts/1 or /carts/1.json
@@ -58,6 +62,8 @@ class CartsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  alias_method :admin, :index
 
   private
     # Use callbacks to share common setup or constraints between actions.

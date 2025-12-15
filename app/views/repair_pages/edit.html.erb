@@ -1,12 +1,11 @@
-<% content_for :title, "Editing repair page" %>
+<% content_for :title, "Admin - Modifier une page réparation" %>
 
-<h1>Editing repair page</h1>
+<%= admin_page(title: "Modifier une page réparation") do %>
+  <%= render "form", repair_page: @repair_page %>
 
-<%= render "form", repair_page: @repair_page %>
-
-<br>
-
-<div>
-  <%= link_to "Show this repair page", @repair_page %> |
-  <%= link_to "Back to repair pages", repair_pages_path %>
-</div>
+  <div class="mt-3 d-flex gap-2">
+    <%= link_to "Voir la page", @repair_page, class: "btn btn-outline-secondary btn-sm" %>
+    <%= link_to "Retour aux pages réparation", admin_repair_pages_path, class: "btn btn-outline-secondary btn-sm" %>
+    <%= button_to "Supprimer", @repair_page, method: :delete, data: { confirm: "Supprimer cette page réparation ?" }, class: "btn btn-danger btn-sm" %>
+  </div>
+<% end %>
