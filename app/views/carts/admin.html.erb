@@ -33,7 +33,6 @@
                   <td><%= cart.created_at&.strftime("%d/%m/%Y %H:%M") %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "Modifier", edit_cart_path(cart), class: "btn btn-primary" %>
                       <button class="btn btn-outline-secondary" data-action="toggle-details#toggle" type="button">👁️</button>
                     </div>
                   </td>
@@ -61,7 +60,6 @@
       <% end %>
 
       <div class="d-flex justify-content-end mt-3">
-        <%= link_to "Créer un panier", new_cart_path, class: "btn btn-success" %>
       </div>
       <%= admin_pagination(@pagination) %>
     </div>
