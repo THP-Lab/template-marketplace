@@ -1,0 +1,51 @@
+<%= form_with(model: page_meta,
+              url: page_meta.persisted? ? page_meta_path(page_meta) : page_metas_path,
+              local: true) do |form| %>
+  <% if page_meta.errors.any? %>
+    <div class="alert alert-danger">
+      <p class="mb-1"><%= pluralize(page_meta.errors.count, "erreur") %> empêchent l’enregistrement :</p>
+      <ul class="mb-0">
+        <% page_meta.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :page_key, "Page (clé)", class: "form-label" %>
+    <%= form.text_field :page_key,
+                        class: "form-control",
+                        list: "page_meta_keys",
+                        placeholder: "ex: home_pages#index" %>
+    <div class="form-text">Choisissez une page ou saisissez une clé custom (format controller#action).</div>
+    <datalist id="page_meta_keys">
+      <option value="home_pages#index">Accueil</option>
+      <option value="repair_pages#index">Réparation (index)</option>
+      <option value="about_pages#index">À propos (index)</option>
+      <option value="terms_pages#index">CGV / CGU (index)</option>
+      <option value="privacy_pages#index">Politique (index)</option>
+      <option value="contacts#new">Contact</option>
+      <option value="carts#index">Panier (index)</option>
+      <option value="events#index">Événements (index)</option>
+      <option value="events#show">Événements (fiche)</option>
+      <option value="products#index">Produits (index)</option>
+      <option value="products#show">Produits (fiche)</option>
+    </datalist>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :meta_title, "Titre unique", class: "form-label" %>
+    <%= form.text_field :meta_title, class: "form-control", placeholder: "Titre spécifique à la page" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :meta_description, "Meta description", class: "form-label" %>
+    <%= form.text_area :meta_description, class: "form-control", rows: 3, placeholder: "Description courte pour le SEO" %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Annuler", page_metas_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

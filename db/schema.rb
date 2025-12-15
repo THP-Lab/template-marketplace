@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_111940) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -138,6 +138,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_111940) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "page_metas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "meta_description"
+    t.string "meta_title"
+    t.string "page_key", null: false
+    t.datetime "updated_at", null: false
+    t.index ["page_key"], name: "index_page_metas_on_page_key", unique: true
   end
 
   create_table "privacy_pages", force: :cascade do |t|

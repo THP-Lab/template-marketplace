@@ -80,6 +80,16 @@ module ApplicationHelper
           { label: "Blocs légaux", path: admin_terms_pages_path },
           { label: "Ajouter une section légale", path: new_terms_page_path }
         ]
+      },
+      {
+        id: "page-metas",
+        title: "Description",
+        icon: "bi-card-text",
+        description: "Titres et meta descriptions par page.",
+        links: [
+          { label: "Descriptions", path: page_metas_path },
+          { label: "Ajouter une description", path: new_page_meta_path }
+        ]
       }
     ]
   end
@@ -128,16 +138,19 @@ module ApplicationHelper
   end
 
   def site_name
-    "Template Marketplace"
+    CompanyInformation.instance.legal_name.presence || "Template Marketplace"
   end
 
   def page_title_value
-    raw_title = content_for(:title).presence || default_page_title
-    [raw_title, site_name].compact.uniq.join(" | ")
+    raw_title = content_for(:title).presence || page_meta_record&.meta_title.presence || default_page_title
+    suffix = site_name
+    [raw_title, suffix].compact.uniq.join(" | ")
   end
 
   def page_meta_description
-    content_for(:meta_description).presence || default_meta_description
+    content_for(:meta_description).presence ||
+      page_meta_record&.meta_description.presence ||
+      default_meta_description
   end
 
   def default_page_title
@@ -148,8 +161,16 @@ module ApplicationHelper
 
   def default_meta_description
     base = "Boutique et atelier d'inspiration médiévale : créations sur mesure, réparations et équipements prêts à l'emploi."
-    title = content_for(:title).presence || default_page_title
+    title = content_for(:title).presence || page_meta_record&.meta_title.presence || default_page_title
     [title, base].compact.join(" — ")
+  end
+
+  def page_meta_record
+    @page_meta_record ||= PageMeta.for(current_page_key)
+  end
+
+  def current_page_key
+    "#{controller_name}##{action_name}"
   end
 
   def controller_page_label

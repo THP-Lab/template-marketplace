@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     collection { patch :reorder }
     collection { get :admin }
   end
+  resources :page_metas, path: "descriptions"
   resources :about_pages do
     collection { patch :reorder }
     collection { get :admin }
