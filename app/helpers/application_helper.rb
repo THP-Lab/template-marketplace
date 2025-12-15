@@ -42,6 +42,15 @@ module ApplicationHelper
         ]
       },
       {
+        id: "company-information",
+        title: "Information",
+        icon: "bi-info-circle",
+        description: "Coordonnées et mentions légales pour les factures.",
+        links: [
+          { label: "Information", path: admin_company_information_path }
+        ]
+      },
+      {
         id: "repair-pages",
         title: "Service réparation",
         icon: "bi-tools",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_14_195214) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_102018) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -64,6 +64,22 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_14_195214) do
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
+  create_table "company_informations", force: :cascade do |t|
+    t.text "additional_info"
+    t.string "address_line1"
+    t.string "address_line2"
+    t.string "city"
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "legal_name"
+    t.string "phone"
+    t.string "siret"
+    t.datetime "updated_at", null: false
+    t.string "vat_number"
+    t.string "zipcode"
   end
 
   create_table "contacts", force: :cascade do |t|

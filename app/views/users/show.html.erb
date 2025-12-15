@@ -73,6 +73,9 @@
         Statut : <%= order.status %> –
         Montant total : <%= order.total_amount %> –
         Date : <%= order.order_date&.strftime("%d/%m/%Y") %>
+        <%= link_to "Télécharger la facture PDF",
+                    invoice_order_path(order),
+                    data: { turbo: false } %>
       </li>
     <% end %>
   </ul>

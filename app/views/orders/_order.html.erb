@@ -26,4 +26,10 @@
     </div>
   <% end %>
 
+  <div class="mt-2">
+    <%= link_to "Télécharger la facture PDF",
+                invoice_order_path(order),
+                class: "btn btn-outline-secondary btn-sm",
+                data: { turbo: false } %>
+  </div>
 </div>

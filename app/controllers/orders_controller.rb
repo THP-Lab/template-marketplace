@@ -1,6 +1,8 @@
 class OrdersController < ApplicationController
   before_action :require_admin!, only: [:admin]
-  before_action :set_order, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: [:invoice, :index, :show, :new, :edit, :create, :update, :destroy]
+  before_action :set_order, only: %i[ show edit update destroy invoice ]
+  before_action :authorize_invoice!, only: [:invoice]
 
   # GET /orders or /orders.json
   def index
@@ -66,10 +68,25 @@ class OrdersController < ApplicationController
 
   alias_method :admin, :index
 
+  def invoice
+    company_information = CompanyInformation.instance
+    pdf = InvoicePdf.new(@order, company_information)
+    send_data pdf.render,
+              filename: "facture-commande-#{@order.id}.pdf",
+              type: "application/pdf",
+              disposition: "attachment"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
-      @order = Order.find(params[:id])
+      @order = Order.includes(:user, order_products: :product).find(params[:id])
+    end
+
+    def authorize_invoice!
+      return if current_user&.is_admin? || @order.user_id == current_user&.id
+
+      redirect_to root_path, alert: "Accès refusé"
     end
 
     # Only allow a list of trusted parameters through.

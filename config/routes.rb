@@ -27,7 +27,11 @@ Rails.application.routes.draw do
     collection { get :admin }
   end
   resources :orders do
+    member { get :invoice }
     collection { get :admin }
+  end
+  resource :company_information, only: [:update], path: "information" do
+    get :admin
   end
   resources :cart_products do
     collection { get :admin }

@@ -58,7 +58,13 @@
                   </td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "Voir", order_path(order), class: "btn btn-outline-secondary" %>
+                      <%= link_to invoice_order_path(order),
+                                  class: "btn btn-outline-secondary",
+                                  title: "Télécharger la facture PDF",
+                                  aria: { label: "Télécharger la facture PDF" },
+                                  data: { turbo: false } do %>
+                        <i class="bi bi-download"></i>
+                      <% end %>
                       <%= link_to "Modifier", edit_order_path(order), class: "btn btn-primary" %>
                       <button class="btn btn-outline-secondary" data-action="toggle-details#toggle" type="button" title="Voir les informations utilisateur">👁️</button>
                     </div>
