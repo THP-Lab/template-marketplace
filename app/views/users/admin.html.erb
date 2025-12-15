@@ -30,10 +30,9 @@
                   <td><%= user.id %></td>
                   <td><%= mask_email(user.email) %></td>
                   <td><%= mask_name(user.first_name, user.last_name) %></td>
-                  <td><%= l(user.created_at, format: :short) %></td>
+                  <td><%= user.created_at&.strftime("%d/%m/%Y") %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">
-                      <%= button_to "Supprimer", user_path(user), method: :delete, data: { confirm: "Supprimer ce compte ?" }, class: "btn btn-danger" %>
                       <button class="btn btn-outline-secondary" data-action="toggle-details#toggle" type="button">👁️</button>
                     </div>
                   </td>
