@@ -25,12 +25,12 @@
                 <th class="text-end">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <% @orders.each do |order| %>
+            <% @orders.each do |order| %>
+              <tbody data-controller="toggle-details">
                 <tr id="<%= dom_id(order) %>">
                   <td><%= order.id %></td>
-                  <td><%= order.user_id %></td>
-                  <td><%= order.order_date.present? ? l(order.order_date, format: :short) : "—" %></td>
+                  <td><%= order.user.present? ? mask_email(order.user.email) : "—" %></td>
+                  <td><%= order.order_date.present? ? l(order.order_date, format: "%d/%m/%Y") : "—" %></td>
                   <td class="text-end"><%= order.total_amount.present? ? number_to_currency(order.total_amount, unit: "€") : "—" %></td>
                   <td>
                     <%= form_with(model: order,
@@ -60,11 +60,26 @@
                     <div class="btn-group btn-group-sm" role="group">
                       <%= link_to "Voir", order_path(order), class: "btn btn-outline-secondary" %>
                       <%= link_to "Modifier", edit_order_path(order), class: "btn btn-primary" %>
+                      <button class="btn btn-outline-secondary" data-action="toggle-details#toggle" type="button" title="Voir les informations utilisateur">👁️</button>
                     </div>
                   </td>
                 </tr>
-              <% end %>
-            </tbody>
+                <tr class="d-none" data-toggle-details-target="details">
+                  <td colspan="6">
+                    <% if order.user.present? %>
+                      <div class="small text-muted">
+                        Email : <%= order.user.email %> |
+                        Prénom : <%= order.user.first_name.presence || "—" %> |
+                        Nom : <%= order.user.last_name.presence || "—" %> |
+                        ID utilisateur : <%= order.user.id %>
+                      </div>
+                    <% else %>
+                      <div class="small text-muted">Utilisateur introuvable</div>
+                    <% end %>
+                  </td>
+                </tr>
+              </tbody>
+            <% end %>
           </table>
         </div>
       <% else %>

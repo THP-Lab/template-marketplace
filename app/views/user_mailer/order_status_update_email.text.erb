@@ -3,6 +3,10 @@ Mise à jour de votre commande n°<%= @order.id %>
 
 Bonjour <%= @user.email %>,
 
+<% if @order.order_date.present? %>
+Date de commande : <%= @order.order_date.strftime("%d/%m/%Y") %>.
+<% end %>
+
 <% if @previous_status.present? %>
 Le statut est passé de <%= @previous_status %> à <%= @current_status %>.
 <% else %>

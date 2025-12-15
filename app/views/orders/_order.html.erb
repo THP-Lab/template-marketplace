@@ -6,7 +6,7 @@
 
   <div>
     <strong>Order date:</strong>
-    <%= order.order_date %>
+    <%= order.order_date.present? ? order.order_date.strftime("%d/%m/%Y") : "—" %>
   </div>
 
   <div>
