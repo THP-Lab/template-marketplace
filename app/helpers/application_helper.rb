@@ -22,16 +22,6 @@ module ApplicationHelper
         ]
       },
       {
-        id: "carts",
-        title: "Paniers",
-        icon: "bi-bag",
-        description: "Consultez les paniers des utilisateurs et leurs contenus.",
-        links: [
-          { label: "Liste des paniers", path: admin_carts_path },
-          { label: "Plus d'informations", path: admin_cart_products_path }
-        ]
-      },
-      {
         id: "orders",
         title: "Commandes",
         icon: "bi-receipt",
@@ -42,23 +32,23 @@ module ApplicationHelper
         ]
       },
       {
-        id: "repair-pages",
-        title: "Service réparation",
-        icon: "bi-tools",
-        description: "Pages dédiées aux offres de réparation.",
-        links: [
-          { label: "Blocs réparation", path: admin_repair_pages_path },
-          { label: "Nouveau bloc réparation", path: new_repair_page_path }
-        ]
-      },
-      {
         id: "home-pages",
         title: "Page d’accueil",
         icon: "bi-house-door",
         description: "Sections et blocs de la page d’accueil.",
         links: [
           { label: "Blocs d’accueil", path: admin_home_pages_path },
-          { label: "Ajouter un bloc d’accueil", path: new_home_page_path }
+          { label: "Ajouter une section d’accueil", path: new_home_page_path }
+        ]
+      },
+      {
+        id: "repair-pages",
+        title: "Service réparation",
+        icon: "bi-tools",
+        description: "Pages dédiées aux offres de réparation.",
+        links: [
+          { label: "Blocs réparation", path: admin_repair_pages_path },
+          { label: "Ajouter une section réparation", path: new_repair_page_path }
         ]
       },
       {
@@ -68,7 +58,7 @@ module ApplicationHelper
         description: "Sections de la page À propos.",
         links: [
           { label: "Blocs À propos", path: admin_about_pages_path },
-          { label: "Nouveau bloc À propos", path: new_about_page_path }
+          { label: "Ajouter une section À propos", path: new_about_page_path }
         ]
       },
       {
@@ -78,7 +68,7 @@ module ApplicationHelper
         description: "Contenus de politique de confidentialité.",
         links: [
           { label: "Blocs confidentialité", path: admin_privacy_pages_path },
-          { label: "Nouveau bloc confidentialité", path: new_privacy_page_path }
+          { label: "Ajouter une section confidentialité", path: new_privacy_page_path }
         ]
       },
       {
@@ -88,7 +78,7 @@ module ApplicationHelper
         description: "Pages de conditions d’utilisation et ventes.",
         links: [
           { label: "Blocs légaux", path: admin_terms_pages_path },
-          { label: "Nouveau bloc légal", path: new_terms_page_path }
+          { label: "Ajouter une section légale", path: new_terms_page_path }
         ]
       }
     ]
