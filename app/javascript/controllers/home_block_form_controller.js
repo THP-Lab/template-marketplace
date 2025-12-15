@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Gère l'affichage conditionnel des champs en fonction du type de bloc.
 export default class extends Controller {
-  static targets = ["blocType", "targetSection", "shopSection", "contentSection", "targetSelect"]
+  static targets = ["blocType", "targetSection", "shopSection", "contentSection", "buttonSection", "targetSelect"]
 
   connect() {
     this.aboutOptions = this._parseOptions(this.targetSelectTarget.dataset.aboutOptions)
@@ -16,6 +16,7 @@ export default class extends Controller {
     this._toggleSection(this.targetSectionTarget, ["about", "repair"].includes(type))
     this._toggleSection(this.shopSectionTarget, type === "shop")
     this._toggleSection(this.contentSectionTarget, type === "custom")
+    this._toggleSection(this.buttonSectionTarget, ["about", "repair", "shop"].includes(type))
     this._populateTargetOptions(type)
   }
 

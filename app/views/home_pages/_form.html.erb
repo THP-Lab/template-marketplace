@@ -63,6 +63,12 @@
     <div class="form-text">S’affiche uniquement pour les blocs personnalisés.</div>
   </div>
 
+  <div class="mb-3" data-home-block-form-target="buttonSection">
+    <%= form.label :button_label, "Texte du bouton", class: "form-label" %>
+    <%= form.text_field :button_label, class: "form-control", placeholder: "Ex : Découvrir" %>
+    <div class="form-text">Affiché sur le bouton du bloc (boutique, À propos, réparation).</div>
+  </div>
+
   <div class="mb-3">
     <%= form.label :image, "Image du bloc", class: "form-label" %>
     <%= form.file_field :image, class: "form-control" %>

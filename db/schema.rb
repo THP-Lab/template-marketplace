@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_102018) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_111940) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -107,6 +107,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_102018) do
 
   create_table "home_pages", force: :cascade do |t|
     t.string "bloc_type", default: "custom", null: false
+    t.string "button_label"
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
