@@ -1,4 +1,4 @@
-<% content_for :title, "Admin - Produits du panier" %>
+<% content_for :title, "Admin - Paniers : informations" %>
 
 <div class="container py-4">
   <div class="row g-4">
@@ -6,49 +6,89 @@
       <%= render_admin_sidebar %>
     </div>
     <div class="col-lg-8 col-xl-9">
-      <h1 class="mb-4">Produits de panier (administration)</h1>
+      <h1 class="mb-4">Paniers - informations détaillées</h1>
 
       <% if notice.present? %>
         <div class="alert alert-success"><%= notice %></div>
       <% end %>
 
-      <% if @cart_products.any? %>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover align-middle">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Panier</th>
-                <th>Produit</th>
-                <th class="text-end">Quantité</th>
-                <th class="text-end">Prix unitaire</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @cart_products.each do |cart_product| %>
-                <tr id="<%= dom_id(cart_product) %>">
-                  <td><%= cart_product.id %></td>
-                  <td><%= cart_product.cart_id %></td>
-                  <td><%= cart_product.product_id %></td>
-                  <td class="text-end"><%= cart_product.quantity %></td>
-                  <td class="text-end"><%= cart_product.unit_price.present? ? number_to_currency(cart_product.unit_price, unit: "€") : "—" %></td>
-                  <td class="text-end">
-                    <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "Modifier", edit_cart_product_path(cart_product), class: "btn btn-primary" %>
+      <% if @carts.present? %>
+        <div class="row g-4">
+          <% @carts.each do |cart| %>
+            <% cart_products = cart.cart_products %>
+            <% total_quantity = cart_products.sum { |cart_product| cart_product.quantity.to_i } %>
+            <% cart_total = cart_products.sum do |cart_product|
+                 unit_price = cart_product.unit_price || cart_product.product&.price || 0
+                 unit_price.to_d * cart_product.quantity.to_i
+               end %>
+
+            <div class="col-12">
+              <div class="card shadow-sm h-100" data-controller="toggle-details">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                  <div>
+                    <div class="fw-semibold mb-1">Panier #<%= cart.id %></div>
+                    <div class="text-muted small">
+                      Statut : <%= cart.status.presence || "—" %> |
+                      Créé le : <%= cart.created_at&.strftime("%d/%m/%Y %H:%M") %> |
+                      Utilisateur : <%= cart.user.present? ? mask_email(cart.user.email) : "—" %>
                     </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-light text-dark border">Articles : <%= total_quantity %></span>
+                    <span class="badge bg-primary">Total : <%= number_to_currency(cart_total, unit: "€") %></span>
+                    <button class="btn btn-outline-secondary btn-sm" data-action="toggle-details#toggle" type="button" title="Voir les informations utilisateur">👁️</button>
+                  </div>
+                </div>
+
+                <div class="card-body p-0">
+                  <% if cart_products.any? %>
+                    <div class="list-group list-group-flush">
+                      <% cart_products.each do |cart_product| %>
+                        <% product = cart_product.product %>
+                        <% unit_price = cart_product.unit_price || product&.price || 0 %>
+                        <% line_total = unit_price.to_d * cart_product.quantity.to_i %>
+
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                          <div>
+                            <div class="fw-semibold"><%= product&.title.presence || "Produit ##{cart_product.product_id}" %></div>
+                            <div class="text-muted small">
+                              Quantité : <%= cart_product.quantity || 0 %> |
+                              Prix unitaire : <%= number_to_currency(unit_price, unit: "€") %>
+                            </div>
+                          </div>
+                          <div class="text-end">
+                            <div class="fw-semibold"><%= number_to_currency(line_total, unit: "€") %></div>
+                            <div class="text-muted small">ID produit : <%= cart_product.product_id %></div>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="p-3 text-muted">Aucun produit dans ce panier.</div>
+                  <% end %>
+                </div>
+
+                <div class="card-footer d-none" data-toggle-details-target="details">
+                  <% if cart.user.present? %>
+                    <div class="small text-muted">
+                      Email : <%= cart.user.email %> |
+                      Prénom : <%= cart.user.first_name.presence || "—" %> |
+                      Nom : <%= cart.user.last_name.presence || "—" %> |
+                      ID utilisateur : <%= cart.user.id %>
+                    </div>
+                  <% else %>
+                    <div class="small text-muted">Utilisateur introuvable</div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
       <% else %>
-        <p class="text-muted">Aucun produit de panier.</p>
+        <p class="text-muted">Aucun panier.</p>
       <% end %>
 
       <div class="d-flex justify-content-end mt-3">
-        <%= link_to "Ajouter un produit de panier", new_cart_product_path, class: "btn btn-success" %>
       </div>
       <%= admin_pagination(@pagination) %>
     </div>

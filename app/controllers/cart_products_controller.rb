@@ -5,9 +5,11 @@ class CartProductsController < ApplicationController
 
   # GET /cart_products or /cart_products.json
   def index
-    @cart_products = CartProduct.all
     if action_name == "admin"
-      @cart_products, @pagination = paginate(@cart_products)
+      cart_scope = Cart.includes(:user, cart_products: :product).order(created_at: :desc)
+      @carts, @pagination = paginate(cart_scope)
+    else
+      @cart_products = CartProduct.includes(:cart, :product).all
     end
   end
 

@@ -28,7 +28,7 @@ module ApplicationHelper
         description: "Consultez les paniers des utilisateurs et leurs contenus.",
         links: [
           { label: "Liste des paniers", path: admin_carts_path },
-          { label: "Produits des paniers", path: admin_cart_products_path }
+          { label: "Plus d'informations", path: admin_cart_products_path }
         ]
       },
       {
