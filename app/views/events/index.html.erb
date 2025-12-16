@@ -1,4 +1,6 @@
-<p style="color: green"><%= notice %></p>
+<% if notice.present? %>
+  <p style="color: green"><%= notice %></p>
+<% end %>
 
 <% content_for :title, "Événements" %>
 <% content_for :meta_description, "Calendrier des marchés médiévaux, ateliers et rencontres à venir organisés par l'atelier." %>
@@ -10,26 +12,27 @@
                                   url_proc: ->(event) { event_url(event) })) %>
 <% end %>
 
-<h1>Events</h1>
+<section class="section-wrapper">
+  <h1 class="h1">Événements</h1>
 
-<div style="margin-bottom: 24px;">
-  <%= month_calendar(events: @events) do |date, events| %>
-    <div><%= date.day %></div>
-    <% events.each do |event| %>
-      <div>
-        <%= link_to event.title, event %>
+  <div class="calendar calendar--wide">
+    <%= month_calendar(events: @events) do |date, events| %>
+      <% cell_classes = ["calendar-day"] %>
+      <% cell_classes << "calendar-day--event" if events.any? %>
+      <div class="<%= cell_classes.join(" ") %>">
+        <div class="calendar-day__number"><%= date.day %></div>
+        <% events.first(2).each do |event| %>
+          <div class="calendar-day__event"><%= truncate(event.title, length: 28) %></div>
+        <% end %>
       </div>
     <% end %>
-  <% end %>
-</div>
+  </div>
 
-<div id="events">
-  <% @events.each do |event| %>
-    <%= render event %>
-    <p>
-      <%= link_to "Show this event", event %>
-    </p>
-  <% end %>
-</div>
+  <div class="events-grid" id="events">
+    <% @events.each do |event| %>
+      <%= render event %>
+    <% end %>
+  </div>
 
-<%= link_to "New event", new_event_path %>
+  <%= link_to "New event", new_event_path, class: "btn btn--secondary" %>
+</section>
