@@ -1,12 +1,6 @@
-<div id="<%= dom_id repair_page %>">
-  <div>
-    <strong>Title:</strong>
-    <%= repair_page.title %>
+<article id="<%= dom_id repair_page %>" class="card-service">
+  <h3 class="card-service__title"><%= repair_page.title %></h3>
+  <div class="card-service__text">
+    <%= simple_format(repair_page.content.to_s) %>
   </div>
-
-  <div>
-    <strong>Content:</strong>
-    <%= repair_page.content %>
-  </div>
-
-</div>
+</article>

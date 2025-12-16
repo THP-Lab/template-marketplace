@@ -4,12 +4,6 @@
   <p>Paiement annulé.</p>
 <% end %>
 
-<% if params[:success] %>
-  <p>Paiement réussi ! </p>
-<% elsif params[:canceled] %>
-  <p>Paiement annulé.</p>
-<% end %>
-
 <% content_for :title, "Boutique" %>
 <% if @selected_category.present? %>
   <% content_for :meta_description, "Créations #{@selected_category.to_s.titleize} : armures, bijoux et accessoires artisanaux en vente." %>
@@ -24,30 +18,27 @@
                                   url_proc: ->(product) { product_url(product) })) %>
 <% end %>
 
-<h1>Products</h1>
+<section class="section-wrapper">
+  <h1 class="h1">Boutique</h1>
 
-<div style="margin-bottom: 16px;">
-  <%= form_with url: products_path, method: :get, local: true do %>
-    <label for="category">Filtrer par catégorie :</label>
-    <%= select_tag :category,
-      options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
-      onchange: "this.form.submit()" %>
-    <noscript><%= submit_tag "Filtrer" %></noscript>
-  <% end %>
-</div>
-
-<div id="products">
-  <% @products.each do |product| %>
-    <%= render product %>
-    
-    <p>
-      <%= link_to "Show this product", product %>
-      <% if user_signed_in? %>
-      <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post %>
+  <% filter_options = [["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] } %>
+  <div class="filters-bar">
+    <p class="form-label">Filtres</p>
+    <div class="filters" role="list">
+      <% filter_options.each do |label, value| %>
+        <% active = value.to_s == (@selected_category || "").to_s %>
+        <%= link_to label,
+                    products_path(category: value.presence),
+                    class: ["filter-btn", ("filter-btn--active" if active)].compact.join(" ") %>
       <% end %>
-    </p>
-  <% end %>
-</div>
+    </div>
+  </div>
 
+  <div class="product-grid" id="products">
+    <% @products.each do |product| %>
+      <%= render product %>
+    <% end %>
+  </div>
 
-<%= link_to "New product", new_product_path %>
+  <%= link_to "New product", new_product_path, class: "btn btn--secondary" %>
+</section>

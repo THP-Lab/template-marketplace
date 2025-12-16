@@ -32,12 +32,14 @@
 
   <body>
     <%= render "layouts/navbar"%>
-    <% flash.each do |key, message| %>
-      <p style="padding: 8px; margin: 0 0 12px 0; background: #f0f4ff; color: #0b3d91;">
-        <%= message %>
-      </p>
-    <% end %>
-    <%= yield %>
+    <main class="page-main">
+      <% flash.each do |key, message| %>
+        <p style="padding: 8px; margin: 0 0 12px 0; background: #f0f4ff; color: #0b3d91;">
+          <%= message %>
+        </p>
+      <% end %>
+      <%= yield %>
+    </main>
     <%= render "layouts/footer"%>
   </body>
 </html>

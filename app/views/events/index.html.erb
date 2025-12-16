@@ -18,12 +18,35 @@
   <div class="calendar calendar--wide">
     <%= month_calendar(events: @events) do |date, events| %>
       <% cell_classes = ["calendar-day"] %>
-      <% cell_classes << "calendar-day--event" if events.any? %>
+      <% if events.size >= 3 %>
+        <% cell_classes << "calendar-day--event-strong" %>
+      <% elsif events.size == 2 %>
+        <% cell_classes << "calendar-day--event-mid" %>
+      <% elsif events.any? %>
+        <% cell_classes << "calendar-day--event" %>
+      <% end %>
+      <% cell_classes << "calendar-day--today" if date == Date.current %>
+
+      <% category_icons = {
+        "Marché médiéval" => "bi-shop",
+        "Atelier" => "bi-hammer",
+        "Reconstitution" => "bi-cast",
+        "En ligne" => "bi-wifi"
+      } %>
+      <% icons = events.map { |e| category_icons[e.category.to_s] }.compact.uniq.first(3) %>
+
       <div class="<%= cell_classes.join(" ") %>">
         <div class="calendar-day__number"><%= date.day %></div>
-        <% events.first(2).each do |event| %>
-          <div class="calendar-day__event"><%= truncate(event.title, length: 28) %></div>
+
+        <% if icons.any? %>
+          <div class="calendar-day__icons" aria-hidden="true">
+            <% icons.each do |icon| %>
+              <i class="bi <%= icon %>"></i>
+            <% end %>
+          </div>
+          <span class="visually-hidden"><%= icons.size %> événement(s) ce jour</span>
         <% end %>
+
       </div>
     <% end %>
   </div>
