@@ -1,30 +1,47 @@
-<ul>
-  <li>
-    <%= link_to "A propos", about_pages_path %>
-  </li>
+<% footer_links_left = [
+  ["A propos", about_pages_path],
+  ["CGU", terms_pages_path],
+  ["Politique de confidentialité", privacy_pages_path],
+  ["Contact", new_contact_path]
+] %>
 
-  <li>
-    <%= link_to "CGU", terms_pages_path %>
-  </li>
+<% footer_links_right = [
+  ["Lucas-mrda-dev", "https://github.com/Lucas-mrda-dev"],
+  ["Enzoulette", "https://github.com/Enzoulette-94"],
+  ["JobeeJobaa", "https://github.com/jobeejobaa"]
+] %>
 
-  <li>
-    <%= link_to "Politique de confidentialité", privacy_pages_path %>
-  </li>
+<footer class="footer-desktop">
+  <div class="footer-desktop__inner">
+    <div class="footer__col">
+      <p class="footer__title">Template Marketplace</p>
+      <p class="footer__text">Crafté en monochrome, propulsé par Pontus UI Kit.</p>
+    </div>
+    <div class="footer__col">
+      <p class="footer__title">Navigation</p>
+      <% footer_links_left.each do |label, path| %>
+        <%= link_to label, path, class: "footer__link" %>
+      <% end %>
+    </div>
+    <div class="footer__col">
+      <p class="footer__title">Crédits</p>
+      <% footer_links_right.each do |label, path| %>
+        <%= link_to label, path, class: "footer__link" %>
+      <% end %>
+    </div>
+  </div>
+</footer>
 
-  <li>
-    <%= link_to "Contact", new_contact_path %>
-  </li>
-</ul>
-<ul>
-  <li> 
-    <%= link_to "Lucas-mrda-dev", "https://github.com/Lucas-mrda-dev" %>
-  </li>
-
-  <li> 
-    <%= link_to "Enzoulette", "https://github.com/Enzoulette-94" %>
-  </li>
-
-  <li> 
-    <%= link_to "JobeeJobaa", "https://github.com/jobeejobaa" %>
-  </li>
-</ul>
+<footer class="footer-mobile">
+  <div class="footer-mobile__content">
+    <div class="footer__col">
+      <p class="footer__title">Template Marketplace</p>
+      <p class="footer__text">Crafté en monochrome, propulsé par Pontus UI Kit.</p>
+    </div>
+    <div class="footer__links-mobile">
+      <% (footer_links_left + footer_links_right).each do |label, path| %>
+        <%= link_to label, path, class: "footer__link" %>
+      <% end %>
+    </div>
+  </div>
+</footer>

@@ -1,48 +1,58 @@
-<ul>
-  <li>
-    <%= link_to "Accueil", root_path %>
-  </li>
+<% primary_links = [
+  ["Accueil", root_path],
+  ["Boutique", products_path],
+  ["Event", events_path],
+  ["Réparation", repair_pages_path]
+] %>
+<% primary_links << ["Admin", admin_root_path] if user_signed_in? && current_user.is_admin? %>
 
-  <li>
-    <%= link_to "Boutique", products_path %>
-  </li>
+<% auth_links =
+    if user_signed_in?
+      [
+        ["Panier", cart_path(current_user.cart)],
+        ["Mon profil", user_path(current_user)],
+        ["Sign out", destroy_user_session_path, { data: { turbo_method: :delete } }]
+      ]
+    else
+      [
+        ["Sign in", new_user_session_path],
+        ["Sign up", new_user_registration_path]
+      ]
+    end %>
 
-  <li>
-    <%= link_to "Event", events_path %>
-  </li>
+<header class="header-desktop">
+  <div class="header-desktop__entries">
+    <div class="header-logo">
+      <%= link_to "Template Marketplace", root_path, class: "header-link" %>
+    </div>
+    <nav aria-label="Navigation principale">
+      <% primary_links.each do |label, path, options| %>
+        <%= link_to label, path, { class: "header-link" }.merge(options || {}) %>
+      <% end %>
+      <% auth_links.each do |label, path, options| %>
+        <%= link_to label, path, { class: "header-link" }.merge(options || {}) %>
+      <% end %>
+    </nav>
+  </div>
+</header>
 
-  <li>
-    <%= link_to "Réparation", repair_pages_path %>
-  </li>
-
-  <% if user_signed_in? && current_user.is_admin? %>
-    <li>
-      <%= link_to "Admin", admin_root_path %>
-    </li>
-  <% end %>
-
-  <% if user_signed_in? %>
-    <li>
-      <%= link_to "Panier", cart_path(current_user.cart) %>
-    </li>
-
-    <li>
-      <%= link_to "Mon profil", user_path(current_user) %>
-    </li>
-
-    <li>
-      <%= link_to "Sign out", destroy_user_session_path, data: {turbo_method: :delete} %>
-    </li>
-
-  <% else %>
-    
-    <li>    
-      <%= link_to "Sign in", new_user_session_path %>
-    </li>
-
-    <li>
-      <%= link_to "Sign up", new_user_registration_path %>
-    </li>
-
-  <% end %>
-</ul>
+<header class="header-mobile">
+  <div class="component-stack" style="width: 100%; gap: 12px; align-items: flex-start;">
+    <div class="demo-row" style="width: 100%; justify-content: space-between; align-items: center;">
+      <div class="header-logo">
+        <%= link_to "Template Marketplace", root_path, class: "header-link" %>
+      </div>
+      <button class="btn-burger" type="button" aria-label="Menu">
+        ☰
+      </button>
+    </div>
+    <nav class="demo-row" aria-label="Navigation principale mobile">
+      <% primary_links.each do |label, path, options| %>
+        <%= link_to label, path, { class: "header-link" }.merge(options || {}) %>
+      <% end %>
+      <% auth_links.each do |label, path, options| %>
+        <%= link_to label, path, { class: "header-link" }.merge(options || {}) %>
+      <% end %>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,48 @@
+<div class="simple-calendar">
+  <% month_label = I18n.t("date.month_names")[start_date.month] || start_date.strftime("%B") %>
+  <% month_label = month_label.to_s.capitalize %>
+
+  <div class="calendar-heading">
+    <div class="calendar-nav calendar-nav--left">
+      <%= link_to calendar.url_for_previous_view,
+                  class: "calendar-nav__btn",
+                  aria: { label: t("simple_calendar.previous", default: "Mois précédent") } do %>
+        ‹
+      <% end %>
+    </div>
+
+    <time datetime="<%= start_date.strftime('%Y-%m') %>" class="calendar-title">
+      <%= "#{month_label} #{start_date.year}" %>
+    </time>
+
+    <div class="calendar-nav calendar-nav--right">
+      <%= link_to calendar.url_for_next_view,
+                  class: "calendar-nav__btn",
+                  aria: { label: t("simple_calendar.next", default: "Mois suivant") } do %>
+        ›
+      <% end %>
+    </div>
+  </div>
+
+  <table class="simple-calendar">
+    <thead>
+      <tr>
+        <% date_range.slice(0, 7).each do |day| %>
+          <th><%= t("date.abbr_day_names")[day.wday].upcase %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% date_range.each_slice(7) do |week| %>
+        <tr>
+          <% week.each do |day| %>
+            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+              <% instance_exec(day, calendar.sorted_events_for(day), &passed_block) %>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

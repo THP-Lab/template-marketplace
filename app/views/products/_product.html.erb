@@ -1,27 +1,31 @@
-<div id="<%= dom_id product %>">
-  <div>
-    <strong>Title:</strong>
-    <%= product.title %>
-  </div>
+<article id="<%= dom_id product %>" class="card-product">
+  <% if product.image.attached? %>
+    <%= image_tag product.image, class: "card-product__image", alt: product.title %>
+  <% else %>
+    <div class="card-product__image" style="display: grid; place-items: center; background: var(--Parchemin-200); color: var(--Rouge-700);">
+      <span class="text-subtitle">Visuel à venir</span>
+    </div>
+  <% end %>
 
-  <div>
-    <strong>Description:</strong>
-    <%= product.description %>
-  </div>
+  <div class="card-product__body">
+    <p class="card-product__category">
+      <%= product.category.present? ? product.category.to_s.titleize : "Catégorie" %>
+    </p>
+    <h3 class="card-product__title"><%= product.title %></h3>
+    <p class="card-product__text">
+      <%= product.description.present? ? truncate(product.description, length: 140) : "Description à venir." %>
+    </p>
 
-  <div>
-    <strong>Catégorie:</strong>
-    <%= product.category %>
+    <div class="card-product__footer">
+      <div class="card-product__price">
+        <%= product.price.present? ? number_to_currency(product.price, unit: "€", format: "%n %u", delimiter: " ", separator: ",") : "Prix sur demande" %>
+      </div>
+      <div class="token-flex">
+        <%= link_to "Voir", product_path(product), class: "btn btn--secondary btn--sm" %>
+        <% if user_signed_in? %>
+          <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class: "btn btn--primary btn--sm" %>
+        <% end %>
+      </div>
+    </div>
   </div>
-
-  <div>
-    <strong>Price:</strong>
-    <%= product.price %>
-  </div>
-
-  <div>
-    <strong>Stock:</strong>
-    <%= product.stock %>
-  </div>
-
-</div>
+</article>

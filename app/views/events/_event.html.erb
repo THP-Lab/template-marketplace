@@ -1,37 +1,29 @@
-<div id="<%= dom_id event %>">
-  <div>
-    <strong>User:</strong>
-    <%= event.user_id %>
+<article id="<%= dom_id event %>" class="card-event">
+  <div class="card-event__icon">🗓</div>
+  <div class="card-event__body">
+    <h3 class="card-event__title"><%= event.title %></h3>
+    <p class="card-event__desc">
+      <%= event.description.present? ? truncate(event.description, length: 140) : "Détails à venir." %>
+    </p>
+    <ul class="card-event__list">
+      <li class="card-event__line">
+        <span class="card-event__bullet">📅</span>
+        <span><%= event.event_date ? event.event_date.strftime("%d/%m/%Y") : "Date à confirmer" %></span>
+      </li>
+      <li class="card-event__line">
+        <span class="card-event__bullet">📍</span>
+        <span><%= event.location.presence || "Lieu à préciser" %></span>
+      </li>
+      <li class="card-event__line">
+        <span class="card-event__bullet">🏷️</span>
+        <span><%= event.category.present? ? event.category.to_s.titleize : "Catégorie" %></span>
+      </li>
+    </ul>
+    <div class="token-flex">
+      <%= link_to "Voir", event_path(event), class: "btn btn--secondary btn--sm" %>
+      <% if event.image.attached? %>
+        <%= link_to "Voir l'image", url_for(event.image), class: "btn btn--primary btn--sm" %>
+      <% end %>
+    </div>
   </div>
-
-  <div>
-    <strong>Title:</strong>
-    <%= event.title %>
-  </div>
-
-  <div>
-    <strong>Category:</strong>
-    <%= event.category %>
-  </div>
-
-  <div>
-    <strong>Description:</strong>
-    <%= event.description %>
-  </div>
-
-  <div>
-    <strong>Event date:</strong>
-    <%= event.event_date %>
-  </div>
-
-  <div>
-    <strong>Location:</strong>
-    <%= event.location %>
-  </div>
-
-  <div>
-    <strong>Image url:</strong>
-    <%= event.image_url %>
-  </div>
-
-</div>
+</article>

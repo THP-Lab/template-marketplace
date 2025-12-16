@@ -19,10 +19,12 @@
                                 type: "CollectionPage")) %>
 <% end %>
 
-<h1>Repair pages</h1>
+<section class="section-wrapper">
+  <h1 class="h1 repair-page-title">Repair pages</h1>
 
-<div id="repair_pages">
-  <% @repair_pages.each do |repair_page| %>
-    <%= render repair_page %>
-  <% end %>
-</div>
+  <div id="repair_pages" class="repair-grid">
+    <% @repair_pages.each do |repair_page| %>
+      <%= render repair_page %>
+    <% end %>
+  </div>
+</section>
