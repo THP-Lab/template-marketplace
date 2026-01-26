@@ -1,6 +1,35 @@
 @use 'bootstrap/scss/bootstrap';
 @use 'bootstrap-icons/font/bootstrap-icons';
 
+
+// ====== VARIABLES ======
+
+// === COLORS ===
+$color-primary: #711C1C;
+$color-secondary: #685323;
+$color-success: #1c6537;
+$color-warning: #b05e0d;
+
+$color-bg: #F3E7D3;
+$color-text: #4C1313;
+
+// === FONT ===
+$font-cinzel: 'Cinzel', serif;
+$font-sans: $font-cinzel;
+
+body {
+  color: $color-text;
+  font-family: $font-cinzel!important;
+}
+
+// ====== NAVBAR ======
+
+.navbar {
+  background-color: $color-primary;
+}
+
+
+
 .reorder-dragging {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
@@ -41,10 +70,4 @@
   background: #0d6efd;
   border-radius: 999px;
   margin: 6px 0;
-}
-
-// ====== NAVBAR ======
-
-.navbar {
-  background-color: #711c1c!important;
 }
