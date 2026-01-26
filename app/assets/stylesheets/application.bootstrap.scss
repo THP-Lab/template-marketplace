@@ -1,9 +1,4 @@
-@use 'bootstrap/scss/bootstrap';
-@use 'bootstrap-icons/font/bootstrap-icons';
-
-
 // ====== VARIABLES ======
-
 // === COLORS ===
 $color-primary: #711C1C;
 $color-secondary: #685323;
@@ -14,9 +9,14 @@ $color-warning: #b05e0d;
 $color-bg: #F3E7D3;
 $color-text: #4C1313;
 
+$custom-toggler-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23C7B07E' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+
 // === FONT ===
 $font-cinzel: 'Cinzel', serif;
 $font-sans: $font-cinzel;
+
+@use 'bootstrap/scss/bootstrap';
+@use 'bootstrap-icons/font/bootstrap-icons';
 
 body {
   color: #{$color-text};
@@ -26,16 +26,24 @@ body {
 // ====== NAVBAR ======
 
 .navbar {
-  background-color: #{$color-primary};
+  background-color: $color-primary;
 }
 
 .nav-link {
-  color: #{$color-bg};
+  color: $color-bg;
   transition: color 0.2s;
 
   &:hover {
-    color: #{$color-tertiary};
+    color: $color-tertiary;
   }
+}
+
+.navbar-toggler {
+  border-color: $color-tertiary;
+}
+
+.navbar-toggler-icon {
+  background-image: $custom-toggler-icon !important;
 }
 
 .btn-outline-secondary {
