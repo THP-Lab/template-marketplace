@@ -7,6 +7,7 @@
 // === COLORS ===
 $color-primary: #711C1C;
 $color-secondary: #685323;
+$color-tertiary: #C7B07E;
 $color-success: #1c6537;
 $color-warning: #b05e0d;
 
@@ -18,17 +19,33 @@ $font-cinzel: 'Cinzel', serif;
 $font-sans: $font-cinzel;
 
 body {
-  color: $color-text;
+  color: #{$color-text};
   font-family: $font-cinzel!important;
 }
 
 // ====== NAVBAR ======
 
 .navbar {
-  background-color: $color-primary;
+  background-color: #{$color-primary};
 }
 
+.nav-link {
+  color: #{$color-bg};
+  transition: color 0.2s;
 
+  &:hover {
+    color: #{$color-tertiary};
+  }
+}
+
+.btn-outline-secondary {
+  color: #{$color-tertiary};
+
+  --bs-btn-border-color: #{$color-tertiary};
+  --bs-btn-hover-border-color: #{$color-tertiary};
+  --bs-btn-hover-bg: #{$color-tertiary};
+  --bs-btn-hover-color: #{$color-text};
+}
 
 .reorder-dragging {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
