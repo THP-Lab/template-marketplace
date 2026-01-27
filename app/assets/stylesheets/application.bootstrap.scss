@@ -1,11 +1,12 @@
 // ====== VARIABLES ======
+
 // === COLORS ===
 $color-primary: #711C1C;
 $color-secondary: #685323;
 $color-tertiary: #C7B07E;
 $color-success: #1c6537;
 $color-warning: #b05e0d;
-
+$color-light: #FEFDFB;
 $color-bg: #F3E7D3;
 $color-text: #4C1313;
 
@@ -30,7 +31,7 @@ body {
 }
 
 .nav-link {
-  color: $color-bg;
+  color: $color-light;
   transition: color 0.2s;
 
   &:hover {
@@ -54,6 +55,33 @@ body {
   --bs-btn-hover-bg: #{$color-tertiary};
   --bs-btn-hover-color: #{$color-text};
 }
+// ====== FOOTER ======
+
+footer {
+  background-color: $color-primary;
+  color: $color-light;
+}
+
+footer {
+  .list-unstyled {
+    a {
+      color: $color-light;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $color-tertiary;
+      }
+    }
+  }
+}
+
+footer hr {
+  border: none;
+  border-top: 1px solid $color-light;
+  opacity: 0.5;
+}
+
+// ====================
 
 .reorder-dragging {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
