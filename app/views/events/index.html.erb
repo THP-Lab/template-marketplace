@@ -10,26 +10,29 @@
                                   url_proc: ->(event) { event_url(event) })) %>
 <% end %>
 
-<h1>Events</h1>
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">événements</h1>
+  <p class="text-center mb-2">Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.</p>
 
-<div style="margin-bottom: 24px;">
-  <%= month_calendar(events: @events) do |date, events| %>
-    <div><%= date.day %></div>
-    <% events.each do |event| %>
-      <div>
-        <%= link_to event.title, event %>
-      </div>
+  <div class="card p-4">
+    <%= month_calendar(events: @events) do |date, events| %>
+      <div>h<%= date.day %></div>
+      <% events.each do |event| %>
+        <div>
+          <%= link_to event.title, event %>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
-</div>
+  </div>
 
-<div id="events">
-  <% @events.each do |event| %>
-    <%= render event %>
-    <p>
-      <%= link_to "Show this event", event %>
-    </p>
-  <% end %>
-</div>
+  <div id="events">
+    <% @events.each do |event| %>
+      <%= render event %>
+      <p>
+        <%= link_to "Show this event", event %>
+      </p>
+    <% end %>
+  </div>
 
-<%= link_to "New event", new_event_path %>
+  <%= link_to "New event", new_event_path %>
+</div>

@@ -24,30 +24,36 @@
                                   url_proc: ->(product) { product_url(product) })) %>
 <% end %>
 
-<h1>Products</h1>
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">Boutique de Pontius</h1>
+  <p class="text-center mb-4">Des produits de qualité supérieur, fait à la main dans un savoir faire authentique.</p>
 
-<div style="margin-bottom: 16px;">
-  <%= form_with url: products_path, method: :get, local: true do %>
-    <label for="category">Filtrer par catégorie :</label>
-    <%= select_tag :category,
-      options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
-      onchange: "this.form.submit()" %>
-    <noscript><%= submit_tag "Filtrer" %></noscript>
-  <% end %>
+  <div class="mb-4">
+    <%= form_with url: products_path, method: :get, local: true do %>
+      <label for="category">Filtrer par catégorie :</label>
+      <%= select_tag :category,
+        options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
+        onchange: "this.form.submit()" %>
+      <noscript><%= submit_tag "Filtrer" %></noscript>
+    <% end %>
+  </div>
+
+  <div id="products">
+    <% @products.each do |product| %>
+      <div class="card p-4 mb-2">
+        <%= render product %>
+        
+        <p>
+          <%= link_to "Show this product", product %>
+          <% if user_signed_in? %>
+          <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class:"btn btn-primary" %>
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+
+  <%= link_to "New product", new_product_path %>
+
 </div>
-
-<div id="products">
-  <% @products.each do |product| %>
-    <%= render product %>
-    
-    <p>
-      <%= link_to "Show this product", product %>
-      <% if user_signed_in? %>
-      <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post %>
-      <% end %>
-    </p>
-  <% end %>
-</div>
-
-
-<%= link_to "New product", new_product_path %>
