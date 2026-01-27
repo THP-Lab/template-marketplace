@@ -38,17 +38,19 @@
     <% end %>
   </div>
 
-  <div id="products">
+  <div id="products" class="row g-4">
     <% @products.each do |product| %>
-      <div class="card p-4 mb-2">
-        <%= render product %>
-        
-        <p>
-          <%= link_to "Show this product", product %>
-          <% if user_signed_in? %>
-          <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class:"btn btn-primary" %>
-          <% end %>
-        </p>
+      <div class="col-12 col-md-4">
+        <div class="card h-100 p-4 mb-2">
+          <%= render product %>
+          
+          <p>
+            <%= link_to "Show this product", product %>
+            <% if user_signed_in? %>
+            <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class:"btn btn-primary" %>
+            <% end %>
+          </p>
+        </div>
       </div>
     <% end %>
   </div>
