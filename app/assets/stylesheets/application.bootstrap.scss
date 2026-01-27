@@ -24,6 +24,10 @@ body {
   font-family: $font-cinzel!important;
 }
 
+.container {
+  max-width: 1440px!important;
+}
+
 // ====== NAVBAR ======
 
 .navbar {
@@ -76,9 +80,10 @@ footer {
 }
 
 footer hr {
-  border: none;
+  width: 300px;
+  margin: 0 auto 1rem auto;
   border-top: 1px solid $color-light;
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 // ====================

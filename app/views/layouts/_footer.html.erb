@@ -3,6 +3,11 @@
 
     <div class="row">
       <div class="col-12 col-md-4 mb-3">
+        <h5>L'haubergerie de Pontius</h5>
+        <p><strong>Artisan forgeron passionné, créateur de bijoux et armures médiévales authentiques. Chaque pièce est forgée avec soin et tradition.</strong></p>
+      </div>
+
+      <div class="col-12 col-md-4 mb-3">
         <ul class="list-unstyled">
           <li> 
             <strong>Navigation</strong>
@@ -28,6 +33,16 @@
       <div class="col-12 col-md-4 mb-3">
         <ul class="list-unstyled">
           <li> 
+            <strong>Contact</strong>
+          </li>
+
+          <li> 
+            <%= mail_to "contact@haubergerie-pontius.com" %>
+          </li>
+        </ul>
+
+        <ul class="list-unstyled">
+          <li> 
             <%= link_to "Lucas-mrda-dev", "https://github.com/Lucas-mrda-dev", class: "text-decoration-none" %>
           </li>
 
@@ -40,22 +55,11 @@
           </li>
         </ul>
       </div>
-
-      <div class="col-12 col-md-4 mb-3">
-        <ul class="list-unstyled">
-          <li> 
-            <strong>Contact</strong>
-          </li>
-
-          <li> 
-            <%= mail_to "contact@haubergerie-pontius.com" %>
-          </li>
-        </ul>
-      </div>
     </div>
     <div class="text-center">
-      <hr class="my-3">
-      <p class="mb-0"><strong>© 2025 L'Haubergerie de Pontius. Tous droits réservés.</strong></p>
+      <hr>
+      <p class="mb-0"><strong>© 2025 L'Haubergerie de Pontius.</strong></p>
+      <p class="mb-0"><strong>Tous droits réservés.</strong></p>
     </div>
   </div>
 </footer>
