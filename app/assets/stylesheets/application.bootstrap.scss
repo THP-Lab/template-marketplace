@@ -127,6 +127,26 @@ footer hr {
   border-color: $color-primary;
 }
 
+.form-control {
+  background-color: $color-bg;
+  border-color: $color-primary;
+}
+
+.form-control:focus {
+  background-color: $color-bg;
+  border-color: $color-tertiary;
+  box-shadow: none;
+  outline: none;
+}
+
+.links {
+  color: $color-text;
+}
+
+.links:hover {
+  color: $color-tertiary;
+}
+
 // ====================
 
 .reorder-dragging {
