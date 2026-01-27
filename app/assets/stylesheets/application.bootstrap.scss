@@ -109,6 +109,24 @@ footer hr {
   background-color: $color-bg;
   border-color: $color-primary;
 }
+
+.card-form {
+  max-width: 680px;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: $color-primary;
+  color: $color-light;
+  border-color: $color-primary;
+}
+
+.btn-primary:hover {
+  background-color: $color-tertiary;
+  color: $color-primary;
+  border-color: $color-primary;
+}
+
 // ====================
 
 .reorder-dragging {
