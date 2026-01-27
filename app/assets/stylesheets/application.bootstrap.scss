@@ -19,13 +19,29 @@ $font-sans: $font-cinzel;
 @use 'bootstrap/scss/bootstrap';
 @use 'bootstrap-icons/font/bootstrap-icons';
 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 body {
   color: #{$color-text};
   font-family: $font-cinzel!important;
+  display: flex;  
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }
 
 .container {
   max-width: 1440px!important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
 }
 
 // ====== NAVBAR ======
@@ -59,6 +75,7 @@ body {
   --bs-btn-hover-bg: #{$color-tertiary};
   --bs-btn-hover-color: #{$color-text};
 }
+
 // ====== FOOTER ======
 
 footer {
@@ -86,6 +103,12 @@ footer hr {
   opacity: 0.75;
 }
 
+// ====== COMPONENTS ======
+
+.card {
+  background-color: $color-bg;
+  border-color: $color-primary;
+}
 // ====================
 
 .reorder-dragging {
