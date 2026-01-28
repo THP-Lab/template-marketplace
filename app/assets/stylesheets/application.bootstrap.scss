@@ -163,6 +163,7 @@ footer h5{
   background-color: $color-bg;
   border-color: $color-primary;
   border-radius: 1rem;
+  color: $color-text;
 }
 
 .card-form {
@@ -180,6 +181,15 @@ footer h5{
   background-color: $color-tertiary;
   color: $color-primary;
   border-color: $color-primary;
+}
+
+.btn-outline-primary {
+  color: $color-primary;
+
+  --bs-btn-border-color: #{$color-primary};
+  --bs-btn-hover-border-color: #{$color-tertiary};
+  --bs-btn-hover-bg: #{$color-tertiary};
+  --bs-btn-hover-color: #{$color-text};
 }
 
 .form-control {
@@ -202,6 +212,9 @@ footer h5{
   color: $color-tertiary;
 }
 
+.gold {
+  color: $color-secondary;
+}
 // ====================
 
 .reorder-dragging {
