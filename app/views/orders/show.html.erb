@@ -6,8 +6,12 @@
   <%= jsonld_tag(order_schema(@order)) %>
 <% end %>
 
-<%= render @order %>
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">Orders</h1>
 
-<div>
-  <%= link_to "Back to orders", orders_path %>
+  <%= render @order %>
+
+  <div>
+    <%= link_to "Back to orders", orders_path, class:"btn btn-primary mt-2" %>
+  </div>
 </div>

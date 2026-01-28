@@ -16,7 +16,11 @@ $custom-toggler-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/20
 $font-cinzel: 'Cinzel', serif;
 $font-sans: $font-cinzel;
 
-@use 'bootstrap/scss/bootstrap';
+@use 'bootstrap/scss/bootstrap' with (
+  $primary: $color-primary,
+  $success: $color-success,
+  $warning: $color-warning,
+);
 @use 'bootstrap-icons/font/bootstrap-icons';
 
 html, body {
