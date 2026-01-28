@@ -157,6 +157,26 @@ footer h5{
   margin-bottom: 0.25rem;
 }
 
+// ====== CART TABLE ======
+
+#cart_contents table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#cart_contents tbody tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+#cart_contents tbody tr:last-child {
+  border-bottom: none;
+}
+
+.cart-summary {
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  padding-top: 1rem;
+}
+
 // ====== COMPONENTS ======
 
 .card {
@@ -181,6 +201,20 @@ footer h5{
   background-color: $color-tertiary;
   color: $color-primary;
   border-color: $color-primary;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-color: $color-tertiary;
+  border-color: $color-primary;
+  color: $color-primary;
+}
+
+.btn-primary:focus,
+.btn-primary:focus-visible {
+  background-color: $color-tertiary;
+  border-color: $color-primary;
+  color: $color-primary;
 }
 
 .btn-outline-primary {
@@ -215,6 +249,7 @@ footer h5{
 .gold {
   color: $color-secondary;
 }
+
 // ====================
 
 .reorder-dragging {
