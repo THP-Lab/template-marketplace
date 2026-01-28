@@ -19,10 +19,14 @@
                                 type: "CollectionPage")) %>
 <% end %>
 
-<h1>Repair pages</h1>
+<div class="container py-4 mt-5">
+  <h1 class="text-center mb-2">Service de réparation</h1>
+  <p class="text-center mb-4">Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale</p>
 
-<div id="repair_pages">
-  <% @repair_pages.each do |repair_page| %>
-    <%= render repair_page %>
-  <% end %>
+  <div id="repair_pages">
+    <% @repair_pages.each do |repair_page| %>
+      <%= render repair_page %>
+    <% end %>
+  </div>
+
 </div>

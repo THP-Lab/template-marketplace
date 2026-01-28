@@ -1,14 +1,12 @@
-<div class="container py-4 mt-5">
-  <div id="<%= dom_id repair_page %>">
-    <div>
-      <strong>Title:</strong>
-      <%= repair_page.title %>
-    </div>
 
-    <div>
-      <strong>Content:</strong>
-      <%= repair_page.content %>
-    </div>
-
+<div id="<%= dom_id repair_page %>" class="card p-4 mt-4 mb-4">
+  <div>
+    <h3 class="text-center mb-2"><%= repair_page.title %></h3>
   </div>
+
+  <div>
+    <p><%= repair_page.content %></p>
+  </div>
+
 </div>
+
