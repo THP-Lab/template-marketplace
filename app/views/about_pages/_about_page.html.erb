@@ -1,14 +1,12 @@
-<div class="container py-4 mt-5">
-  <div id="<%= dom_id about_page %>">
-    <div>
-      <strong>Title:</strong>
-      <%= about_page.title %>
-    </div>
 
-    <div>
-      <strong>Content:</strong>
-      <%= about_page.content %>
-    </div>
+<div id="<%= dom_id about_page %>" class="card mt-4">
+  <h2 class="text-center mb-2 mt-2">
+    <%= about_page.title %>
+  </h2>
 
+  <div>
+    <p><%= about_page.content %></p>
   </div>
+
 </div>
+
