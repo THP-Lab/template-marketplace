@@ -1,24 +1,32 @@
 <div id="<%= dom_id product %>">
-  <div class="gold">
-    <p><strong><%= product.category %></strong></p>
-  </div>
+  <% if product.image.attached? %>
+    <div class="card-img p-0">
+      <%= image_tag product.image, alt: product.title %>
+    </div>
+  <% end %>
 
-  <div>
-    <h5><%= product.title %></h5>
-  </div>
+  <div class="p-2">
+    <div class="gold">
+      <p><strong><%= product.category %></strong></p>
+    </div>
 
-  <div>
-    <p><%= product.description %></p>
-  </div>
+    <div>
+      <h5><%= product.title %></h5>
+    </div>
 
-  <div>
-    <strong>Price:</strong>
-    <%= product.price %>
-  </div>
+    <div>
+      <p><%= product.description %></p>
+    </div>
 
-  <div>
-    <strong>Stock:</strong>
-    <%= product.stock %>
-  </div>
+    <div>
+      <h5 class="gold"><%= product.price %></h5>
+    </div>
 
+    <!-- <div>
+      <strong>Stock:</strong>
+      <%= product.stock %>
+    </div> -->
+
+  </div>
+ 
 </div>
