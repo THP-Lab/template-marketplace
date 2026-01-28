@@ -1,5 +1,13 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
+    <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+      <%= image_tag "favicon.svg",
+            alt: "Template Marketplace",
+            height: 40,
+            class: "me-2" %>
+      <span><strong>L'Haubergerie de Pontius</strong></span>
+    <% end %>
+    
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

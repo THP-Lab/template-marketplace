@@ -3,7 +3,15 @@
 
     <div class="row">
       <div class="col-12 col-md-4 mb-3">
-        <h5>L'haubergerie de Pontius</h5>
+        <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+          <%= image_tag "favicon.svg",
+                alt: "Template Marketplace",
+                height: 35,
+                class: "me-2" %>
+          <span><strong>L'haubergerie de Pontius</strong></span>
+        <% end %>
+        
+        
         <p><strong>Artisan forgeron passionné, créateur de bijoux et armures médiévales authentiques. Chaque pièce est forgée avec soin et tradition.</strong></p>
       </div>
 
