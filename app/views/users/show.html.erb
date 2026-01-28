@@ -1,95 +1,106 @@
 <% content_for :title, "Mon profil" %>
 <% content_for :meta_description, "Mettez à jour vos coordonnées, consultez vos commandes et gérez votre compte client." %>
 
-<h1>Mon profil</h1>
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">Mon profil</h1>
+  <p class="text-center mb-4">Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.</p>
 
-<% if notice.present? %>
-  <p class="notice"><%= notice %></p>
-<% end %>
+  <% if notice.present? %>
+    <p class="notice"><%= notice %></p>
+  <% end %>
 
-<% if @user.errors.any? %>
-  <div class="alert alert-danger">
-    <p><%= pluralize(@user.errors.count, "erreur") %> empêchent l'enregistrement :</p>
-    <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <p><%= pluralize(@user.errors.count, "erreur") %> empêchent l'enregistrement :</p>
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<%= form_with model: @user, url: user_path(@user), method: :patch, local: true do |f| %>
-  <div>
-    <%= f.label :first_name, "Prénom" %>
-    <%= f.text_field :first_name, required: true %>
-  </div>
+  <div class="card p-4">
+    <%= form_with model: @user, url: user_path(@user), method: :patch, local: true do |f| %>
+      <div class="mt-2">
+        <%= f.label :first_name, "Prénom" %>
+        <%= f.text_field :first_name, required: true, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.label :last_name, "Nom" %>
-    <%= f.text_field :last_name, required: true %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :last_name, "Nom" %>
+        <%= f.text_field :last_name, required: true, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.label :email %>
-    <%= f.email_field :email, required: true %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :email %>
+        <%= f.email_field :email, required: true, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.label :address, "Adresse" %>
-    <%= f.text_field :address %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :address, "Adresse" %>
+        <%= f.text_field :address, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.label :zipcode, "Code postal" %>
-    <%= f.text_field :zipcode %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :zipcode, "Code postal" %>
+        <%= f.text_field :zipcode , class: "form-control"%>
+      </div>
 
-  <div>
-    <%= f.label :city, "Ville" %>
-    <%= f.text_field :city %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :city, "Ville" %>
+        <%= f.text_field :city, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.label :country, "Pays" %>
-    <%= f.text_field :country %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :country, "Pays" %>
+        <%= f.text_field :country, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.label :phone, "Téléphone" %>
-    <%= f.telephone_field :phone %>
-  </div>
+      <div class="mt-2">
+        <%= f.label :phone, "Téléphone" %>
+        <%= f.telephone_field :phone, class: "form-control" %>
+      </div>
 
-  <div>
-    <%= f.submit "Mettre à jour mes informations" %>
-  </div>
-<% end %>
-
-<h2>Historique des commandes</h2>
-<% if @orders.any? %>
-  <ul>
-    <% @orders.each do |order| %>
-      <li>
-        Commande nº <%= order.id %> –
-        Statut : <%= order.status %> –
-        Montant total : <%= order.total_amount %> –
-        Date : <%= order.order_date&.strftime("%d/%m/%Y") %>
-        <%= link_to "Télécharger la facture PDF",
-                    invoice_order_path(order),
-                    data: { turbo: false } %>
-      </li>
+      <div class="d-flex justify-content-center mt-3">
+        <%= f.submit "Mettre à jour mes informations", class:"btn btn-primary" %>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>Vous n'avez pas encore passé de commande.</p>
-<% end %>
+  </div>
 
-<div class="account-danger-zone">
-  <h2>Supprimer mon compte</h2>
-  <p>Cette action est définitive. Vos commandes resteront accessibles pour l'administration.</p>
-  <%= button_to "Supprimer mon compte", user_path(@user), method: :delete,
-                data: {
-                  confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?",
-                  turbo_confirm: "Cette action est définitive. Confirmez-vous la suppression de votre compte ?"
-                } %>
-  <%= link_to "Annuler", root_path %>
+  <div class="card p-4 mt-4">
+    <h2 class="text-center mb-2">Historique des commandes</h2>
+    <% if @orders.any? %>
+      <ul>
+        <% @orders.each do |order| %>
+          <li>
+            Commande nº <%= order.id %> –
+            Statut : <%= order.status %> –
+            Montant total : <%= order.total_amount %> –
+            Date : <%= order.order_date&.strftime("%d/%m/%Y") %>
+            <%= link_to "Télécharger la facture PDF",
+                        invoice_order_path(order),
+                        data: { turbo: false } %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>Vous n'avez pas encore passé de commande.</p>
+    <% end %>
+  </div>
+
+  <div class="account-danger-zone">
+    <h2 class="text-center mt-4">Supprimer mon compte</h2>
+    <p class="text-center mb-2">Cette action est définitive. Vos commandes resteront accessibles pour l'administration.</p>
+
+    <div class="d-flex justify-content-center mt-3 mb-4">
+      <%= button_to "Supprimer mon compte", user_path(@user), method: :delete,
+                    data: {
+                      confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?",
+                      turbo_confirm: "Cette action est définitive. Confirmez-vous la suppression de votre compte ?"
+                    }, class:"btn btn-primary" %>
+    </div>
+    <!-- <%= link_to "Annuler", root_path %> -->
+
+  </div>
 </div>
