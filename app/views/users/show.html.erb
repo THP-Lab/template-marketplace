@@ -71,16 +71,28 @@
   <div class="card p-4 mt-4">
     <h2 class="text-center mb-2">Historique des commandes</h2>
     <% if @orders.any? %>
-      <ul>
+      <ul class="list-unstyled">
         <% @orders.each do |order| %>
-          <li>
-            Commande nº <%= order.id %> –
-            Statut : <%= order.status %> –
-            Montant total : <%= order.total_amount %> –
-            Date : <%= order.order_date&.strftime("%d/%m/%Y") %>
+          <li class="card p-4 mb-3">
+            <strong>Commande nº <%= order.id %></strong>
+            <hr class="my-2">
+            <p class="mb-1">
+              <strong>Date :</strong>
+              <%= order.order_date&.strftime("%d/%m/%Y") %>
+            </p>
+            <p class="mb-1">
+              <strong>Statut :</strong> <%= order.status %>
+            </p>
+            <hr class="my-2">
+            <p class="mb-3">
+             <strong>Montant total :</strong> <%= order.total_amount %>
+            </p>
+
             <%= link_to "Télécharger la facture PDF",
-                        invoice_order_path(order),
-                        data: { turbo: false } %>
+                  invoice_order_path(order),
+                  data: { turbo: false },
+                  class: "btn btn-outline-primary btn-sm" %>
+
           </li>
         <% end %>
       </ul>
