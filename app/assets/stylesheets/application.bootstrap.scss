@@ -34,6 +34,7 @@ body {
   display: flex;  
   flex-direction: column;
   min-height: 100vh;
+
 }
 
 main {
@@ -138,7 +139,6 @@ footer h5{
 
 .hero-2 {
   min-height: 30vh;
-  margin: 0;
   background-image: url("header.png");
   background-size: cover;
   background-position: center;
