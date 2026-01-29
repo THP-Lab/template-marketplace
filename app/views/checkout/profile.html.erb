@@ -27,7 +27,7 @@
   </section>
 
   <section class="checkout-actions">
-    <%= link_to "Retour au panier", cart_path(current_user.cart), class: "btn" %>
+    <%= link_to "Retour au panier", cart_path(current_user.cart), class: "btn btn-primary" %>
     <%= button_to "Passer au paiement Stripe",
                   checkout_path,
                   method: :post,

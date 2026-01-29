@@ -51,10 +51,10 @@
           <%= render product %>
           
           <div class="d-flex gap-2 mt-2 p-2">
-            <%= link_to "Show this product", product, class: "btn btn-primary" %>
+            <%= link_to "Voir plus", product, class: "btn btn-primary btn-sm" %>
             
             <% if user_signed_in? %>
-              <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class: "btn btn-primary" %>
+              <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class: "btn btn-primary btn-sm" %>
             <% end %>
           </div>
         </div>

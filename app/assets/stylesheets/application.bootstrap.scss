@@ -221,7 +221,7 @@ footer h5{
 }
 
 .simple-calendar .calendar-heading a:first-child::before {
-  content: "‹ Previous";
+  content: "‹ Précédent";
   font-size: 1rem;
   border: 1.5px solid $color-primary;
   border-radius: 8px;
@@ -229,7 +229,7 @@ footer h5{
 }
 
 .simple-calendar .calendar-heading a:last-child::before {
-  content: "Next ›";
+  content: "Suivant ›";
   font-size: 1rem;
   border: 1.5px solid $color-primary;
   border-radius: 8px;
