@@ -31,14 +31,51 @@
   </div>
 
   <div>
-    <h3 class="text-center mb-2">Le Parcours de Pontius</h3>
+    <h3 class="text-center mt-5 mb-5">Le Parcours de Pontius</h3>
 
+    <div class="d-flex justify-content-center mb-5">
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>L'Apprentissage</h5>
+            <p>Pontius a commencé son voyage en tant qu'apprenti forgeron aux côtés des grands maîtres. Années d'apprentissage rigoureux et d'étude des techniques anciennes.</p>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>La Maîtrise</h5>
+            <p>Après années de perfectionnement, Pontius a maîtrisé chaque aspect du métier d'armure. Il est devenu maître-forgeron reconnu dans tous les royaumes.</p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>La Création</h5>
+            <p>Aujourd'hui, Pontius crée des pièces exceptionnelles. Chaque armure, chaque haubert raconte une histoire et porte l'âme du guerrier qui la portera.</p>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>Le Partage</h5>
+            <p>Pontius partage sa passion lors d'événements, de reconstitutions historiques et de livestreams où il démontre son art à une communauté grandissante.</p>
+          </div>
+        </div>
+      
+      </div>
+    </div>
   </div>
 
-  <div id="about_pages">
-    <h3  class="text-center mb-2">Mon Parcours</h3>
-    <% @about_pages.each do |about_page| %>
-      <%= render about_page %>
+</div>
+
+<div id="about_pages" class="product-section">
+  <div class="container py-4 mt-4">
+    <h3 class="text-center mb-4">Mon Parcours</h3>
+
+    <% @about_pages.each_with_index do |about_page, index| %>
+      <%= render partial: "about_page", locals: { about_page: about_page, index: index } %>
     <% end %>
   </div>
 </div>
+    

@@ -367,6 +367,13 @@ dialog {
   color: $color-secondary;
 }
 
+.fixed-image {
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
 // ====================
 
 .reorder-dragging {
