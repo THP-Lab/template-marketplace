@@ -7,20 +7,20 @@
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="mt-2">
-        <%= f.label :email %><br />
+        <%= f.label :email, "Adresse e-mail" %><br />
         <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
       </div>
 
       <div class="mt-2">
-        <%= f.label :password %>
+        <%= f.label :password, "Mot de passe" %>
         <% if @minimum_password_length %>
-        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <em>(<%= @minimum_password_length %> charactères minimum)</em>
         <% end %><br />
         <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
       </div>
 
       <div class="mt-2">
-        <%= f.label :password_confirmation %><br />
+        <%= f.label :password_confirmation, "confirmation du mot de passe" %><br />
         <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
       </div>
 
@@ -32,7 +32,7 @@
       </div>
 
       <div class="d-flex justify-content-center mt-3">
-        <%= f.submit "Sign up", class:"btn btn-primary" %>
+        <%= f.submit "S'inscrire", class:"btn btn-primary" %>
       </div>
     <% end %>
 
