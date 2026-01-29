@@ -124,6 +124,47 @@ footer h5{
   color: $color-light;
 }
 
+// ====== HERO ======
+
+.hero {
+  min-height: 50vh;
+  background-image: url("header.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  color: $color-light;
+}
+
+.hero-2 {
+  min-height: 30vh;
+  margin: 0;
+  background-image: url("header.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  color: $color-light;
+}
+
+.hero h1{
+  font-size: 4rem;
+  color: $color-light;
+}
+
+.hero h4{
+  color: $color-light;
+}
+
+.hero-2 h1{
+  font-size: 3rem;
+  color: $color-light;
+}
+
+.hero-2 h4{
+  color: $color-light;
+}
+
 // ====== CALENDAR ======
 
 .simple-calendar {
