@@ -29,13 +29,19 @@
   <p class="text-center mb-4">Des produits de qualité supérieur, fait à la main dans un savoir faire authentique.</p>
 
   <div class="mb-4">
-    <%= form_with url: products_path, method: :get, local: true do %>
-      <label for="category">Filtrer par catégorie :</label>
-      <%= select_tag :category,
-        options_for_select([["Toutes", ""]] + @categories.map { |cat| [cat.to_s.titleize, cat] }, @selected_category),
-        onchange: "this.form.submit()" %>
-      <noscript><%= submit_tag "Filtrer" %></noscript>
-    <% end %>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+
+      <%= link_to "Tous",
+          products_path,
+          class: "btn #{ @selected_category.blank? ? 'btn-primary' : 'btn-outline-primary' }" %>
+
+      <% @categories.each do |category| %>
+        <%= link_to category.to_s.titleize,
+            products_path(category: category),
+            class: "btn #{ @selected_category == category ? 'btn-primary' : 'btn-outline-primary' }" %>
+      <% end %>
+
+    </div>
   </div>
 
   <div id="products" class="row g-4">
@@ -62,7 +68,7 @@
       <p class="text-center mt-2">Pontius le Templier vous forgera votre plus belle pièce d’amure, bijoux... sur-mesure !</p>
 
       <div class="d-flex justify-content-center mt-2 mb-3">
-        <%= link_to "Contact", new_contact_path, class: "btn btn-primary" %>
+        <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-primary" %>
       </div>
     </div>
   </div>
