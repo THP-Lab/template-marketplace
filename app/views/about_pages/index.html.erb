@@ -17,9 +17,21 @@
 <% end %>
 
 <div class="container py-4 mt-4">
-  <h1 class="text-center mb-2">About pages</h1>
+  <div class="card p-4 mt-4 mb-4">
+    <h1 class="text-center mb-2">Bienvenue dans notre Haubergerie</h1>
+    <p class="text-center mb-2">Pontius le Templier vous accueille dans sa légendaire Haubergerie, un atelier où l'histoire côtoie l'artisanat authentique. </p>
+    <p class="text-center mb-1">Depuis des années, nous perpétuons les traditions millénaires de l'armurerie médiévale.</p>
+    <p class="text-center mb-2">Chaque pièce est travaillée avec respect et passion. </p>
+    <p class="text-center mb-2">De l'épée forgée à main au haubert de mailles, découvrez des créations qui honorent les guerriers d'antan.</p>
+  </div>
+
+  <div>
+    <h3 class="text-center mb-2">Le Parcours de Pontius</h3>
+
+  </div>
 
   <div id="about_pages">
+    <h3  class="text-center mb-2">Mon Parcours</h3>
     <% @about_pages.each do |about_page| %>
       <%= render about_page %>
     <% end %>
