@@ -98,7 +98,7 @@
                         <% if product.price.present? %>
                           <div class="d-flex justify-content-between align-items-center mt-2">
                             <h5 class="gold mb-0">
-                              <%= number_to_currency(product.price, unit: "€") %>
+                              <%= number_to_currency(product.price, unit: "€", format: "%n %u") %>
                             </h5>
                             <%= link_to "Voir le produit", product_path(product), class: "btn btn-primary btn-sm" %>
                           </div>

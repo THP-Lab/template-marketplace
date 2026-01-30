@@ -15,7 +15,7 @@
       <% cart_products.each do |cart_product| %>
         <tr id="<%= dom_id(cart_product) %>">
           <td><%= cart_product.product.title %></td>
-          <td><%= number_to_currency(cart_product.unit_price) %></td>
+          <td><%= number_to_currency(cart_product.unit_price, unit: "€", format: "%n %u") %></td>
           <td>
             <%= form_with model: cart_product,
                           url: cart_product_path(cart_product),
@@ -31,7 +31,7 @@
             <% end %>
             <small>Saisir 0 pour retirer l'article.</small>
           </td>
-          <td data-auto-submit-target="rowTotal"><%= number_to_currency(cart_product.quantity * cart_product.unit_price) %></td>
+          <td data-auto-submit-target="rowTotal"><%= number_to_currency(cart_product.quantity * cart_product.unit_price, unit: "€", format: "%n %u") %></td>
           <td>
             <%= button_to "Supprimer",
                           cart_product_path(cart_product),
@@ -48,7 +48,7 @@
       Total panier :
       <span data-auto-submit-target="overallTotal">
         <%= number_to_currency(
-          cart_products.sum { |cp| cp.quantity * cp.unit_price }
+          cart_products.sum { |cp| cp.quantity * cp.unit_price }, unit: "€", format: "%n %u"
         ) %>
       </span>
     </h5>
