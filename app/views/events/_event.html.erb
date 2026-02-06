@@ -1,37 +1,34 @@
 <div id="<%= dom_id event %>">
-  <div>
+  <!-- <div>
     <strong>User:</strong>
     <%= event.user_id %>
+  </div> -->
+
+  <div>
+    <h5><%= event.title %></h5>
   </div>
 
   <div>
-    <strong>Title:</strong>
-    <%= event.title %>
+    <p class="gold"><strong><%= event.category %></strong></p>
   </div>
 
   <div>
-    <strong>Category:</strong>
-    <%= event.category %>
-  </div>
-
-  <div>
-    <strong>Description:</strong>
-    <%= event.description %>
-  </div>
-
-  <div>
-    <strong>Event date:</strong>
+    <i class="bi bi-calendar-event"></i>
     <%= event.event_date %>
   </div>
 
   <div>
-    <strong>Location:</strong>
+    <i class="bi bi-geo-alt"></i>
     <%= event.location %>
   </div>
 
   <div>
+    <%= event.description %>
+  </div>
+
+  <!-- <div>
     <strong>Image url:</strong>
     <%= event.image_url %>
-  </div>
+  </div> -->
 
 </div>

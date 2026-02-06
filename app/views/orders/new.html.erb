@@ -1,11 +1,16 @@
 <% content_for :title, "New order" %>
 
-<h1>New order</h1>
+<div class="container py-4 mt-4">
+  
+  <h1 class="text-center mb-2">New order</h1>
 
-<%= render "form", order: @order %>
+  <div class="card p-4">
+    <%= render "form", order: @order %>
+  </div>
 
-<br>
+  <br>
 
-<div>
-  <%= link_to "Back to orders", orders_path %>
+  <div>
+    <%= link_to "Back to orders", orders_path, class:"btn btn-primary mt-2" %>
+  </div>
 </div>

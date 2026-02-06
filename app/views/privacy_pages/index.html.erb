@@ -8,10 +8,12 @@
                                     description: page_meta_description)) %>
 <% end %>
 
-<h1>Privacy pages</h1>
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-5">Politique de confidentialité</h1>
 
-<div id="privacy_pages">
-  <% @privacy_pages.each do |privacy_page| %>
-    <%= render privacy_page %>
-  <% end %>
+  <div id="privacy_pages">
+    <% @privacy_pages.each do |privacy_page| %>
+      <%= render privacy_page %>
+    <% end %>
+  </div>
 </div>
