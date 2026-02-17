@@ -1,0 +1,54 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Événements" %>
+<% content_for :meta_description, "Calendrier des marchés médiévaux, ateliers et rencontres à venir organisés par l'atelier." %>
+<% content_for :structured_data do %>
+  <% listed_events = @events.respond_to?(:limit) ? @events.first(20) : Array(@events).first(20) %>
+  <%= jsonld_tag(item_list_schema(listed_events,
+                                  type: "Event",
+                                  name: "Calendrier des événements",
+                                  url_proc: ->(event) { event_url(event) })) %>
+<% end %>
+
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">événements</h1>
+  <p class="text-center mb-4">Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.</p>
+
+  <div class="card p-4">
+    <%= month_calendar(events: @events) do |date, events| %>
+      <div class="day-square">
+        <div class="day-number"><%= date.day %></div>
+        <% events.each do |event| %>
+          <div>
+            <%= link_to event.title, event, class:"btn btn-outline-primary btn-sm mt-2" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+  </div>
+
+  <div class="card p-4 mt-4">
+    <h2 class="text-center mb-2">Vous organisez un événement?</h2>
+    <p class="text-center mb-2">Pontius est disponible pour des démonstrations, des animations ou des collaborations.</p>
+    <div class="text-center mb-2">
+      <%= link_to "New event", new_event_path, class:"btn btn-primary" %>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <div id="events" class="row g-4">
+      <% @events.each do |event| %>
+        <div class="col-12 col-md-6">
+          <div class="card p-4 h-100">
+            <%= render event %>
+            <p>
+              <%= link_to "Show this event", event, class:"btn btn-primary mt-2" %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+</div>

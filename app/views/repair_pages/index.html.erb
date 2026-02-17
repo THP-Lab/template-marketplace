@@ -1,0 +1,45 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Réparation" %>
+<% content_for :meta_description, "Diagnostic, restauration fidèle et suivi transparent pour vos équipements médiévaux." %>
+<% content_for :structured_data do %>
+  <% repair_blocks = @repair_pages.map { |page|
+    {
+      "@type": "CreativeWork",
+      "name": page.title,
+      "description": meta_description_from(page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(service_schema(name: "Service de réparation médiévale",
+                                description: page_meta_description,
+                                area_served: "France")) %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: repair_blocks.presence,
+                                type: "CollectionPage")) %>
+<% end %>
+
+<div class="container py-4 mt-5">
+  <h1 class="text-center mb-2">Service de réparation</h1>
+  <p class="text-center mb-4">Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale</p>
+
+  <div id="repair_pages">
+    <div class="row g-4">
+      <% @repair_pages.each do |repair_page| %>
+        <div class="col-12 col-md-4 d-flex">
+          <%= render repair_page %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="card mt-5 mb-5">
+    <h2 class="text-center mt-4">Besoin d'une Réparation ?</h2>
+    <p class="text-center mt-2">Contactez-nous pour nous expliquer votre besoin. Nous établirons un devis personnalisé et discuterons ensemble des délais de réparation.</p>
+
+    <div class="d-flex justify-content-center mt-2 mb-3">
+      <%= link_to "besoin d'une réparation ?", new_contact_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+</div>

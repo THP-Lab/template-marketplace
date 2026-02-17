@@ -1,0 +1,78 @@
+<% if params[:success] %>
+  <p>Paiement réussi ! </p>
+<% elsif params[:canceled] %>
+  <p>Paiement annulé.</p>
+<% end %>
+
+<% if params[:success] %>
+  <p>Paiement réussi ! </p>
+<% elsif params[:canceled] %>
+  <p>Paiement annulé.</p>
+<% end %>
+
+<% content_for :title, "Boutique" %>
+<% if @selected_category.present? %>
+  <% content_for :meta_description, "Créations #{@selected_category.to_s.titleize} : armures, bijoux et accessoires artisanaux en vente." %>
+<% else %>
+  <% content_for :meta_description, "Boutique médiévale : armures, bijoux, accessoires et vêtements forgés ou cousus à la main." %>
+<% end %>
+<% content_for :structured_data do %>
+  <% listed_products = @products.respond_to?(:limit) ? @products.first(20) : Array(@products).first(20) %>
+  <%= jsonld_tag(item_list_schema(listed_products,
+                                  type: "Product",
+                                  name: "Catalogue produits",
+                                  url_proc: ->(product) { product_url(product) })) %>
+<% end %>
+
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">Boutique de Pontius</h1>
+  <p class="text-center mb-4">Des produits de qualité supérieur, fait à la main dans un savoir faire authentique.</p>
+
+  <div class="mb-4">
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+
+      <%= link_to "Tous",
+          products_path,
+          class: "btn #{ @selected_category.blank? ? 'btn-primary' : 'btn-outline-primary' }" %>
+
+      <% @categories.each do |category| %>
+        <%= link_to category.to_s.titleize,
+            products_path(category: category),
+            class: "btn #{ @selected_category == category ? 'btn-primary' : 'btn-outline-primary' }" %>
+      <% end %>
+
+    </div>
+  </div>
+
+  <div id="products" class="row g-4">
+    <% @products.each do |product| %>
+      <div class="col-12 col-md-4">
+        <div class="card h-100 mb-2">
+          <%= render product %>
+          
+          <div class="d-flex gap-2 mt-2 p-2">
+            <%= link_to "Voir plus", product, class: "btn btn-primary btn-sm" %>
+            
+            <% if user_signed_in? %>
+              <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class: "btn btn-primary btn-sm" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-5">
+    <div class="card mt-5">
+      <h2 class="text-center mt-4">Un besoin sur-mesure ?</h2>
+      <p class="text-center mt-2">Pontius le Templier vous forgera votre plus belle pièce d’amure, bijoux... sur-mesure !</p>
+
+      <div class="d-flex justify-content-center mt-2 mb-3">
+        <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- <%= link_to "New product", new_product_path, class: "btn btn-primary mt-4" %> -->
+
+</div>

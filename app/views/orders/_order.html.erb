@@ -1,0 +1,35 @@
+<div id="<%= dom_id order %>" class="card p-4">
+  <div>
+    <strong>User:</strong>
+    <%= order.user_id %>
+  </div>
+
+  <div>
+    <strong>Order date:</strong>
+    <%= order.order_date.present? ? order.order_date.strftime("%d/%m/%Y") : "—" %>
+  </div>
+
+  <div>
+    <strong>Total amount:</strong>
+    <%= order.total_amount %>
+  </div>
+
+  <div>
+    <strong>Status:</strong>
+    <%= order.status_label %>
+  </div>
+
+  <% if order.tracking_number.present? %>
+    <div>
+      <strong>Numéro de suivi:</strong>
+      <%= order.tracking_number %>
+    </div>
+  <% end %>
+
+  <div class="mt-2">
+    <%= link_to "Télécharger la facture PDF",
+                invoice_order_path(order),
+                class: "btn btn-outline-secondary btn-sm",
+                data: { turbo: false } %>
+  </div>
+</div>

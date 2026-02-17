@@ -1,0 +1,19 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Confidentialité" %>
+<% content_for :meta_description, "Politique de confidentialité : données collectées pour vos commandes et demandes, droits d'accès et de suppression." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(policy_page_schema(type: "PrivacyPolicy",
+                                    name: page_title_value,
+                                    description: page_meta_description)) %>
+<% end %>
+
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-5">Politique de confidentialité</h1>
+
+  <div id="privacy_pages">
+    <% @privacy_pages.each do |privacy_page| %>
+      <%= render privacy_page %>
+    <% end %>
+  </div>
+</div>

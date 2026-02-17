@@ -1,0 +1,11 @@
+<% content_for :title, "Admin - Modifier un événement" %>
+
+<%= admin_page(title: "Modifier un événement") do %>
+  <%= render "form", event: @event %>
+
+  <div class="mt-3 d-flex gap-2">
+    <%= link_to "Voir l’événement", @event, class: "btn btn-outline-secondary btn-sm" %>
+    <%= link_to "Retour aux événements", admin_events_path, class: "btn btn-outline-secondary btn-sm" %>
+    <%= button_to "Supprimer", @event, method: :delete, data: { confirm: "Supprimer cet événement ?" }, class: "btn btn-danger btn-sm" %>
+  </div>
+<% end %>

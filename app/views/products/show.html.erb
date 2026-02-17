@@ -1,0 +1,101 @@
+<% content_for :title, @product.title %>
+<% content_for :meta_description,
+                meta_description_from(@product.description) ||
+                "Découvrir #{@product.title}, une création artisanale disponible dans notre boutique médiévale." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(product_schema(@product)) %>
+<% end %>
+
+
+<div class="product-section">
+  <div class="container py-4">
+    <%= link_to "Retour", products_path, class:"btn btn-outline-primary mb-4" %>
+
+    <div class="row g-4 align-items-start">
+      <div class="col-12 col-md-6">
+        <% if @product.image.attached? %>
+          <div>
+            <%= image_tag @product.image, alt: @product.title, class: "img img-fluid w-100" %>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="col-12 col-md-6">
+        <div>
+          <h2><%= @product.title %></h2>
+        </div>
+
+        <div class="gold">
+          <p><strong><%= @product.category %></strong></p>
+        </div>
+
+        <div>
+          <p><%= @product.description %></p>
+        </div>
+
+        <div>
+          <strong>Stock:</strong>
+          <%= @product.stock %>
+        </div>
+
+        <div>
+          <h5 class="mt-2 gold"><%= number_to_currency( @product.price, unit: "€", format: "%n %u") %></h5>
+        </div>
+
+        <div data-controller="quantity-modal">
+          <%= button_tag "Ajouter au panier", type: "button", data: { action: "click->quantity-modal#open" }, class:"btn btn-primary" %>
+
+          <dialog data-quantity-modal-target="dialog">
+            <h3 class="text-center mb-4">Choisir la quantité</h3>
+            <%= form_with url: cart_products_path, method: :post do %>
+              <%= hidden_field_tag :product_id, @product.id %>
+              <div>
+                <%= number_field_tag :quantity, 1, min: 1 %>
+              </div>
+              <div class="mt-3">
+                <%= button_tag "Ajouter et continuer mes achats", type: "submit", name: "redirect_to", value: "products", class:"btn btn-primary" %>
+                <%= button_tag "Ajouter et aller au panier", type: "submit", name: "redirect_to", value: "cart", class:"btn btn-primary" %>
+                <%= button_tag "Annuler", type: "button", data: { action: "click->quantity-modal#close" }, class:"btn btn-primary" %>
+              </div>
+            <% end %>
+          </dialog>
+        </div>
+      </div>
+
+      <div class="row g-4 text-center">
+        <div class="col-12 col-md-4">
+          <div class="card h-100 p-2">
+            <h5><i class="bi bi-shield-check"></i> Garantie artisanale</h5>
+            <p>Chaque pièce est garantie 2 ans contre les défauts de fabrication</p>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-4">
+          <div class="card h-100 p-2">
+            <h5><i class="bi bi-truck"></i> Livraison soignée</h5>
+            <p>Expédition sous 2-3 jours dans un emballage médiéval</p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <div class="card h-100 p-2">
+            <h5><i class="bi bi-box-seam"></i> Retour accepté</h5>
+            <p>30 jours pour changer d'avis</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="card  mb-4">
+    <h2 class="text-center mt-4">Un besoin sur-mesure ?</h2>
+    <p class="text-center mt-2">Pontius le Templier vous forgera votre plus belle pièce d’amure, bijoux... sur-mesure !</p>
+
+    <div class="d-flex justify-content-center mt-2 mb-3">
+      <%= link_to "Contactez-nous", new_contact_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+</div>

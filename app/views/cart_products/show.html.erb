@@ -1,0 +1,13 @@
+<p style="color: green"><%= notice %></p>
+<% content_for :title, "Produit du panier ##{@cart_product.id}" %>
+<% content_for :meta_description,
+                "Détail du produit #{@cart_product.product&.title || 'associé'} dans un panier client." %>
+
+<%= render @cart_product %>
+
+<div>
+  <%= link_to "Edit this cart product", edit_cart_product_path(@cart_product) %> |
+  <%= link_to "Back to cart products", cart_products_path %>
+
+  <%= button_to "Destroy this cart product", @cart_product, method: :delete %>
+</div>

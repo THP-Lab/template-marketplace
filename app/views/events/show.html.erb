@@ -1,0 +1,57 @@
+<% content_for :title, @event.title %>
+<% category_label = @event.category.presence || "événement" %>
+<% content_for :meta_description,
+                meta_description_from(@event.description) ||
+                "#{@event.title} : #{category_label.downcase} animé par notre atelier#{@event.location.presence ? " à #{@event.location}" : ""}." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(event_schema(@event)) %>
+<% end %>
+
+<div class="product-section">
+  <div class="container py-4">
+    <div>
+      <%= link_to "Retour", events_path, class:"btn btn-outline-primary mb-4" %>
+    </div>
+
+    <div class="row g-4 align-items-start">
+      <div class="col-12 col-md-6">
+        <% if @event.image.attached? %>
+          <div>
+            <%= image_tag @event.image, alt: @event.title, class: "img img-fluid w-100" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div id="<%= dom_id @event %>" class="col-12 col-md-6">
+        <h2><%= @event.title %></h2>
+        <div>
+          <p class="gold"><strong><%= @event.category %></strong></p>
+        </div>
+        <div>
+          <i class="bi bi-calendar-event"></i>
+          <%= @event.event_date %>
+        </div>
+        <div>
+          <i class="bi bi-geo-alt"></i>
+          <%= @event.location %>
+        </div>
+        <div class="mt-2">
+          <p><%= @event.description %></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="container py-4">
+  <div class="card p-4 mt-4">
+    <h2 class="text-center mb-2">Vous organisez un événement?</h2>
+    <p class="text-center mb-2">Pontius est disponible pour des démonstrations, des animations ou des collaborations.</p>
+    <div class="text-center mb-2">
+      <%= link_to "Contactez-nous", new_event_path, class:"btn btn-primary" %>
+    </div>
+  </div>
+</div>
+
+
+

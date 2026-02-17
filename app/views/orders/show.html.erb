@@ -1,0 +1,17 @@
+<p style="color: green"><%= notice %></p>
+<% content_for :title, "Commande ##{@order.id}" %>
+<% content_for :meta_description,
+                "Détails de la commande ##{@order.id} : statut #{@order.status}, montant #{number_to_currency(@order.total_amount, unit: '€')}." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(order_schema(@order)) %>
+<% end %>
+
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">Orders</h1>
+
+  <%= render @order %>
+
+  <div>
+    <%= link_to "Back to orders", orders_path, class:"btn btn-primary mt-2" %>
+  </div>
+</div>

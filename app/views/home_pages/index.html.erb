@@ -1,0 +1,160 @@
+<% content_for :title, "Accueil" %>
+<% content_for :meta_description,
+                meta_description_from(@home_pages.map(&:content).join(" ")) ||
+                "Découvrir l'atelier, nos créations sur mesure et les engagements qualité de Template Marketplace." %>
+<% content_for :structured_data do %>
+  <% sections = @home_pages.map { |home_page|
+    {
+      "@type": "CreativeWork",
+      "name": home_page.title,
+      "description": meta_description_from(home_page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: sections.presence)) %>
+<% end %>
+
+<header class="hero d-flex align-items-center text-center">
+  <div class="container">
+    <h1 class="mt-4">Haubergerie de pontius</h1>
+    <h4 class="mt-2">l’authentique armurerie du moyen âge</h4>
+    <div class="mt-4">
+      <%= link_to "Mon histoire", about_pages_path, class: "btn btn-primary" %>
+      <%= link_to "Boutique", products_path, class:"btn btn-primary" %>
+    </div>
+  </div>
+</header>
+
+<div class="product-section">
+  <div class="container-fluid px-4">
+    <div class="row text-center g-4 pt-4">
+      <div class="col-12 col-md-6 col-lg-3">
+        <h4>Savoir-faire Artisanal</h4>
+        <p>Chaque pièce est créée à la main avec passion et précision, dans le respect des techniques ancestrales.</p>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <h4>Créations Uniques</h4>
+        <p>Bijoux et accessoires en maille, conçus pour durer et sublimer votre style médiéval.</p>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <h4>Réparations & Entretien</h4>
+        <p>Service professionnel de restauration et personnalisation de vos pièces en maille.</p>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <h4>Événements</h4>
+        <p>Retrouvez-nous lors des festivités et marchés médiévaux.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <% @home_pages.each do |home_page| %>
+        <section class="mb-5 pb-4">
+          <h2 class="text-center mb-4"><%= home_page.title %></h2>
+          <% case home_page.bloc_type %>
+          <% when "about", "repair" %>
+            <% if (target = home_page.target_record) %>
+              <div class="card">
+                <% if target.image.attached? %>
+                  <div class="mb-3">
+                    <%= attachment_thumb(target.image, class: "img-fluid fixed-image") %>
+                  </div>
+                <% end %>
+                <div class="p-4">
+                  <p><%= simple_format(target.content) %></p>
+                  <% button_label = home_page.button_label.presence || "Découvrir" %>
+                  <div class="text-center mt-2">
+                    <%= link_to button_label,
+                                home_page.bloc_type == "about" ? about_pages_path : repair_pages_path,
+                                class: "btn btn-primary" %>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <p class="text-muted">Bloc cible introuvable.</p>
+            <% end %>
+          <% when "shop" %>
+            <% products = home_page.shop_products %>
+            <% if products.any? %>
+              <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <% products.each do |product| %>
+                  <div class="col">
+                    <div class="card h-100 shadow-sm">
+                      <% if product.image.attached? %>
+                        <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [600, 360] }, class: "card-img-top") %>
+                      <% end %>
+                      <div class="card-body d-flex flex-column">
+                        <% if product.category.present? %>
+                          <p class="gold"><strong><%= product.category %></strong></p>
+                        <% end %>
+                        <h5 class="card-title"><%= product.title %></h5>
+                        <% if product.description.present? %>
+                          <p class="card-text"><%= truncate(product.description, length: 120) %></p>
+                        <% end %>
+                        <% if product.price.present? %>
+                          <div class="d-flex justify-content-between align-items-center mt-2">
+                            <h5 class="gold mb-0">
+                              <%= number_to_currency(product.price, unit: "€", format: "%n %u") %>
+                            </h5>
+                            <%= link_to "Voir le produit", product_path(product), class: "btn btn-primary btn-sm" %>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="text-center mt-3">
+                <% button_label = home_page.button_label.presence || "Accéder à la boutique" %>
+                <%= link_to button_label, products_path, class: "btn btn-primary" %>
+              </div>
+            <% else %>
+              <p class="text-muted">Aucun produit disponible pour ce bloc.</p>
+            <% end %>
+          <% else %>
+            <div class="card">
+              <% if home_page.image.attached? %>
+                <div>
+                  <%= attachment_thumb(home_page.image, class: "img-fluid fixed-image") %>
+                </div>
+              <% end %>
+              <div class="p-4"><p><%= simple_format(home_page.content) %></p></div>
+              
+            </div>
+          <% end %>  
+        </section>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="product-section">
+  <div class="container py-4">
+    <div class="row align-items-center g-4">
+      <div class="col-12 col-md-6">
+        <%= image_tag "img_accueil.png", alt: "Artisan", class: "img-fluid rounded" %>
+      </div>
+      <div class="col-12 col-md-6">
+        <h3>L'Artisanat au Service de la Tradition</h3>
+        <p>Pontius l'Haubergier perpétue un savoir-faire ancestral dans son atelier, où chaque anneau de maille est tissé avec patience et précision.</p>
+        <p>De la création de bijoux délicats aux réparations d'armures historiques, notre passion pour le travail du métal médiéval guide chacune de nos réalisations.</p>
+      </div>
+    </div>
+  </div>
+    
+</div>
+
+<div class="container mt-5">
+  <div class="card mt-5 mb-5">
+    <h2 class="text-center mt-4">Besoin d'une Réparation ?</h2>
+    <p class="text-center mt-2">Contactez-nous pour nous expliquer votre besoin. Nous établirons un devis personnalisé et discuterons ensemble des délais de réparation.</p>
+
+    <div class="d-flex justify-content-center mt-2 mb-3">
+      <%= link_to "besoin d'une réparation ?", new_contact_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+</div>

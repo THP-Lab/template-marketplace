@@ -1,0 +1,11 @@
+Nouvelle demande de contact
+==========================
+
+Nom : <%= @contact.name.presence || "Non renseigné" %>
+Email : <%= @contact.email %>
+Sujet : <%= @contact.subject %>
+
+Message :
+<%= @contact.message %>
+
+Consultez l'espace admin via <%= @url || root_url %>.

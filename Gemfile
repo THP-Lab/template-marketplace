@@ -18,10 +18,10 @@ gem "stimulus-rails"
 gem "cssbundling-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-
+gem "devise"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
-
+gem "rspec-rails"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
@@ -46,6 +46,8 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
+  gem "faker"
+
   # Audits gems for known security defects (use config/bundler-audit.yml to ignore issues)
   gem "bundler-audit", require: false
 
@@ -66,3 +68,15 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "letter_opener"
+
+# Open sent emails in the browser instead of sending them. http://localhost:3000/letter_opener
+gem "letter_opener_web"
+
+gem "dotenv-rails", "~> 3.1"
+gem "stripe", "~> 18.0"
+gem "table_print", "~> 1.5"
+gem "simple_calendar"
+gem "prawn"
+gem "prawn-table"

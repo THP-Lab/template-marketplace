@@ -1,0 +1,33 @@
+<%= form_with(model: privacy_page) do |form| %>
+  <% if privacy_page.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h6 mb-2"><%= pluralize(privacy_page.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
+      <ul class="mb-0">
+        <% privacy_page.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, "Titre", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :content, "Contenu", class: "form-label" %>
+    <%= form.text_area :content, class: "form-control", rows: 4 %>
+  </div>
+
+  <% if privacy_page.persisted? %>
+    <div class="mb-3">
+      <%= form.label :position, "Position", class: "form-label" %>
+      <%= form.number_field :position, class: "form-control" %>
+    </div>
+  <% end %>
+
+  <div class="d-flex gap-2">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+  </div>
+<% end %>

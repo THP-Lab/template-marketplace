@@ -1,0 +1,37 @@
+<% content_for :title, "Coordonnées de commande" %>
+<% content_for :meta_description, "Complétez vos informations avant de procéder au paiement sécurisé de votre panier." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(checkout_page_schema(title: page_title_value, description: page_meta_description)) %>
+<% end %>
+
+<div class="container py-4">
+  <h1 class="text-center mb-4">Finaliser votre commande</h1>
+
+  <% missing_attributes = current_user.missing_profile_fields %>
+
+  <section class="checkout-profile-warning">
+    <% if missing_attributes.any? %>
+      <p>
+        Il nous manque :
+        <strong><%= missing_attributes.map { |field| User.human_attribute_name(field) }.join(", ") %></strong>.
+        Merci de compléter vos informations avant de procéder au paiement.
+      </p>
+    <% else %>
+      <p>Toutes vos informations sont complètes. Vous pouvez passer au paiement.</p>
+    <% end %>
+  </section>
+
+  <section class="checkout-profile-form">
+    <%= render partial: "users/profile_form",
+              locals: { user: current_user, cart_context: true, redirect_path: checkout_profile_path } %>
+  </section>
+
+  <section class="checkout-actions">
+    <%= link_to "Retour au panier", cart_path(current_user.cart), class: "btn btn-primary" %>
+    <%= button_to "Passer au paiement Stripe",
+                  checkout_path,
+                  method: :post,
+                  data: { turbo: false },
+                  class: "btn btn-primary" %>
+  </section>
+</div>

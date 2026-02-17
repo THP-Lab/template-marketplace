@@ -1,0 +1,13 @@
+<div id="<%= dom_id repair_page %>" class="card">
+  <div class="card-img p-0">
+    <% if repair_page.image.attached? %>
+      <%= image_tag repair_page.image, class: "img-fluid fixed-image", alt: repair_page.title %>
+    <% end %>
+  </div>
+
+  <div class="p-4">
+    <h3><%= repair_page.title %></h3>
+    <p><%= repair_page.content %></p>
+  </div>
+</div>
+

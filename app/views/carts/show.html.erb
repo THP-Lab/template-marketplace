@@ -1,0 +1,11 @@
+<% content_for :title, "Mon panier" %>
+<% content_for :meta_description, "Vérifiez vos articles, quantités et montant avant de passer au paiement." %>
+<% content_for :structured_data do %>
+  <%= jsonld_tag(shopping_cart_schema(@cart_products)) %>
+<% end %>
+
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-4">Mon Panier</h1>
+
+  <%= render partial: "carts/cart_contents", locals: { cart_products: @cart_products } %>
+</div>

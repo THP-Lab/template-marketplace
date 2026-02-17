@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Template Marketplace" %></title>
+    <% page_title = page_title_value %>
+    <% meta_description = page_meta_description %>
+    <title><%= page_title %></title>
+    <meta name="description" content="<%= meta_description %>">
+    <meta property="og:title" content="<%= page_title %>">
+    <meta property="og:description" content="<%= meta_description %>">
+    <%= canonical_link_tag %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Template Marketplace">
@@ -10,20 +16,35 @@
     <%= csp_meta_tag %>
 
     <%= yield :head %>
+    <%= render_structured_data %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="<%= asset_path 'favicon.svg' %>" type="image/svg+xml">
+    <link rel="icon" href="<%= asset_path 'favicon.png' %>" type="image/png">
+    <link rel="apple-touch-icon" href="<%= asset_path 'favicon.png' %>">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   </head>
 
   <body>
-    <%= yield %>
+    <%= render "layouts/navbar"%>
+    <% flash.each do |key, message| %>
+      <p style="padding: 8px; margin: 0 0 12px 0; background: #f0f4ff; color: #0b3d91;">
+        <%= message %>
+      </p>
+    <% end %>
+    <main>
+      <%= yield %>
+    </main>
+    <%= render "layouts/footer"%>
   </body>
 </html>

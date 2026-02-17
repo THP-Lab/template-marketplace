@@ -1,0 +1,9 @@
+<% content_for :title, "Admin - Nouvelle page réparation" %>
+
+<%= admin_page(title: "Nouvelle page réparation") do %>
+  <%= render "form", repair_page: @repair_page %>
+
+  <div class="mt-3">
+    <%= link_to "Retour aux pages réparation", admin_repair_pages_path, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+<% end %>

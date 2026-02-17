@@ -1,0 +1,77 @@
+<footer class="py-4">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-md-4 mb-3">
+        <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+          <%= image_tag "favicon.svg",
+                alt: "Template Marketplace",
+                height: 35,
+                class: "me-2" %>
+          <span><strong>L'haubergerie de Pontius</strong></span>
+        <% end %>
+        
+        
+        <p><strong>Artisan forgeron passionné, créateur de bijoux et armures médiévales authentiques. Chaque pièce est forgée avec soin et tradition.</strong></p>
+      </div>
+
+      <div class="col-12 col-md-4 mb-3">
+        <ul class="list-unstyled">
+          <li> 
+            <strong>Navigation</strong>
+          </li>
+          <li>
+            <%= link_to "A propos", about_pages_path, class: "text-decoration-none" %>
+          </li>
+
+          <li>
+            <%= link_to "CGU", terms_pages_path, class: "text-decoration-none" %>
+          </li>
+
+          <li>
+            <%= link_to "Politique de confidentialité", privacy_pages_path, class: "text-decoration-none" %>
+          </li>
+
+          <li>
+            <%= link_to "Contact", new_contact_path, class: "text-decoration-none" %>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-12 col-md-4 mb-3">
+        <ul class="list-unstyled">
+          <li> 
+            <strong>Contact</strong>
+          </li>
+
+          <li> 
+            <%= mail_to "haubergeriedepontius@gmail.com" %>
+          </li>
+        </ul>
+
+        <ul class="list-unstyled">
+          <li> 
+            <%= link_to "Lucas-mrda-dev", "https://github.com/Lucas-mrda-dev", class: "text-decoration-none" %>
+          </li>
+
+          <li> 
+            <%= link_to "Enzoulette", "https://github.com/Enzoulette-94", class: "text-decoration-none" %>
+          </li>
+
+          <li> 
+            <%= link_to "JobeeJobaa", "https://github.com/jobeejobaa", class: "text-decoration-none" %>
+          </li>
+
+          <li> 
+            <%= link_to "melody-ste", "https://github.com/melody-ste", class: "text-decoration-none" %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center">
+      <hr>
+      <p class="mb-0"><strong>© 2025 L'Haubergerie de Pontius.</strong></p>
+      <p class="mb-0"><strong>Tous droits réservés.</strong></p>
+    </div>
+  </div>
+</footer>

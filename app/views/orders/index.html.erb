@@ -1,0 +1,18 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Orders" %>
+
+<div class="container py-4 mt-4">
+  <h1 class="text-center mb-2">Orders</h1>
+
+  <div id="orders">
+    <% @orders.each do |order| %>
+      <%= render order %>
+      <p>
+        <%= link_to "Show this order", order %>
+      </p>
+    <% end %>
+  </div>
+
+  <%= link_to "New order", new_order_path, class:"btn btn-primary mt-2" %>
+</div>

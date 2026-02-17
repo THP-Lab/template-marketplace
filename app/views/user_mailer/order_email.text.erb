@@ -1,0 +1,12 @@
+Salut <%= @user.email %> et merci pour ta commande jeune templier !
+==========================================================
+
+<% if @order.order_date.present? %>
+Date de commande : <%= @order.order_date.strftime("%d/%m/%Y") %>.
+<% end %>
+
+Tu viens de gagner 30 points d'armure grâce à ta commande n°<%= @order.id %>.
+
+Pour accéder à ton espace client et consulter ta commande, connecte-toi via : <%= @url %>.
+
+À très vite sur monsite.fr !

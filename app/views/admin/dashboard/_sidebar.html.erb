@@ -1,0 +1,89 @@
+<% accordion_id = "adminSidebarAccordion" %>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+    <i class="bi bi-speedometer2"></i>
+    <span>Navigation admin</span>
+  </div>
+  <div class="card-body p-0">
+    <div class="accordion accordion-flush"
+         id="<%= accordion_id %>"
+         data-controller="admin-accordion"
+         data-admin-accordion-parent-value="<%= "##{accordion_id}" %>">
+      <% (admin_sections || []).each do |section| %>
+        <%= render partial: "admin/dashboard/menu_section",
+                   locals: { accordion_id: accordion_id, section: section } %>
+      <% end %>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="users-heading">
+          <button class="accordion-button collapsed d-flex align-items-center gap-2"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#users-collapse"
+                  aria-expanded="false"
+                  aria-controls="users-collapse">
+            <i class="bi bi-people"></i>
+            <span>Utilisateurs</span>
+          </button>
+        </h2>
+        <div id="users-collapse"
+             class="accordion-collapse collapse"
+             aria-labelledby="users-heading"
+             data-bs-parent="<%= "##{accordion_id}" %>">
+          <div class="accordion-body py-3">
+            <div class="d-grid gap-2">
+              <%= link_to "Liste des utilisateurs", admin_users_path, class: "btn btn-outline-primary btn-sm text-start" %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="carts-heading">
+          <button class="accordion-button collapsed d-flex align-items-center gap-2"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#carts-collapse"
+                  aria-expanded="false"
+                  aria-controls="carts-collapse">
+            <i class="bi bi-bag"></i>
+            <span>Paniers</span>
+          </button>
+        </h2>
+        <div id="carts-collapse"
+             class="accordion-collapse collapse"
+             aria-labelledby="carts-heading"
+             data-bs-parent="<%= "##{accordion_id}" %>">
+          <div class="accordion-body py-3">
+            <div class="d-grid gap-2">
+              <%= link_to "Liste des paniers", admin_carts_path, class: "btn btn-outline-primary btn-sm text-start" %>
+              <%= link_to "Plus d'informations", admin_cart_products_path, class: "btn btn-outline-primary btn-sm text-start" %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="company-info-heading">
+          <button class="accordion-button collapsed d-flex align-items-center gap-2"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#company-info-collapse"
+                  aria-expanded="false"
+                  aria-controls="company-info-collapse">
+            <i class="bi bi-info-circle"></i>
+            <span>Information</span>
+          </button>
+        </h2>
+        <div id="company-info-collapse"
+             class="accordion-collapse collapse"
+             aria-labelledby="company-info-heading"
+             data-bs-parent="<%= "##{accordion_id}" %>">
+          <div class="accordion-body py-3">
+            <div class="d-grid gap-2">
+              <%= link_to "Information", admin_company_information_path, class: "btn btn-outline-primary btn-sm text-start" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<% content_for :title, "À propos" %>
+<% content_for :meta_description, "Notre histoire, l'atelier et l'équipe qui façonnent vos pièces médiévales sur mesure." %>
+<% content_for :structured_data do %>
+  <% sections = @about_pages.map { |about_page|
+    {
+      "@type": "CreativeWork",
+      "name": about_page.title,
+      "description": meta_description_from(about_page.content)
+    }.compact_blank
+  }.compact_blank %>
+  <%= jsonld_tag(webpage_schema(name: page_title_value,
+                                description: page_meta_description,
+                                has_part: sections.presence,
+                                type: "AboutPage")) %>
+<% end %>
+
+<header class="hero-2 d-flex align-items-center text-center">
+  <div class="container">
+    <h1 class="mt-4">Haubergerie de pontius</h1>
+    <h4 class="mt-2">l’authentique armurerie du moyen âge</h4>
+  </div>
+</header>
+
+<div class="container py-4 mt-4">
+  <div class="card p-4 mt-4 mb-4">
+    <h1 class="text-center mb-2">Bienvenue dans notre Haubergerie</h1>
+    <p class="text-center mb-2">Pontius le Templier vous accueille dans sa légendaire Haubergerie, un atelier où l'histoire côtoie l'artisanat authentique. </p>
+    <p class="text-center mb-1">Depuis des années, nous perpétuons les traditions millénaires de l'armurerie médiévale.</p>
+    <p class="text-center mb-2">Chaque pièce est travaillée avec respect et passion. </p>
+    <p class="text-center mb-2">De l'épée forgée à main au haubert de mailles, découvrez des créations qui honorent les guerriers d'antan.</p>
+  </div>
+
+  <div>
+    <h3 class="text-center mt-5 mb-5">Le Parcours de Pontius</h3>
+
+    <div class="d-flex justify-content-center mb-5">
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>L'Apprentissage</h5>
+            <p>Pontius a commencé son voyage en tant qu'apprenti forgeron aux côtés des grands maîtres. Années d'apprentissage rigoureux et d'étude des techniques anciennes.</p>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>La Maîtrise</h5>
+            <p>Après années de perfectionnement, Pontius a maîtrisé chaque aspect du métier d'armure. Il est devenu maître-forgeron reconnu dans tous les royaumes.</p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>La Création</h5>
+            <p>Aujourd'hui, Pontius crée des pièces exceptionnelles. Chaque armure, chaque haubert raconte une histoire et porte l'âme du guerrier qui la portera.</p>
+          </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+          <div class="card h-100 p-3">
+            <h5>Le Partage</h5>
+            <p>Pontius partage sa passion lors d'événements, de reconstitutions historiques et de livestreams où il démontre son art à une communauté grandissante.</p>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="about_pages" class="product-section">
+  <div class="container py-4 mt-4">
+    <h3 class="text-center mb-4">Mon Parcours</h3>
+
+    <% @about_pages.each_with_index do |about_page, index| %>
+      <%= render partial: "about_page", locals: { about_page: about_page, index: index } %>
+    <% end %>
+  </div>
+</div>
+    
