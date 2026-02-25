@@ -38,6 +38,7 @@ module ApplicationHelper
         description: "Sections et blocs de la page d’accueil.",
         links: [
           { label: "Blocs d’accueil", path: admin_home_pages_path },
+          { label: "Configurer la bannière", path: home_banner_company_information_path },
           { label: "Ajouter une section d’accueil", path: new_home_page_path }
         ]
       },

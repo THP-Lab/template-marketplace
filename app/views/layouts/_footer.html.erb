@@ -1,3 +1,5 @@
+<% company_information = CompanyInformation.instance %>
+
 <footer class="py-4">
   <div class="container">
 
@@ -11,8 +13,7 @@
           <span><strong>L'haubergerie de Pontius</strong></span>
         <% end %>
         
-        
-        <p><strong>Artisan forgeron passionné, créateur de bijoux et armures médiévales authentiques. Chaque pièce est forgée avec soin et tradition.</strong></p>
+        <p><strong><%= company_information.footer_description_or_default %></strong></p>
       </div>
 
       <div class="col-12 col-md-4 mb-3">
