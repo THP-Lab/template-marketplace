@@ -34,7 +34,8 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to @product, notice: "Product was successfully created." }
+        redirect_path = params[:redirect_to].presence || new_product_path
+        format.html { redirect_to redirect_path, notice: "Product was successfully created." }
         format.json { render :show, status: :created, location: @product }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -47,7 +48,7 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        redirect_path = params[:redirect_to].presence || @product
+        redirect_path = params[:redirect_to].presence || edit_product_path(@product)
         format.html { redirect_to redirect_path, notice: "Product was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @product }
       else
@@ -59,11 +60,23 @@ class ProductsController < ApplicationController
 
   # DELETE /products/1 or /products/1.json
   def destroy
-    @product.destroy!
+    redirect_path = params[:redirect_to].presence || admin_products_path
 
     respond_to do |format|
-      format.html { redirect_to products_path, notice: "Product was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+      if @product.destroy
+        format.html { redirect_to redirect_path, notice: "Produit supprimé.", status: :see_other }
+        format.json { head :no_content }
+      else
+        message = @product.errors.full_messages.to_sentence.presence || "Impossible de supprimer ce produit."
+        format.html { redirect_to redirect_path, alert: message, status: :see_other }
+        format.json { render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    respond_to do |format|
+      message = "Impossible de supprimer ce produit car il est lié à des commandes."
+      format.html { redirect_to redirect_path, alert: message, status: :see_other }
+      format.json { render json: { errors: [message] }, status: :unprocessable_entity }
     end
   end
 

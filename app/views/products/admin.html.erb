@@ -1,7 +1,7 @@
 
 <% content_for :title, "Admin - Produits" %>
 
-<div class="container py-4">
+<div class="container py-4" data-controller="quantity-modal">
   <div class="row g-4">
     <div class="col-lg-4 col-xl-3">
       <%= render_admin_sidebar %>
@@ -11,6 +11,9 @@
 
       <% if notice.present? %>
         <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="alert alert-warning"><%= alert %></div>
       <% end %>
 
       <% if @products.any? %>
@@ -24,7 +27,7 @@
                 <th>Catégorie</th>
                 <th class="text-end">Prix</th>
                 <th class="text-end">Stock</th>
-                <th class="text-end">Actions</th>
+                <th class="text-end" style="width: 230px;">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -70,9 +73,21 @@
                     <% end %>
                   </td>
                   <td class="text-end">
-                    <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "Voir", product_path(product), class: "btn btn-outline-secondary" %>
-                      <%= link_to "Modifier", edit_product_path(product), class: "btn btn-primary" %>
+                    <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap admin-product-actions">
+                      <%= link_to "Voir", product_path(product), class: "btn btn-outline-secondary btn-sm" %>
+                      <%= link_to "Modifier", edit_product_path(product), class: "btn btn-primary btn-sm" %>
+                      <%= form_with(url: product_path(product), method: :delete, class: "d-inline-flex m-0") do %>
+                        <%= hidden_field_tag :redirect_to, admin_products_path(page: @pagination&.dig(:page) || params[:page]) %>
+                        <%= button_tag "Supprimer",
+                                       type: "submit",
+                                       class: "btn btn-danger btn-sm",
+                                       data: {
+                                         action: "click->quantity-modal#open",
+                                         modal_title: "Supprimer le produit",
+                                         modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer ce produit ?",
+                                         modal_confirm_label: "Supprimer"
+                                       } %>
+                      <% end %>
                     </div>
                   </td>
                 </tr>
@@ -88,6 +103,7 @@
         <%= link_to "Créer un produit", new_product_path, class: "btn btn-success" %>
       </div>
       <%= admin_pagination(@pagination) %>
+      <%= render "shared/confirm_modal" %>
     </div>
   </div>
 </div>

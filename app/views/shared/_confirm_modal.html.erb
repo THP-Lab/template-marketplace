@@ -1,0 +1,20 @@
+<dialog class="confirm-dialog"
+        data-quantity-modal-target="dialog"
+        data-action="click->quantity-modal#closeOnBackdrop cancel->quantity-modal#close">
+  <h2 class="h5 mb-2" data-quantity-modal-target="title">Confirmer l'action</h2>
+  <p class="mb-0" data-quantity-modal-target="message">Cette action est définitive.</p>
+
+  <div class="d-flex justify-content-end gap-2 mt-4">
+    <button type="button"
+            class="btn btn-outline-primary btn-sm"
+            data-action="quantity-modal#close">
+      Annuler
+    </button>
+    <button type="button"
+            class="btn btn-danger btn-sm"
+            data-quantity-modal-target="confirmButton"
+            data-action="quantity-modal#confirm">
+      Confirmer
+    </button>
+  </div>
+</dialog>
