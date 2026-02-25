@@ -4,6 +4,12 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_HOME_BANNER_PRIMARY_CTA_LABEL = "Mon histoire".freeze
   DEFAULT_HOME_BANNER_SECONDARY_CTA_LABEL = "Boutique".freeze
   DEFAULT_FOOTER_DESCRIPTION = "Artisan forgeron passionné, créateur de bijoux et armures médiévales authentiques. Chaque pièce est forgée avec soin et tradition.".freeze
+  DEFAULT_ABOUT_PRINCIPAL_TITLE = "Bienvenue dans notre Haubergerie".freeze
+  DEFAULT_ABOUT_PONTIUS_TITLE = "Le Parcours de Pontius".freeze
+  DEFAULT_ABOUT_MON_PARCOURS_TITLE = "Mon Parcours".freeze
+  DEFAULT_ABOUT_PRIMARY_TITLE = DEFAULT_ABOUT_PRINCIPAL_TITLE
+  DEFAULT_ABOUT_SECONDARY_TITLE = DEFAULT_ABOUT_PONTIUS_TITLE
+  DEFAULT_ABOUT_JOURNEY_TITLE = DEFAULT_ABOUT_MON_PARCOURS_TITLE
 
   has_one_attached :home_banner_image
 
@@ -24,7 +30,13 @@ class CompanyInformation < ApplicationRecord
       home_banner_subtitle: "",
       home_banner_primary_cta_label: "",
       home_banner_secondary_cta_label: "",
-      footer_description: ""
+      footer_description: "",
+      about_principal_title: "",
+      about_principal_description: "",
+      about_pontius_title: "",
+      about_pontius_description: "",
+      about_mon_parcours_title: "",
+      about_mon_parcours_description: ""
     )
   end
 
@@ -54,5 +66,77 @@ class CompanyInformation < ApplicationRecord
 
   def footer_description_or_default
     footer_description.presence || DEFAULT_FOOTER_DESCRIPTION
+  end
+
+  def about_principal_title_or_default
+    about_principal_title.presence || DEFAULT_ABOUT_PRINCIPAL_TITLE
+  end
+
+  def about_pontius_title_or_default
+    about_pontius_title.presence || DEFAULT_ABOUT_PONTIUS_TITLE
+  end
+
+  def about_mon_parcours_title_or_default
+    about_mon_parcours_title.presence || DEFAULT_ABOUT_MON_PARCOURS_TITLE
+  end
+
+  def about_primary_title
+    about_principal_title
+  end
+
+  def about_primary_title=(value)
+    self.about_principal_title = value
+  end
+
+  def about_primary_description
+    about_principal_description
+  end
+
+  def about_primary_description=(value)
+    self.about_principal_description = value
+  end
+
+  def about_secondary_title
+    about_pontius_title
+  end
+
+  def about_secondary_title=(value)
+    self.about_pontius_title = value
+  end
+
+  def about_secondary_description
+    about_pontius_description
+  end
+
+  def about_secondary_description=(value)
+    self.about_pontius_description = value
+  end
+
+  def about_journey_title
+    about_mon_parcours_title
+  end
+
+  def about_journey_title=(value)
+    self.about_mon_parcours_title = value
+  end
+
+  def about_journey_description
+    about_mon_parcours_description
+  end
+
+  def about_journey_description=(value)
+    self.about_mon_parcours_description = value
+  end
+
+  def about_primary_title_or_default
+    about_primary_title.presence || DEFAULT_ABOUT_PRIMARY_TITLE
+  end
+
+  def about_secondary_title_or_default
+    about_secondary_title.presence || DEFAULT_ABOUT_SECONDARY_TITLE
+  end
+
+  def about_journey_title_or_default
+    about_journey_title.presence || DEFAULT_ABOUT_JOURNEY_TITLE
   end
 end

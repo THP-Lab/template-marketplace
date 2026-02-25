@@ -1,4 +1,7 @@
-<% about_options = AboutPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
+<% about_options = AboutPage.order(:section_type, :position, :title).map { |p|
+     position_label = p.position.present? ? "##{p.position}" : "#-"
+     ["#{p.section_label} - #{position_label} - #{p.title}", p.id]
+   } %>
 <% repair_options = RepairPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
 
 <%= form_with(model: home_page, data: { controller: "home-block-form" }) do |form| %>

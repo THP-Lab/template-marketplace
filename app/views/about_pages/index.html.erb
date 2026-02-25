@@ -14,6 +14,8 @@
                                 type: "AboutPage")) %>
 <% end %>
 
+<% company_information = @company_information || CompanyInformation.instance %>
+
 <header class="hero-2 d-flex align-items-center text-center">
   <div class="container">
     <h1 class="mt-4">Haubergerie de pontius</h1>
@@ -22,60 +24,105 @@
 </header>
 
 <div class="container py-4 mt-4">
-  <div class="card p-4 mt-4 mb-4">
-    <h1 class="text-center mb-2">Bienvenue dans notre Haubergerie</h1>
-    <p class="text-center mb-2">Pontius le Templier vous accueille dans sa légendaire Haubergerie, un atelier où l'histoire côtoie l'artisanat authentique. </p>
-    <p class="text-center mb-1">Depuis des années, nous perpétuons les traditions millénaires de l'armurerie médiévale.</p>
-    <p class="text-center mb-2">Chaque pièce est travaillée avec respect et passion. </p>
-    <p class="text-center mb-2">De l'épée forgée à main au haubert de mailles, découvrez des créations qui honorent les guerriers d'antan.</p>
-  </div>
+  <section class="mb-5">
+    <h2 class="text-center mb-2"><%= company_information.about_primary_title_or_default %></h2>
+    <% if company_information.about_primary_description.present? %>
+      <p class="text-center mb-4"><%= company_information.about_primary_description %></p>
+    <% end %>
 
-  <div>
-    <h3 class="text-center mt-5 mb-5">Le Parcours de Pontius</h3>
+    <% if @about_primary_blocks.any? %>
+      <% @about_primary_blocks.each do |about_page| %>
+        <% show_title = about_page.title.present? && !about_page.title.to_s.strip.casecmp?(company_information.about_primary_title_or_default.to_s.strip) %>
+        <div class="card p-4 mt-4 mb-4" id="<%= dom_id(about_page) %>">
+          <% if show_title %>
+            <h3 class="text-center mb-2"><%= about_page.title %></h3>
+          <% end %>
+          <% if about_page.image.attached? %>
+            <div class="text-center mb-3">
+              <%= attachment_thumb(about_page.image, class: "img-fluid fixed-image") %>
+            </div>
+          <% end %>
+          <div class="text-center">
+            <%= simple_format(about_page.content) %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="card p-4 mt-4 mb-4">
+        <p class="text-center mb-2">Pontius le Templier vous accueille dans sa légendaire Haubergerie, un atelier où l'histoire côtoie l'artisanat authentique.</p>
+        <p class="text-center mb-1">Depuis des années, nous perpétuons les traditions millénaires de l'armurerie médiévale.</p>
+        <p class="text-center mb-2">Chaque pièce est travaillée avec respect et passion.</p>
+        <p class="text-center mb-2">De l'épée forgée à main au haubert de mailles, découvrez des créations qui honorent les guerriers d'antan.</p>
+      </div>
+    <% end %>
+  </section>
 
-    <div class="d-flex justify-content-center mb-5">
-      <div class="row g-4">
+  <section class="mb-5">
+    <h3 class="text-center mt-5 mb-3"><%= company_information.about_secondary_title_or_default %></h3>
+    <% if company_information.about_secondary_description.present? %>
+      <p class="text-center mb-4"><%= company_information.about_secondary_description %></p>
+    <% end %>
+
+    <div class="row g-4 mb-5">
+      <% if @about_secondary_blocks.any? %>
+        <% @about_secondary_blocks.each do |about_page| %>
+          <div class="col-12 col-md-6" id="<%= dom_id(about_page) %>">
+            <div class="card h-100 p-3">
+              <% if about_page.image.attached? %>
+                <div class="mb-3">
+                  <%= attachment_thumb(about_page.image, class: "img-fluid fixed-image") %>
+                </div>
+              <% end %>
+              <% if about_page.title.present? %>
+                <h5><%= about_page.title %></h5>
+              <% end %>
+              <%= simple_format(about_page.content) %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
         <div class="col-12 col-md-6">
           <div class="card h-100 p-3">
             <h5>L'Apprentissage</h5>
             <p>Pontius a commencé son voyage en tant qu'apprenti forgeron aux côtés des grands maîtres. Années d'apprentissage rigoureux et d'étude des techniques anciennes.</p>
           </div>
         </div>
-        
         <div class="col-12 col-md-6">
           <div class="card h-100 p-3">
             <h5>La Maîtrise</h5>
             <p>Après années de perfectionnement, Pontius a maîtrisé chaque aspect du métier d'armure. Il est devenu maître-forgeron reconnu dans tous les royaumes.</p>
           </div>
         </div>
-
         <div class="col-12 col-md-6">
           <div class="card h-100 p-3">
             <h5>La Création</h5>
             <p>Aujourd'hui, Pontius crée des pièces exceptionnelles. Chaque armure, chaque haubert raconte une histoire et porte l'âme du guerrier qui la portera.</p>
           </div>
         </div>
-        
         <div class="col-12 col-md-6">
           <div class="card h-100 p-3">
             <h5>Le Partage</h5>
             <p>Pontius partage sa passion lors d'événements, de reconstitutions historiques et de livestreams où il démontre son art à une communauté grandissante.</p>
           </div>
         </div>
-      
-      </div>
+      <% end %>
     </div>
-  </div>
-
+  </section>
 </div>
 
 <div id="about_pages" class="product-section">
   <div class="container py-4 mt-4">
-    <h3 class="text-center mb-4">Mon Parcours</h3>
+    <h3 class="text-center mb-3"><%= company_information.about_journey_title_or_default %></h3>
+    <% if company_information.about_journey_description.present? %>
+      <p class="text-center mb-4"><%= company_information.about_journey_description %></p>
+    <% end %>
 
-    <% @about_pages.each_with_index do |about_page, index| %>
-      <%= render partial: "about_page", locals: { about_page: about_page, index: index } %>
+    <% if @about_journey_blocks.any? %>
+      <% @about_journey_blocks.each_with_index do |about_page, index| %>
+        <%= render partial: "about_page", locals: { about_page: about_page, index: index } %>
+      <% end %>
+    <% else %>
+      <p class="text-center text-muted mb-0">Aucun bloc “Mon parcours” pour le moment.</p>
     <% end %>
   </div>
 </div>
-    

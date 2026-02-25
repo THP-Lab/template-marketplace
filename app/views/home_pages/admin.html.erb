@@ -32,7 +32,12 @@
               <% @home_pages.each do |home_page| %>
                 <% target_label =
                      case home_page.bloc_type
-                     when "about" then "Bloc À propos ##{home_page.target_id}"
+                     when "about"
+                       if (about_block = AboutPage.find_by(id: home_page.target_id))
+                         "#{about_block.section_label} - #{about_block.title}"
+                       else
+                         "Bloc À propos ##{home_page.target_id}"
+                       end
                      when "repair" then "Bloc Réparation ##{home_page.target_id}"
                      when "shop"
                        case home_page.shop_scope

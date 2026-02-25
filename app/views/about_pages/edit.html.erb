@@ -1,11 +1,26 @@
 <% content_for :title, "Admin - Modifier une section À propos" %>
 
 <%= admin_page(title: "Modifier une section À propos") do %>
-  <%= render "form", about_page: @about_page %>
+  <div data-controller="quantity-modal">
+    <%= render "form", about_page: @about_page, redirect_to: edit_about_page_path(@about_page) %>
 
-  <div class="mt-3 d-flex gap-2">
-    <%= link_to "Voir la section", @about_page, class: "btn btn-outline-secondary btn-sm" %>
-    <%= link_to "Retour aux sections", admin_about_pages_path, class: "btn btn-outline-secondary btn-sm" %>
-    <%= button_to "Supprimer", @about_page, method: :delete, data: { confirm: "Supprimer cette section ?" }, class: "btn btn-danger btn-sm" %>
+    <div class="mt-3 d-flex gap-2">
+      <%= link_to "Voir la section", about_pages_path(anchor: dom_id(@about_page)), class: "btn btn-outline-secondary btn-sm" %>
+      <%= link_to "Retour aux sections", admin_about_pages_path(anchor: @about_page.section_type), class: "btn btn-outline-secondary btn-sm" %>
+      <%= form_with url: about_page_path(@about_page), method: :delete, class: "d-inline" do %>
+        <%= hidden_field_tag :redirect_to, admin_about_pages_path(anchor: @about_page.section_type) %>
+        <%= button_tag "Supprimer",
+                       type: "submit",
+                       class: "btn btn-danger btn-sm",
+                       data: {
+                         action: "click->quantity-modal#open",
+                         modal_title: "Supprimer ce bloc À propos",
+                         modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer ce bloc ?",
+                         modal_confirm_label: "Supprimer"
+                       } %>
+      <% end %>
+    </div>
+
+    <%= render "shared/confirm_modal" %>
   </div>
 <% end %>

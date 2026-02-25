@@ -58,8 +58,10 @@ module ApplicationHelper
         icon: "bi-people",
         description: "Sections de la page À propos.",
         links: [
-          { label: "Blocs À propos", path: admin_about_pages_path },
-          { label: "Ajouter une section À propos", path: new_about_page_path }
+          { label: "Blocs À propos", path: admin_about_pages_path(anchor: "primary") },
+          { label: "Ajouter bloc principal", path: new_about_page_path(section_type: "primary") },
+          { label: "Ajouter bloc secondaire", path: new_about_page_path(section_type: "secondary") },
+          { label: "Ajouter bloc parcours", path: new_about_page_path(section_type: "journey") }
         ]
       },
       {

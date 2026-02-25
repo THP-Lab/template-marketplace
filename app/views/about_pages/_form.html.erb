@@ -1,4 +1,8 @@
 <%= form_with(model: about_page) do |form| %>
+  <% if local_assigns[:redirect_to].present? %>
+    <%= hidden_field_tag :redirect_to, local_assigns[:redirect_to] %>
+  <% end %>
+
   <% if about_page.errors.any? %>
     <div class="alert alert-danger">
       <h2 class="h6 mb-2"><%= pluralize(about_page.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
@@ -9,6 +13,14 @@
       </ul>
     </div>
   <% end %>
+
+  <div class="mb-3">
+    <%= form.label :section_type, "Partie de la page À propos", class: "form-label" %>
+    <%= form.select :section_type,
+                    AboutPage.section_options_for_select,
+                    {},
+                    class: "form-select" %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :title, "Titre", class: "form-label" %>

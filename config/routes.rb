@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :about_pages do
     collection { patch :reorder }
     collection { get :admin }
+    collection { patch :update_settings }
   end
   resources :terms_pages do
     collection { patch :reorder }

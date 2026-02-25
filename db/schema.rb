@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_192524) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_194141) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
+    t.string "section_type", default: "mon_parcours", null: false
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["section_type"], name: "index_about_pages_on_section_type"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -67,6 +69,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_192524) do
   end
 
   create_table "company_informations", force: :cascade do |t|
+    t.text "about_mon_parcours_description"
+    t.string "about_mon_parcours_title"
+    t.text "about_pontius_description"
+    t.string "about_pontius_title"
+    t.text "about_principal_description"
+    t.string "about_principal_title"
     t.text "additional_info"
     t.string "address_line1"
     t.string "address_line2"
