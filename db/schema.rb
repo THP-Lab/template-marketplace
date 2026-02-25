@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_194141) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_210836) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -175,7 +175,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_194141) do
     t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
+    t.text "highlight_1_description"
+    t.boolean "highlight_1_enabled", default: true, null: false
+    t.string "highlight_1_title"
+    t.text "highlight_2_description"
+    t.boolean "highlight_2_enabled", default: true, null: false
+    t.string "highlight_2_title"
+    t.text "highlight_3_description"
+    t.boolean "highlight_3_enabled", default: true, null: false
+    t.string "highlight_3_title"
     t.decimal "price"
+    t.boolean "show_product_highlights", default: true, null: false
     t.integer "stock"
     t.string "title"
     t.datetime "updated_at", null: false

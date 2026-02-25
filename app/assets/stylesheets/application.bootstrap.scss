@@ -381,6 +381,26 @@ dialog {
   width: 100%;
 }
 
+.product-highlight-config {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.product-highlight-config__panel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+.product-highlight-config__panel.is-open {
+  max-height: 420px;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
 .btn-primary {
   background-color: $color-primary;
   color: $color-light;
@@ -499,4 +519,3 @@ dialog {
 .admin-product-actions {
   white-space: nowrap;
 }
-
