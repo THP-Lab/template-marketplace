@@ -20,7 +20,6 @@
           <table class="table table-striped table-hover align-middle">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Image</th>
                 <th>Titre</th>
                 <th>Catégorie</th>
@@ -32,7 +31,6 @@
             <tbody>
             <% @events.each do |event| %>
               <tr id="<%= dom_id(event) %>">
-                <td><%= event.id %></td>
                 <td>
                   <%= attachment_thumb(event.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
                 </td>

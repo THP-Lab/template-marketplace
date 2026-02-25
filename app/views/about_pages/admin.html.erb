@@ -19,7 +19,6 @@
                  data-reorder-url-value="<%= reorder_about_pages_path %>">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Image</th>
                 <th>Titre</th>
                 <th>Contenu</th>
@@ -32,7 +31,6 @@
                 <tr id="<%= dom_id(about_page) %>"
                     data-reorder-target="item"
                     data-id="<%= about_page.id %>">
-                  <td><%= about_page.id %></td>
                   <td>
                     <%= attachment_thumb(about_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
                   </td>

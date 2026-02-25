@@ -19,7 +19,6 @@
                  data-reorder-url-value="<%= reorder_home_pages_path %>">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Titre</th>
                 <th>Image</th>
                 <th>Type</th>
@@ -48,7 +47,6 @@
                 <tr id="<%= dom_id(home_page) %>"
                     data-reorder-target="item"
                     data-id="<%= home_page.id %>">
-                  <td><%= home_page.id %></td>
                   <td><%= home_page.title %></td>
                   <td>
                     <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
