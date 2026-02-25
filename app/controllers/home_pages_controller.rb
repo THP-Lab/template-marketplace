@@ -5,6 +5,7 @@ class HomePagesController < ApplicationController
   # GET /home_pages or /home_pages.json
   def index
     @home_pages = HomePage.order(:position)
+    @company_information = CompanyInformation.instance
     if action_name == "admin"
       @home_pages, @pagination = paginate(@home_pages)
     end

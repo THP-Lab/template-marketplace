@@ -1,4 +1,11 @@
 class CompanyInformation < ApplicationRecord
+  DEFAULT_HOME_BANNER_TITLE = "Haubergerie de pontius".freeze
+  DEFAULT_HOME_BANNER_SUBTITLE = "l’authentique armurerie du moyen âge".freeze
+  DEFAULT_HOME_BANNER_PRIMARY_CTA_LABEL = "Mon histoire".freeze
+  DEFAULT_HOME_BANNER_SECONDARY_CTA_LABEL = "Boutique".freeze
+
+  has_one_attached :home_banner_image
+
   def self.instance
     first_or_create!(
       legal_name: "",
@@ -11,7 +18,11 @@ class CompanyInformation < ApplicationRecord
       vat_number: "",
       phone: "",
       email: "",
-      additional_info: ""
+      additional_info: "",
+      home_banner_title: "",
+      home_banner_subtitle: "",
+      home_banner_primary_cta_label: "",
+      home_banner_secondary_cta_label: ""
     )
   end
 
@@ -21,5 +32,21 @@ class CompanyInformation < ApplicationRecord
 
   def location_line
     [zipcode.presence, city.presence, country.presence].compact.join(" ")
+  end
+
+  def home_banner_title_or_default
+    home_banner_title.presence || DEFAULT_HOME_BANNER_TITLE
+  end
+
+  def home_banner_subtitle_or_default
+    home_banner_subtitle.presence || DEFAULT_HOME_BANNER_SUBTITLE
+  end
+
+  def home_banner_primary_cta_label_or_default
+    home_banner_primary_cta_label.presence || DEFAULT_HOME_BANNER_PRIMARY_CTA_LABEL
+  end
+
+  def home_banner_secondary_cta_label_or_default
+    home_banner_secondary_cta_label.presence || DEFAULT_HOME_BANNER_SECONDARY_CTA_LABEL
   end
 end

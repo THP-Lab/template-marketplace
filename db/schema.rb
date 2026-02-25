@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_170000) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -74,6 +74,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
     t.string "country"
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "home_banner_primary_cta_label"
+    t.string "home_banner_secondary_cta_label"
+    t.string "home_banner_subtitle"
+    t.string "home_banner_title"
     t.string "legal_name"
     t.string "phone"
     t.string "siret"
