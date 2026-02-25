@@ -270,6 +270,11 @@ module ApplicationHelper
       "url": url,
       "description": description,
       "isPartOf": {
+        "@type": "WebSite",
+        "name": site_name,
+        "url": request.base_url
+      },
+      "publisher": {
         "@type": "Organization",
         "name": site_name,
         "url": request.base_url
