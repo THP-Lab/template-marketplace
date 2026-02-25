@@ -3,6 +3,24 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_HOME_BANNER_SUBTITLE = "l’authentique armurerie du moyen âge".freeze
   DEFAULT_HOME_BANNER_PRIMARY_CTA_LABEL = "Mon histoire".freeze
   DEFAULT_HOME_BANNER_SECONDARY_CTA_LABEL = "Boutique".freeze
+  HOME_HIGHLIGHT_DEFAULTS = [
+    {
+      title: "Savoir-faire Artisanal",
+      description: "Chaque pièce est créée à la main avec passion et précision, dans le respect des techniques ancestrales."
+    },
+    {
+      title: "Créations Uniques",
+      description: "Bijoux et accessoires en maille, conçus pour durer et sublimer votre style médiéval."
+    },
+    {
+      title: "Réparations & Entretien",
+      description: "Service professionnel de restauration et personnalisation de vos pièces en maille."
+    },
+    {
+      title: "Événements",
+      description: "Retrouvez-nous lors des festivités et marchés médiévaux."
+    }
+  ].freeze
   DEFAULT_FOOTER_DESCRIPTION = "Artisan forgeron passionné, créateur de bijoux et armures médiévales authentiques. Chaque pièce est forgée avec soin et tradition.".freeze
   DEFAULT_ABOUT_PRINCIPAL_TITLE = "Bienvenue dans notre Haubergerie".freeze
   DEFAULT_ABOUT_PONTIUS_TITLE = "Le Parcours de Pontius".freeze
@@ -30,6 +48,14 @@ class CompanyInformation < ApplicationRecord
       home_banner_subtitle: "",
       home_banner_primary_cta_label: "",
       home_banner_secondary_cta_label: "",
+      home_highlight_1_title: "",
+      home_highlight_1_description: "",
+      home_highlight_2_title: "",
+      home_highlight_2_description: "",
+      home_highlight_3_title: "",
+      home_highlight_3_description: "",
+      home_highlight_4_title: "",
+      home_highlight_4_description: "",
       footer_description: "",
       about_principal_title: "",
       about_principal_description: "",
@@ -62,6 +88,16 @@ class CompanyInformation < ApplicationRecord
 
   def home_banner_secondary_cta_label_or_default
     home_banner_secondary_cta_label.presence || DEFAULT_HOME_BANNER_SECONDARY_CTA_LABEL
+  end
+
+  def home_highlights
+    HOME_HIGHLIGHT_DEFAULTS.each_with_index.map do |defaults, index|
+      number = index + 1
+      {
+        title: send("home_highlight_#{number}_title").presence || defaults[:title],
+        description: send("home_highlight_#{number}_description").presence || defaults[:description]
+      }
+    end
   end
 
   def footer_description_or_default

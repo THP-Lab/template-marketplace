@@ -72,7 +72,15 @@ class CompanyInformationsController < ApplicationController
       :home_banner_subtitle,
       :home_banner_primary_cta_label,
       :home_banner_secondary_cta_label,
-      :home_banner_image
+      :home_banner_image,
+      :home_highlight_1_title,
+      :home_highlight_1_description,
+      :home_highlight_2_title,
+      :home_highlight_2_description,
+      :home_highlight_3_title,
+      :home_highlight_3_description,
+      :home_highlight_4_title,
+      :home_highlight_4_description
     )
   end
 
