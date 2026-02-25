@@ -238,38 +238,44 @@ footer h5{
 
 @media (min-width: 992px) {
   .simple-calendar {
-    width: clamp(760px, 52vw, 920px);
+    width: min(700px, 90vw);
     margin-inline: auto;
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
 
   .simple-calendar .calendar-heading {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
   }
 
   .simple-calendar .calendar-title {
-    font-size: 1.15rem;
+    font-size: 1rem;
   }
 
   .simple-calendar th {
-    font-size: 0.85rem;
-    padding-block: 0.2rem;
+    font-size: 0.75rem;
+    padding: 0.1rem !important;
+  }
+
+  .simple-calendar td {
+    padding: 0.12rem !important;
   }
 
   .simple-calendar .day-square {
-    aspect-ratio: 2 / 1;
-    padding: 0.35rem;
+    aspect-ratio: auto;
+    height: clamp(52px, 7vh, 72px);
+    min-height: 52px;
+    padding: 0.2rem;
   }
 
   .simple-calendar .day-number {
-    font-size: 0.8rem;
-    margin-bottom: 0.15rem;
+    font-size: 0.72rem;
+    margin-bottom: 0.1rem;
   }
 
   .simple-calendar .calendar-heading a:first-child::before,
   .simple-calendar .calendar-heading a:last-child::before {
-    font-size: 0.85rem;
-    padding: 2px 6px;
+    font-size: 0.75rem;
+    padding: 1px 5px;
   }
 }
 
@@ -333,6 +339,16 @@ dialog {
   border-radius: 12px;
   padding: 1.5rem;
   background-color: $color-bg;
+}
+
+.confirm-dialog {
+  width: min(92vw, 460px);
+  border-width: 2px;
+  box-shadow: 0 12px 32px rgba(76, 19, 19, 0.25);
+}
+
+.confirm-dialog::backdrop {
+  background: rgba(76, 19, 19, 0.45);
 }
 
 .product-section {
