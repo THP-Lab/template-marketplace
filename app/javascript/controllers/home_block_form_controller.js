@@ -2,9 +2,25 @@ import { Controller } from "@hotwired/stimulus"
 
 // Gère l'affichage conditionnel des champs en fonction du type de bloc.
 export default class extends Controller {
-  static targets = ["blocType", "targetSection", "shopSection", "contentSection", "buttonSection", "targetSelect"]
+  static targets = [
+    "blocType",
+    "targetSection",
+    "shopSection",
+    "contentSection",
+    "designSection",
+    "designVariant",
+    "splitOptionsSection",
+    "buttonToggleSection",
+    "buttonSection",
+    "buttonUrlSection",
+    "showButtonInput",
+    "imageSection",
+    "targetSelect"
+  ]
 
   connect() {
+    if (!this.hasTargetSelectTarget) return
+
     this.aboutOptions = this._parseOptions(this.targetSelectTarget.dataset.aboutOptions)
     this.repairOptions = this._parseOptions(this.targetSelectTarget.dataset.repairOptions)
     this.selectedValue = this.targetSelectTarget.dataset.selectedValue
@@ -12,11 +28,23 @@ export default class extends Controller {
   }
 
   toggle() {
+    if (!this.hasBlocTypeTarget) return
+
     const type = this.blocTypeTarget.value
-    this._toggleSection(this.targetSectionTarget, ["about", "repair"].includes(type))
-    this._toggleSection(this.shopSectionTarget, type === "shop")
-    this._toggleSection(this.contentSectionTarget, type === "custom")
-    this._toggleSection(this.buttonSectionTarget, ["about", "repair", "shop"].includes(type))
+    const isShop = type === "shop"
+    const isCustom = type === "custom"
+    const isSplitVariant = this.hasDesignVariantTarget && this.designVariantTarget.value === "split"
+    const showButton = this.hasShowButtonInputTarget && this.showButtonInputTarget.checked
+
+    this._toggleIfPresent("targetSection", ["about", "repair"].includes(type))
+    this._toggleIfPresent("shopSection", isShop)
+    this._toggleIfPresent("contentSection", isCustom)
+    this._toggleIfPresent("designSection", !isShop)
+    this._toggleIfPresent("splitOptionsSection", !isShop && isSplitVariant)
+    this._toggleIfPresent("buttonToggleSection", !isShop)
+    this._toggleIfPresent("buttonSection", !isShop && showButton)
+    this._toggleIfPresent("buttonUrlSection", !isShop && isCustom && showButton)
+    this._toggleIfPresent("imageSection", !isShop && isSplitVariant)
     this._populateTargetOptions(type)
   }
 
@@ -28,8 +56,10 @@ export default class extends Controller {
   }
 
   _populateTargetOptions(type) {
+    if (!this.hasTargetSelectTarget) return
+
     const select = this.targetSelectTarget
-    const current = this.selectedValue || select.value
+    const current = select.value || this.selectedValue
     let options = []
 
     if (type === "about") {
@@ -46,6 +76,19 @@ export default class extends Controller {
     })
 
     select.value = current
+    this.selectedValue = null
+  }
+
+  _toggleIfPresent(targetName, visible) {
+    const hasTargetMethod = `has${this._capitalize(targetName)}Target`
+    const targetMethod = `${targetName}Target`
+    if (!this[hasTargetMethod]) return
+
+    this._toggleSection(this[targetMethod], visible)
+  }
+
+  _capitalize(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1)
   }
 
   _addOption(select, value, label) {

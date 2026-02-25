@@ -472,6 +472,20 @@ dialog {
   border-radius: 0.5rem;
 }
 
+.home-split-block-image {
+  width: 100%;
+  min-height: 420px;
+  max-height: 620px;
+  object-fit: cover;
+}
+
+@media (max-width: 991.98px) {
+  .home-split-block-image {
+    min-height: 260px;
+    max-height: 360px;
+  }
+}
+
 // ====================
 
 .reorder-dragging {

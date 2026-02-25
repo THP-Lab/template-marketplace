@@ -22,6 +22,7 @@
                 <th>Titre</th>
                 <th>Image</th>
                 <th>Type</th>
+                <th>Design</th>
                 <th>Source / portée</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
@@ -57,6 +58,18 @@
                     <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
                   </td>
                   <td><%= home_page.bloc_type %></td>
+                  <td>
+                    <% if home_page.shop_bloc_type? %>
+                      <span class="text-muted">Boutique (inchangé)</span>
+                    <% else %>
+                      <%= home_page.layout_variant %>
+                      <% if home_page.split_layout_variant? %>
+                        <small class="d-block text-muted">
+                          <%= home_page.layout_background %> · <%= home_page.layout_text_tone %> · image <%= home_page.layout_image_position %>
+                        </small>
+                      <% end %>
+                    <% end %>
+                  </td>
                   <td><%= target_label %></td>
                   <td><%= truncate(home_page.content.to_s, length: 100) %></td>
                   <td class="text-end">

@@ -1,0 +1,72 @@
+<%
+  block_title = home_page.resolved_title
+  block_content = home_page.resolved_content.to_s
+  block_image = home_block_image_attachment(home_page)
+  button_url = home_block_button_url(home_page)
+  light_text = home_page.light_layout_text_tone?
+  split_background_class = home_page.white_layout_background? ? "bg-white" : "product-section"
+  image_col_class = "col-12 col-md-6"
+  text_col_class = "col-12 col-md-6"
+
+  if home_page.right_layout_image_position?
+    image_col_class += " order-md-2"
+    text_col_class += " order-md-1"
+  end
+%>
+
+<article>
+  <% if home_page.split_layout_variant? %>
+    <div class="<%= split_background_class %> rounded">
+      <div class="container py-4">
+        <div class="row align-items-center g-4">
+          <% if block_image.present? %>
+            <div class="<%= image_col_class %>">
+              <%= attachment_thumb(block_image,
+                                  variant_options: { resize_to_fill: [1200, 760] },
+                                  class: "img-fluid rounded home-split-block-image",
+                                  alt: block_title) %>
+            </div>
+          <% end %>
+
+          <div class="<%= block_image.present? ? text_col_class : "col-12" %>">
+            <% if block_title.present? %>
+              <h3 class="<%= "text-light" if light_text %>"><%= block_title %></h3>
+            <% end %>
+
+            <% if block_content.present? %>
+              <div class="<%= "text-light" if light_text %>">
+                <%= simple_format(block_content) %>
+              </div>
+            <% end %>
+
+            <% if button_url.present? %>
+              <div class="mt-2">
+                <%= link_to home_block_button_label(home_page), button_url, class: "btn btn-primary" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="container mt-5">
+      <div class="card mt-5 mb-5">
+        <% if block_title.present? %>
+          <h2 class="text-center mt-4"><%= block_title %></h2>
+        <% end %>
+
+        <% if block_content.present? %>
+          <div class="text-center mt-2 px-3">
+            <%= simple_format(block_content) %>
+          </div>
+        <% end %>
+
+        <% if button_url.present? %>
+          <div class="d-flex justify-content-center mt-2 mb-3">
+            <%= link_to home_block_button_label(home_page), button_url, class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</article>

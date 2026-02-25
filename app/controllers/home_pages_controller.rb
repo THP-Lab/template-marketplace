@@ -27,7 +27,7 @@ class HomePagesController < ApplicationController
 
     respond_to do |format|
       if @home_page.save
-        format.html { redirect_to @home_page, notice: "Home page was successfully created." }
+        format.html { redirect_to admin_home_pages_path, notice: "Bloc d’accueil créé." }
         format.json { render :show, status: :created, location: @home_page }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,7 +40,7 @@ class HomePagesController < ApplicationController
   def update
     respond_to do |format|
       if @home_page.update(home_page_params)
-        format.html { redirect_to @home_page, notice: "Home page was successfully updated.", status: :see_other }
+        format.html { redirect_to admin_home_pages_path, notice: "Bloc d’accueil mis à jour.", status: :see_other }
         format.json { render :show, status: :ok, location: @home_page }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -54,7 +54,7 @@ class HomePagesController < ApplicationController
     @home_page.destroy!
 
     respond_to do |format|
-      format.html { redirect_to home_pages_path, notice: "Home page was successfully destroyed.", status: :see_other }
+      format.html { redirect_to admin_home_pages_path, notice: "Bloc d’accueil supprimé.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -80,6 +80,8 @@ class HomePagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def home_page_params
-      params.expect(home_page: [ :title, :content, :position, :bloc_type, :target_id, :shop_scope, :image, :button_label ])
+      params.expect(home_page: [ :title, :content, :position, :bloc_type, :target_id, :shop_scope, :image, :button_label,
+                                 :layout_variant, :layout_background, :layout_text_tone, :layout_image_position,
+                                 :show_button, :button_url ])
     end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_215742) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -130,10 +130,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_215742) do
   create_table "home_pages", force: :cascade do |t|
     t.string "bloc_type", default: "custom", null: false
     t.string "button_label"
+    t.string "button_url"
     t.text "content"
     t.datetime "created_at", null: false
+    t.string "layout_background", default: "theme", null: false
+    t.string "layout_image_position", default: "left", null: false
+    t.string "layout_text_tone", default: "theme", null: false
+    t.string "layout_variant", default: "split", null: false
     t.integer "position"
     t.string "shop_scope", default: "first", null: false
+    t.boolean "show_button", default: true, null: false
     t.integer "target_id"
     t.string "title"
     t.datetime "updated_at", null: false

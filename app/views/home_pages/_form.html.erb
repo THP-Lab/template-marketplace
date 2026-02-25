@@ -66,15 +66,71 @@
     <div class="form-text">S’affiche uniquement pour les blocs personnalisés.</div>
   </div>
 
+  <div class="mb-3" data-home-block-form-target="designSection">
+    <%= form.label :layout_variant, "Design du bloc", class: "form-label" %>
+    <%= form.select :layout_variant,
+                    [["Image + texte", "split"],
+                     ["Encadré titre + description", "cta_card"]],
+                    {},
+                    class: "form-select",
+                    data: { "home-block-form-target": "designVariant", action: "change->home-block-form#toggle" } %>
+    <div class="form-text">Le design ne s’applique pas aux blocs boutique.</div>
+  </div>
+
+  <div class="row g-3 mb-3" data-home-block-form-target="splitOptionsSection">
+    <div class="col-md-4">
+      <%= form.label :layout_background, "Fond du bloc", class: "form-label" %>
+      <%= form.select :layout_background,
+                      [["Fond thème", "theme"],
+                       ["Fond blanc", "white"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+    <div class="col-md-4">
+      <%= form.label :layout_text_tone, "Couleur du texte", class: "form-label" %>
+      <%= form.select :layout_text_tone,
+                      [["Texte thème", "theme"],
+                       ["Texte clair", "light"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+    <div class="col-md-4">
+      <%= form.label :layout_image_position, "Position image", class: "form-label" %>
+      <%= form.select :layout_image_position,
+                      [["Image à gauche", "left"],
+                       ["Image à droite", "right"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+  </div>
+
+  <div class="form-check mb-3" data-home-block-form-target="buttonToggleSection">
+    <%= form.check_box :show_button,
+                       class: "form-check-input",
+                       data: { "home-block-form-target": "showButtonInput", action: "change->home-block-form#toggle" } %>
+    <%= form.label :show_button, "Afficher un bouton dans ce bloc", class: "form-check-label" %>
+  </div>
+
   <div class="mb-3" data-home-block-form-target="buttonSection">
     <%= form.label :button_label, "Texte du bouton", class: "form-label" %>
     <%= form.text_field :button_label, class: "form-control", placeholder: "Ex : Découvrir" %>
-    <div class="form-text">Affiché sur le bouton du bloc (boutique, À propos, réparation).</div>
+    <div class="form-text">Pour À propos et Réparation, ce texte remplace le libellé par défaut.</div>
   </div>
 
-  <div class="mb-3">
+  <div class="mb-3" data-home-block-form-target="buttonUrlSection">
+    <%= form.label :button_url, "Lien du bouton (bloc personnalisé)", class: "form-label" %>
+    <%= form.text_field :button_url,
+                        class: "form-control",
+                        placeholder: "/contacts ou https://exemple.com/page" %>
+    <div class="form-text">Utilisé uniquement pour les blocs personnalisés quand le bouton est activé.</div>
+  </div>
+
+  <div class="mb-3" data-home-block-form-target="imageSection">
     <%= form.label :image, "Image du bloc", class: "form-label" %>
     <%= form.file_field :image, class: "form-control" %>
+    <div class="form-text">
+      Image utilisée sur le design “Image + texte”. Le cadrage reste homogène automatiquement.
+    </div>
     <% if home_page.image.attached? %>
       <div class="mt-2">
         <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail") %>
