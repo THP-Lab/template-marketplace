@@ -1,6 +1,6 @@
 <% content_for :title, "Admin - Événements" %>
 
-<div class="container py-4">
+<div class="container py-4" data-controller="quantity-modal">
   <div class="row g-4">
     <div class="col-lg-4 col-xl-3">
       <%= render_admin_sidebar %>
@@ -10,6 +10,9 @@
 
       <% if notice.present? %>
         <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="alert alert-warning"><%= alert %></div>
       <% end %>
 
       <% if @events.any? %>
@@ -23,7 +26,7 @@
                 <th>Catégorie</th>
                 <th>Dates</th>
                 <th>Lieu</th>
-                <th class="text-end">Actions</th>
+                <th class="text-end" style="width: 230px;">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -38,9 +41,21 @@
                   <td><%= event_date_range(event) %></td>
                   <td><%= event.location.presence || "—" %></td>
                   <td class="text-end">
-                    <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "Voir", event_path(event), class: "btn btn-outline-secondary" %>
-                      <%= link_to "Modifier", edit_event_path(event), class: "btn btn-primary" %>
+                    <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap admin-product-actions">
+                      <%= link_to "Voir", event_path(event), class: "btn btn-outline-secondary btn-sm" %>
+                      <%= link_to "Modifier", edit_event_path(event), class: "btn btn-primary btn-sm" %>
+                      <%= form_with(url: event_path(event), method: :delete, class: "d-inline-flex m-0") do %>
+                        <%= hidden_field_tag :redirect_to, admin_events_path(page: @pagination&.dig(:page) || params[:page]) %>
+                        <%= button_tag "Supprimer",
+                                       type: "submit",
+                                       class: "btn btn-danger btn-sm",
+                                       data: {
+                                         action: "click->quantity-modal#open",
+                                         modal_title: "Supprimer l’événement",
+                                         modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer cet événement ?",
+                                         modal_confirm_label: "Supprimer"
+                                       } %>
+                      <% end %>
                     </div>
                   </td>
                 </tr>
@@ -56,6 +71,7 @@
         <%= link_to "Créer un événement", new_event_path, class: "btn btn-success" %>
       </div>
       <%= admin_pagination(@pagination) %>
+      <%= render "shared/confirm_modal" %>
     </div>
   </div>
 </div>

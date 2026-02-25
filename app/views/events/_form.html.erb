@@ -1,4 +1,8 @@
 <%= form_with(model: event) do |form| %>
+  <% if local_assigns[:redirect_to].present? %>
+    <%= hidden_field_tag :redirect_to, local_assigns[:redirect_to] %>
+  <% end %>
+
   <% if event.errors.any? %>
     <div class="alert alert-danger">
       <h2 class="h6 mb-2"><%= pluralize(event.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
