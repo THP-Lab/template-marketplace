@@ -8,7 +8,17 @@ class UsersController < ApplicationController
   end
 
   def admin
+    @query = params[:q].to_s.strip
     @users = User.order(created_at: :desc)
+
+    if @query.present?
+      term = "%#{ActiveRecord::Base.sanitize_sql_like(@query.downcase)}%"
+      @users = @users.where(
+        "LOWER(email) LIKE :term OR LOWER(first_name) LIKE :term OR LOWER(last_name) LIKE :term",
+        term: term
+      )
+    end
+
     @users, @pagination = paginate(@users)
   end
 
