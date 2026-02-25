@@ -21,7 +21,7 @@
                 <th>Image</th>
                 <th>Titre</th>
                 <th>Catégorie</th>
-                <th>Date</th>
+                <th>Dates</th>
                 <th>Lieu</th>
                 <th class="text-end">Actions</th>
               </tr>
@@ -35,7 +35,7 @@
                 </td>
                 <td><%= event.title %></td>
                 <td><%= event.category.presence || "—" %></td>
-                  <td><%= event.event_date.present? ? l(event.event_date, format: :short) : "—" %></td>
+                  <td><%= event_date_range(event) %></td>
                   <td><%= event.location.presence || "—" %></td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm" role="group">

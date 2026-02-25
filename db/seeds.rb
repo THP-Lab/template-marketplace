@@ -135,11 +135,15 @@ puts "• #{orders.count} commandes générées (statuts : #{ORDER_STATUSES.join
 
 separator("Événements programmés")
 events = Array.new(6) do |index|
+  start_at = Faker::Time.between(from: 2.months.ago, to: 3.months.from_now)
+  end_at = start_at + rand(2..10).hours
+
   Event.create!(
-    user: users.sample,
+    user: admin,
     title: "Événement #{index + 1} - #{Faker::Ancient.primordial}",
     description: Faker::Lorem.paragraph(sentence_count: 4),
-    event_date: Faker::Time.between(from: 2.months.ago, to: 3.months.from_now),
+    event_date: start_at,
+    end_date: end_at,
     location: Faker::Address.city,
     image_url: "https://picsum.photos/seed/event#{index}/900/450",
     category: EVENT_CATEGORIES.sample

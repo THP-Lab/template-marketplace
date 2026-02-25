@@ -6,7 +6,7 @@ class EventsController < ApplicationController
   def index
     scope = Event.order(event_date: :asc)
     unless action_name == "admin"
-      scope = scope.where("event_date IS NULL OR event_date >= ?", Time.current)
+      scope = scope.where("(event_date IS NULL AND end_date IS NULL) OR COALESCE(end_date, event_date) >= ?", Time.current)
     end
     @events = scope
     @events, @pagination = paginate(@events) if action_name == "admin"
@@ -27,7 +27,7 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    @event = Event.new(event_params)
+    @event = current_user.events.new(event_params)
 
     respond_to do |format|
       if @event.save
@@ -73,6 +73,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.expect(event: [ :user_id, :title, :category, :description, :event_date, :location, :image_url, :image ])
+      params.expect(event: [ :title, :category, :description, :event_date, :end_date, :location, :image_url, :image ])
     end
 end

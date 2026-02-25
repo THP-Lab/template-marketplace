@@ -9,6 +9,62 @@
                                   name: "Calendrier des événements",
                                   url_proc: ->(event) { event_url(event) })) %>
 <% end %>
+<% content_for :head do %>
+  <style>
+    @media (min-width: 992px) {
+      .simple-calendar {
+        width: min(980px, 96vw) !important;
+        margin-inline: auto !important;
+        padding: 0.75rem !important;
+      }
+
+      .simple-calendar .calendar-heading {
+        margin-bottom: 0.6rem !important;
+      }
+
+      .simple-calendar .calendar-title {
+        font-size: 1.2rem !important;
+      }
+
+      .simple-calendar th {
+        font-size: 0.9rem !important;
+        padding: 0.2rem !important;
+      }
+
+      .simple-calendar td.day {
+        height: 116px !important;
+        min-height: 116px !important;
+        padding: 0.2rem !important;
+      }
+
+      .simple-calendar .day-square {
+        height: 108px !important;
+        min-height: 108px !important;
+        aspect-ratio: auto !important;
+        padding: 0.35rem !important;
+        overflow-y: auto !important;
+      }
+
+      .simple-calendar .day-number {
+        font-size: 0.82rem !important;
+        margin-bottom: 0.2rem !important;
+        line-height: 1 !important;
+      }
+
+      .simple-calendar .day-square .btn {
+        font-size: 0.68rem !important;
+        padding: 0.1rem 0.35rem !important;
+        margin-top: 0.2rem !important;
+      }
+
+      .simple-calendar .calendar-heading a:first-child::before,
+      .simple-calendar .calendar-heading a:last-child::before {
+        font-size: 0.82rem !important;
+        padding: 2px 6px !important;
+      }
+    }
+  </style>
+<% end %>
 
 <div class="container py-4 mt-4">
   <h1 class="text-center mb-2">événements</h1>
@@ -32,7 +88,11 @@
     <h2 class="text-center mb-2">Vous organisez un événement?</h2>
     <p class="text-center mb-2">Pontius est disponible pour des démonstrations, des animations ou des collaborations.</p>
     <div class="text-center mb-2">
-      <%= link_to "New event", new_event_path, class:"btn btn-primary" %>
+      <% if current_user&.is_admin? %>
+        <%= link_to "Créer un événement", new_event_path, class:"btn btn-primary" %>
+      <% else %>
+        <%= link_to "Contactez-nous", new_contact_path, class:"btn btn-primary" %>
+      <% end %>
     </div>
   </div>
 

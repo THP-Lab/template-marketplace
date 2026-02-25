@@ -313,6 +313,7 @@ module ApplicationHelper
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "eventStatus": "https://schema.org/EventScheduled",
       "startDate": event.event_date&.iso8601,
+      "endDate": event.end_date&.iso8601,
       "image": image_url,
       "location": location,
       "organizer": {
