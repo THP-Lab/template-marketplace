@@ -10,6 +10,6 @@
 
   <div class="col-12 col-md-6 <%= text_order %>">
     <h2 class="mb-2 mt-2"><%= about_page.title %></h2>
-    <p><%= about_page.content %></p>
+    <%= simple_format(about_page.content) %>
   </div>
 </div>
