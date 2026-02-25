@@ -37,6 +37,31 @@ body {
 
 }
 
+.flash-message {
+  margin: 0 0 12px 0;
+  padding: 10px 14px;
+  border-left: 4px solid transparent;
+  font-weight: 600;
+}
+
+.flash-notice {
+  background: #edf9f1;
+  color: #2f7d48;
+  border-color: #95d1a8;
+}
+
+.flash-alert {
+  background: #fff4eb;
+  color: #8a4b1f;
+  border-color: #e5bf9f;
+}
+
+.flash-error {
+  background: #ffeef0;
+  color: #8d1f2d;
+  border-color: #d8a0a8;
+}
+
 main {
   flex: 1;
 }
@@ -474,5 +499,4 @@ dialog {
 .admin-product-actions {
   white-space: nowrap;
 }
-
 

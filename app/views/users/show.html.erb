@@ -69,6 +69,14 @@
   </div>
 
   <div class="card p-4 mt-4">
+    <h2 class="text-center mb-2">Sécurité du compte</h2>
+    <p class="text-center mb-3">Vous pouvez mettre à jour votre mot de passe à tout moment.</p>
+    <div class="d-flex justify-content-center">
+      <%= link_to "Changer mon mot de passe", edit_user_registration_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <div class="card p-4 mt-4">
     <h2 class="text-center mb-2">Historique des commandes</h2>
     <% if @orders.any? %>
       <ul class="list-unstyled">

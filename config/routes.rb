@@ -24,7 +24,9 @@ Rails.application.routes.draw do
     collection { patch :reorder }
     collection { get :admin }
   end
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: "users/registrations"
+  }
   resources :order_products do
     collection { get :admin }
   end

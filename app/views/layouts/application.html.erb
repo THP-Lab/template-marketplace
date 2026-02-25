@@ -38,9 +38,7 @@
   <body>
     <%= render "layouts/navbar"%>
     <% flash.each do |key, message| %>
-      <p style="padding: 8px; margin: 0 0 12px 0; background: #f0f4ff; color: #0b3d91;">
-        <%= message %>
-      </p>
+      <p class="flash-message flash-<%= key.to_s %>"><%= message %></p>
     <% end %>
     <main>
       <%= yield %>
