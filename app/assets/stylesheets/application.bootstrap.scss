@@ -472,17 +472,38 @@ dialog {
   border-radius: 0.5rem;
 }
 
+.home-split-block {
+  width: 100%;
+}
+
+.home-split-band {
+  width: 100%;
+}
+
 .home-split-block-image {
   width: 100%;
-  min-height: 420px;
-  max-height: 620px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+.home-split-block-title {
+  font-size: clamp(2rem, 2.8vw, 3.15rem);
+  line-height: 1.12;
+  margin-bottom: 1.1rem;
+}
+
+.home-split-block-content {
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+.home-split-block-content p:last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 991.98px) {
   .home-split-block-image {
-    min-height: 260px;
-    max-height: 360px;
+    aspect-ratio: 16 / 10;
   }
 }
 

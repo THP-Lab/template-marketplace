@@ -16,34 +16,38 @@
 
 <article>
   <% if home_page.split_layout_variant? %>
-    <div class="<%= split_background_class %> rounded">
-      <div class="container py-4">
+    <div class="<%= split_background_class %> home-split-band py-4">
+      <div class="container">
         <div class="row align-items-center g-4">
+          <div class="<%= image_col_class %>">
           <% if block_image.present? %>
-            <div class="<%= image_col_class %>">
-              <%= attachment_thumb(block_image,
-                                  variant_options: { resize_to_fill: [1200, 760] },
-                                  class: "img-fluid rounded home-split-block-image",
-                                  alt: block_title) %>
+            <%= attachment_thumb(block_image,
+                                variant_options: { resize_to_fill: [1200, 900] },
+                                class: "img-fluid rounded home-split-block-image",
+                                alt: block_title) %>
+          <% else %>
+            <%= image_tag "img_accueil.png",
+                          class: "img-fluid rounded home-split-block-image",
+                          alt: block_title.presence || "Visuel du bloc d'accueil" %>
+          <% end %>
+          </div>
+
+          <div class="<%= text_col_class %>">
+          <% if block_title.present? %>
+            <h3 class="home-split-block-title <%= "text-light" if light_text %>"><%= block_title %></h3>
+          <% end %>
+
+          <% if block_content.present? %>
+            <div class="home-split-block-content <%= "text-light" if light_text %>">
+              <%= simple_format(block_content) %>
             </div>
           <% end %>
 
-          <div class="<%= block_image.present? ? text_col_class : "col-12" %>">
-            <% if block_title.present? %>
-              <h3 class="<%= "text-light" if light_text %>"><%= block_title %></h3>
-            <% end %>
-
-            <% if block_content.present? %>
-              <div class="<%= "text-light" if light_text %>">
-                <%= simple_format(block_content) %>
-              </div>
-            <% end %>
-
-            <% if button_url.present? %>
-              <div class="mt-2">
-                <%= link_to home_block_button_label(home_page), button_url, class: "btn btn-primary" %>
-              </div>
-            <% end %>
+          <% if button_url.present? %>
+            <div class="mt-2">
+              <%= link_to home_block_button_label(home_page), button_url, class: "btn btn-primary" %>
+            </div>
+          <% end %>
           </div>
         </div>
       </div>
