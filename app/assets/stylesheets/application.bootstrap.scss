@@ -480,6 +480,19 @@ dialog {
   width: 100%;
 }
 
+.home-blocks {
+  padding: 0;
+}
+
+.home-blocks__section {
+  margin: 0;
+}
+
+.home-blocks__section--split {
+  padding: 0;
+  margin: 0;
+}
+
 .home-split-block-image {
   width: 100%;
   aspect-ratio: 4 / 3;

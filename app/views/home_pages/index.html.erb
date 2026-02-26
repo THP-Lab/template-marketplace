@@ -49,9 +49,17 @@
   </div>
 </div>
 
-<div class="py-4">
+<div class="home-blocks">
   <% @home_pages.each do |home_page| %>
-    <section class="mb-5 pb-4">
+    <% section_classes =
+         if home_page.shop_bloc_type?
+           "mb-5 pb-4"
+         elsif home_page.split_layout_variant?
+           "home-blocks__section home-blocks__section--split"
+         else
+           "home-blocks__section mb-5 pb-4"
+         end %>
+    <section class="<%= section_classes %>">
       <% if home_page.shop_bloc_type? %>
         <div class="container">
           <h2 class="text-center mb-4"><%= home_page.title %></h2>
