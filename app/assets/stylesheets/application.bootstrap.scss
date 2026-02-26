@@ -13,7 +13,7 @@ $color-text: #4C1313;
 $custom-toggler-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23C7B07E' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 
 // === FONT ===
-$font-cinzel: 'Cinzel', serif;
+$font-cinzel: "Palatino Linotype", "Book Antiqua", Palatino, Garamond, "Times New Roman", serif;
 $font-sans: $font-cinzel;
 
 @use 'bootstrap/scss/bootstrap' with (
@@ -154,7 +154,7 @@ footer h5{
 
 .hero {
   min-height: 50vh;
-  background-image: url("header.png");
+  background-image: url("header.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -164,7 +164,7 @@ footer h5{
 
 .hero-2 {
   min-height: 30vh;
-  background-image: url("header.png");
+  background-image: url("header.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

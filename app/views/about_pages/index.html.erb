@@ -39,7 +39,9 @@
           <% end %>
           <% if about_page.image.attached? %>
             <div class="text-center mb-3">
-              <%= attachment_thumb(about_page.image, class: "img-fluid fixed-image") %>
+              <%= attachment_thumb(about_page.image,
+                                  variant_options: { resize_to_limit: [1200, 900] },
+                                  class: "img-fluid fixed-image") %>
             </div>
           <% end %>
           <div class="text-center">
@@ -70,7 +72,9 @@
             <div class="card h-100 p-3">
               <% if about_page.image.attached? %>
                 <div class="mb-3">
-                  <%= attachment_thumb(about_page.image, class: "img-fluid fixed-image") %>
+                  <%= attachment_thumb(about_page.image,
+                                      variant_options: { resize_to_limit: [1200, 900] },
+                                      class: "img-fluid fixed-image") %>
                 </div>
               <% end %>
               <% if about_page.title.present? %>

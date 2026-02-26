@@ -117,6 +117,11 @@ module ApplicationHelper
   def attachment_thumb(attachment, variant_options: nil, **options)
     return unless attachment&.attached?
 
+    options = options.dup
+    options[:loading] = "lazy" unless options.key?(:loading)
+    options[:decoding] = "async" unless options.key?(:decoding)
+    variant_options ||= { resize_to_limit: [1600, 1600] } if attachment.variable?
+
     if variant_options && attachment.variable?
       image_tag attachment.variant(variant_options), **options
     else

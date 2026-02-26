@@ -26,8 +26,10 @@
                                 class: "img-fluid rounded home-split-block-image",
                                 alt: block_title) %>
           <% else %>
-            <%= image_tag "img_accueil.png",
+            <%= image_tag "img_accueil.webp",
                           class: "img-fluid rounded home-split-block-image",
+                          loading: "lazy",
+                          decoding: "async",
                           alt: block_title.presence || "Visuel du bloc d'accueil" %>
           <% end %>
           </div>

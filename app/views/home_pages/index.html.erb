@@ -20,9 +20,17 @@
 
 <%
   company_information = @company_information || CompanyInformation.instance
-  hero_background_style =
+  hero_background_url =
     if company_information.home_banner_image.attached?
-      "background-image: url('#{url_for(company_information.home_banner_image)}');"
+      if company_information.home_banner_image.variable?
+        url_for(company_information.home_banner_image.variant(resize_to_limit: [1600, 900]))
+      else
+        url_for(company_information.home_banner_image)
+      end
+    end
+  hero_background_style =
+    if hero_background_url.present?
+      "background-image: url('#{hero_background_url}');"
     end
 %>
 <%= content_tag :header, class: "hero d-flex align-items-center text-center", style: hero_background_style do %>
