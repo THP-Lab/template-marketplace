@@ -4,12 +4,15 @@
 
   <div class="col-12 col-md-6 <%= image_order %> mb-3 mb-md-0">
     <% if about_page.image.attached? %>
-      <%= image_tag about_page.image, class: "img-fluid fixed-image", alt: about_page.title %>
+      <%= attachment_thumb(about_page.image,
+                          variant_options: { resize_to_limit: [1200, 900] },
+                          class: "img-fluid fixed-image",
+                          alt: about_page.title) %>
     <% end %>
   </div>
 
   <div class="col-12 col-md-6 <%= text_order %>">
     <h2 class="mb-2 mt-2"><%= about_page.title %></h2>
-    <p><%= about_page.content %></p>
+    <%= simple_format(about_page.content) %>
   </div>
 </div>

@@ -1,7 +1,47 @@
-<% about_options = AboutPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
+<% about_options = AboutPage.order(:section_type, :position, :title).map { |p|
+     position_label = p.position.present? ? "##{p.position}" : "#-"
+     ["#{p.section_label} - #{position_label} - #{p.title}", p.id]
+   } %>
 <% repair_options = RepairPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
+<style>
+  .home-block-form [data-home-block-form-target="targetSection"],
+  .home-block-form [data-home-block-form-target="shopSection"],
+  .home-block-form [data-home-block-form-target="contentSection"],
+  .home-block-form [data-home-block-form-target="splitOptionsSection"],
+  .home-block-form [data-home-block-form-target="buttonSection"],
+  .home-block-form [data-home-block-form-target="imageSection"] {
+    display: none;
+  }
 
-<%= form_with(model: home_page, data: { controller: "home-block-form" }) do |form| %>
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="contentSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="imageSection"] {
+    display: block;
+  }
+
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="splitOptionsSection"] {
+    display: flex;
+  }
+
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="targetSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="buttonSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="targetSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="buttonSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="shopSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="buttonSection"] {
+    display: block;
+  }
+</style>
+
+<%= form_with(model: home_page, class: "home-block-form", data: { controller: "home-block-form" }) do |form| %>
   <% if home_page.errors.any? %>
     <div class="alert alert-danger">
       <h2 class="h6 mb-2"><%= pluralize(home_page.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
@@ -28,7 +68,9 @@
                     {},
                     class: "form-select",
                     data: { "home-block-form-target": "blocType", action: "change->home-block-form#toggle" } %>
-    <div class="form-text">Choisissez la source du contenu affiché sur la home.</div>
+    <div class="form-text">
+      Règles automatiques: “Image + texte” pour les blocs personnalisés, “Encadré titre + description” pour À propos/Réparation.
+    </div>
   </div>
 
   <div class="mb-3" data-home-block-form-target="targetSection">
@@ -63,15 +105,45 @@
     <div class="form-text">S’affiche uniquement pour les blocs personnalisés.</div>
   </div>
 
+  <div class="row g-3 mb-3" data-home-block-form-target="splitOptionsSection">
+    <div class="col-md-4">
+      <%= form.label :layout_background, "Fond du bloc", class: "form-label" %>
+      <%= form.select :layout_background,
+                      [["Fond thème", "theme"],
+                       ["Fond blanc", "white"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+    <div class="col-md-4">
+      <%= form.label :layout_text_tone, "Couleur du texte", class: "form-label" %>
+      <%= form.select :layout_text_tone,
+                      [["Texte thème", "theme"],
+                       ["Texte clair", "light"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+    <div class="col-md-4">
+      <%= form.label :layout_image_position, "Position image", class: "form-label" %>
+      <%= form.select :layout_image_position,
+                      [["Image à gauche", "left"],
+                       ["Image à droite", "right"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+  </div>
+
   <div class="mb-3" data-home-block-form-target="buttonSection">
     <%= form.label :button_label, "Texte du bouton", class: "form-label" %>
     <%= form.text_field :button_label, class: "form-control", placeholder: "Ex : Découvrir" %>
-    <div class="form-text">Affiché sur le bouton du bloc (boutique, À propos, réparation).</div>
+    <div class="form-text">Disponible pour les blocs boutique, à propos et réparation.</div>
   </div>
 
-  <div class="mb-3">
+  <div class="mb-3" data-home-block-form-target="imageSection">
     <%= form.label :image, "Image du bloc", class: "form-label" %>
     <%= form.file_field :image, class: "form-control" %>
+    <div class="form-text">
+      Image utilisée sur le design “Image + texte”. Le cadrage reste homogène automatiquement.
+    </div>
     <% if home_page.image.attached? %>
       <div class="mt-2">
         <%= attachment_thumb(home_page.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail") %>

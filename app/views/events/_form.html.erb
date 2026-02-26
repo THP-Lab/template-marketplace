@@ -1,4 +1,8 @@
 <%= form_with(model: event) do |form| %>
+  <% if local_assigns[:redirect_to].present? %>
+    <%= hidden_field_tag :redirect_to, local_assigns[:redirect_to] %>
+  <% end %>
+
   <% if event.errors.any? %>
     <div class="alert alert-danger">
       <h2 class="h6 mb-2"><%= pluralize(event.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
@@ -9,11 +13,6 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="mb-3">
-    <%= form.label :user_id, "Utilisateur", class: "form-label" %>
-    <%= form.number_field :user_id, class: "form-control" %>
-  </div>
 
   <div class="mb-3">
     <%= form.label :title, "Titre", class: "form-label" %>
@@ -33,6 +32,11 @@
   <div class="mb-3">
     <%= form.label :event_date, "Date de l’événement", class: "form-label" %>
     <%= form.datetime_field :event_date, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :end_date, "Date de fin", class: "form-label" %>
+    <%= form.datetime_field :end_date, class: "form-control" %>
   </div>
 
   <div class="mb-3">

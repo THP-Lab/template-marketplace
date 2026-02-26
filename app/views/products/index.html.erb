@@ -54,7 +54,10 @@
             <%= link_to "Voir plus", product, class: "btn btn-primary btn-sm" %>
             
             <% if user_signed_in? %>
-              <%= button_to "Ajouter au panier", cart_products_path(product_id: product.id), method: :post, class: "btn btn-primary btn-sm" %>
+              <%= button_to "Ajouter au panier",
+                            cart_products_path(product_id: product.id, quantity: 1, redirect_to: "products"),
+                            method: :post,
+                            class: "btn btn-primary btn-sm" %>
             <% end %>
           </div>
         </div>

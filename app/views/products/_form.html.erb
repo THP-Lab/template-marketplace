@@ -1,4 +1,8 @@
 <%= form_with(model: product) do |form| %>
+  <% if local_assigns[:redirect_to].present? %>
+    <%= hidden_field_tag :redirect_to, local_assigns[:redirect_to] %>
+  <% end %>
+
   <% if product.errors.any? %>
     <div class="alert alert-danger">
       <h2 class="h6 mb-2"><%= pluralize(product.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
@@ -33,6 +37,57 @@
   <div class="mb-3">
     <%= form.label :stock, "Stock", class: "form-label" %>
     <%= form.number_field :stock, class: "form-control", min: 0 %>
+  </div>
+
+  <div class="card p-3 mb-3" data-controller="product-highlights-form">
+    <div class="form-check">
+      <%= form.check_box :show_product_highlights,
+                         class: "form-check-input",
+                         data: {
+                           "product-highlights-form-target": "toggle",
+                           action: "change->product-highlights-form#update"
+                         } %>
+      <%= form.label :show_product_highlights,
+                     "Afficher des encarts d'informations sous le produit",
+                     class: "form-check-label" %>
+    </div>
+
+    <div class="mt-3 <%= "d-none" unless product.show_product_highlights? %>" data-product-highlights-form-target="fields">
+      <h3 class="h6 mb-3">Contenu des encarts</h3>
+      <% Product::HIGHLIGHT_DEFAULTS.each_with_index do |defaults, index| %>
+        <% number = index + 1 %>
+        <div class="product-highlight-config border rounded p-3 mb-3">
+          <div class="form-check mb-2">
+            <%= form.check_box :"highlight_#{number}_enabled",
+                               class: "form-check-input",
+                               data: {
+                                 index: index,
+                                 "product-highlights-form-target": "itemToggle",
+                                 action: "change->product-highlights-form#updateItem"
+                               } %>
+            <%= form.label :"highlight_#{number}_enabled", "Activer l'encart #{number}", class: "form-check-label fw-semibold" %>
+          </div>
+
+          <% panel_open = product.show_product_highlights? && product.public_send("highlight_#{number}_enabled") %>
+          <div class="<%= "product-highlight-config__panel mt-2 #{'is-open' if panel_open} #{'d-none' unless panel_open}" %>"
+               data-product-highlights-form-target="itemPanel">
+            <div class="mb-2">
+              <%= form.label :"highlight_#{number}_title", "Titre encart #{number}", class: "form-label" %>
+              <%= form.text_field :"highlight_#{number}_title",
+                                  class: "form-control",
+                                  placeholder: defaults[:title] %>
+            </div>
+            <div>
+              <%= form.label :"highlight_#{number}_description", "Description encart #{number}", class: "form-label" %>
+              <%= form.text_area :"highlight_#{number}_description",
+                                 class: "form-control",
+                                 rows: 2,
+                                 placeholder: defaults[:description] %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <div class="mb-3">

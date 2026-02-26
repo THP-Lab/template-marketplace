@@ -1,5 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:user) do
+    User.create!(
+      email: "event-admin-#{SecureRandom.hex(4)}@example.com",
+      password: "123456",
+      password_confirmation: "123456",
+      cgu_accepted: true,
+      is_admin: true
+    )
+  end
+
+  it "is invalid when end_date is before event_date" do
+    event = Event.new(
+      user: user,
+      title: "Atelier",
+      event_date: Time.current,
+      end_date: 1.hour.ago
+    )
+
+    expect(event).not_to be_valid
+    expect(event.errors[:end_date]).to include("doit être postérieure à la date de début")
+  end
+
+  it "returns fallback start_time and end_time when only one date exists" do
+    starts_only = Event.new(user: user, event_date: Time.current)
+    ends_only = Event.new(user: user, end_date: 2.hours.from_now)
+
+    expect(starts_only.start_time).to eq(starts_only.event_date)
+    expect(starts_only.end_time).to eq(starts_only.event_date)
+    expect(ends_only.start_time).to eq(ends_only.end_date)
+    expect(ends_only.end_time).to eq(ends_only.end_date)
+  end
 end

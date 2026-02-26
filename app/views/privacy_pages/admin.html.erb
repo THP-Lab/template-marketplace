@@ -19,7 +19,6 @@
                  data-reorder-url-value="<%= reorder_privacy_pages_path %>">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Titre</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
@@ -31,7 +30,6 @@
                 <tr id="<%= dom_id(privacy_page) %>"
                     data-reorder-target="item"
                     data-id="<%= privacy_page.id %>">
-                  <td><%= privacy_page.id %></td>
                   <td><%= privacy_page.title %></td>
                   <td><%= truncate(privacy_page.content.to_s, length: 100) %></td>
                   <td class="text-end">

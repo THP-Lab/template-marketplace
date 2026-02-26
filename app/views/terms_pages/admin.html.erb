@@ -19,7 +19,6 @@
                  data-reorder-url-value="<%= reorder_terms_pages_path %>">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Titre</th>
                 <th>Contenu</th>
                 <th class="text-end">Actions</th>
@@ -31,7 +30,6 @@
                 <tr id="<%= dom_id(terms_page) %>"
                     data-reorder-target="item"
                     data-id="<%= terms_page.id %>">
-                  <td><%= terms_page.id %></td>
                   <td><%= terms_page.title %></td>
                   <td><%= truncate(terms_page.content.to_s, length: 100) %></td>
                   <td class="text-end">

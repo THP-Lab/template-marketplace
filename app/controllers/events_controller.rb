@@ -6,7 +6,7 @@ class EventsController < ApplicationController
   def index
     scope = Event.order(event_date: :asc)
     unless action_name == "admin"
-      scope = scope.where("event_date IS NULL OR event_date >= ?", Time.current)
+      scope = scope.where("(event_date IS NULL AND end_date IS NULL) OR COALESCE(end_date, event_date) >= ?", Time.current)
     end
     @events = scope
     @events, @pagination = paginate(@events) if action_name == "admin"
@@ -27,11 +27,12 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    @event = Event.new(event_params)
+    @event = current_user.events.new(event_params)
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: "Event was successfully created." }
+        redirect_path = params[:redirect_to].presence || new_event_path
+        format.html { redirect_to redirect_path, notice: "Événement créé." }
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -44,7 +45,8 @@ class EventsController < ApplicationController
   def update
     respond_to do |format|
       if @event.update(event_params)
-        format.html { redirect_to @event, notice: "Event was successfully updated.", status: :see_other }
+        redirect_path = params[:redirect_to].presence || edit_event_path(@event)
+        format.html { redirect_to redirect_path, notice: "Événement mis à jour.", status: :see_other }
         format.json { render :show, status: :ok, location: @event }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -55,11 +57,23 @@ class EventsController < ApplicationController
 
   # DELETE /events/1 or /events/1.json
   def destroy
-    @event.destroy!
+    redirect_path = params[:redirect_to].presence || admin_events_path
 
     respond_to do |format|
-      format.html { redirect_to events_path, notice: "Event was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+      if @event.destroy
+        format.html { redirect_to redirect_path, notice: "Événement supprimé.", status: :see_other }
+        format.json { head :no_content }
+      else
+        message = @event.errors.full_messages.to_sentence.presence || "Impossible de supprimer cet événement."
+        format.html { redirect_to redirect_path, alert: message, status: :see_other }
+        format.json { render json: { errors: @event.errors.full_messages }, status: :unprocessable_entity }
+      end
+    end
+  rescue ActiveRecord::InvalidForeignKey
+    respond_to do |format|
+      message = "Impossible de supprimer cet événement car il est lié à d'autres données."
+      format.html { redirect_to redirect_path, alert: message, status: :see_other }
+      format.json { render json: { errors: [message] }, status: :unprocessable_entity }
     end
   end
 
@@ -73,6 +87,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.expect(event: [ :user_id, :title, :category, :description, :event_date, :location, :image_url, :image ])
+      params.expect(event: [ :title, :category, :description, :event_date, :end_date, :location, :image_url, :image ])
     end
 end

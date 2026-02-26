@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :about_pages do
     collection { patch :reorder }
     collection { get :admin }
+    collection { patch :update_settings }
   end
   resources :terms_pages do
     collection { patch :reorder }
@@ -23,7 +24,9 @@ Rails.application.routes.draw do
     collection { patch :reorder }
     collection { get :admin }
   end
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: "users/registrations"
+  }
   resources :order_products do
     collection { get :admin }
   end
@@ -33,6 +36,10 @@ Rails.application.routes.draw do
   end
   resource :company_information, only: [:update], path: "information" do
     get :admin
+    get :footer
+    patch :update_footer
+    get :home_banner
+    patch :update_home_banner
   end
   resources :cart_products do
     collection { get :admin }
@@ -66,8 +73,8 @@ Rails.application.routes.draw do
   # root "static_pages#index"
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
   root to: "home_pages#index"

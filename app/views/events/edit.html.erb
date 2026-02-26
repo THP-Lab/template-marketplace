@@ -1,11 +1,26 @@
 <% content_for :title, "Admin - Modifier un événement" %>
 
 <%= admin_page(title: "Modifier un événement") do %>
-  <%= render "form", event: @event %>
+  <div data-controller="quantity-modal">
+    <%= render "form", event: @event, redirect_to: edit_event_path(@event) %>
 
-  <div class="mt-3 d-flex gap-2">
-    <%= link_to "Voir l’événement", @event, class: "btn btn-outline-secondary btn-sm" %>
-    <%= link_to "Retour aux événements", admin_events_path, class: "btn btn-outline-secondary btn-sm" %>
-    <%= button_to "Supprimer", @event, method: :delete, data: { confirm: "Supprimer cet événement ?" }, class: "btn btn-danger btn-sm" %>
+    <div class="mt-3 d-flex gap-2">
+      <%= link_to "Voir l’événement", @event, class: "btn btn-outline-secondary btn-sm" %>
+      <%= link_to "Retour aux événements", admin_events_path, class: "btn btn-outline-secondary btn-sm" %>
+      <%= form_with url: event_path(@event), method: :delete, class: "d-inline" do %>
+        <%= hidden_field_tag :redirect_to, admin_events_path %>
+        <%= button_tag "Supprimer",
+                       type: "submit",
+                       class: "btn btn-danger btn-sm",
+                       data: {
+                         action: "click->quantity-modal#open",
+                         modal_title: "Supprimer l’événement",
+                         modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer cet événement ?",
+                         modal_confirm_label: "Supprimer"
+                       } %>
+      <% end %>
+    </div>
+
+    <%= render "shared/confirm_modal" %>
   </div>
 <% end %>
