@@ -73,6 +73,17 @@ main {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: $color-text;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+p,
+.card-title,
+.card-text,
+.home-split-block-title,
+.home-split-block-content {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 // ====== NAVBAR ======
@@ -520,8 +531,28 @@ dialog {
   padding: 0;
 }
 
+/* Empêche tout débordement horizontal des mots longs dans les blocs Home dynamiques */
+.home-blocks__section,
+.home-blocks__section h1,
+.home-blocks__section h2,
+.home-blocks__section h3,
+.home-blocks__section h4,
+.home-blocks__section h5,
+.home-blocks__section h6,
+.home-blocks__section p,
+.home-blocks__section span,
+.home-blocks__section li,
+.home-blocks__section a,
+.home-blocks__section div {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  hyphens: auto;
+}
+
 .home-blocks__section {
   margin: 0;
+  min-width: 0;
 }
 
 .home-blocks__section--split {
@@ -535,19 +566,42 @@ dialog {
   object-fit: cover;
 }
 
+.home-split-band [class*="col-"] {
+  min-width: 0;
+}
+
 .home-split-block-title {
-  font-size: clamp(2rem, 2.8vw, 3.15rem);
+  font-size: clamp(1.5rem, 4.2vw, 2.6rem);
   line-height: 1.12;
   margin-bottom: 1.1rem;
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  line-break: anywhere;
 }
 
 .home-split-block-content {
   font-size: 1.08rem;
   line-height: 1.75;
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  line-break: anywhere;
 }
 
 .home-split-block-content p:last-child {
   margin-bottom: 0;
+}
+
+.home-blocks .card h2 {
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  line-break: anywhere;
+  font-size: clamp(1.35rem, 5.6vw, 2.25rem);
 }
 
 /* Fallback dynamique du formulaire admin Home, même sans JS Stimulus */
@@ -590,6 +644,11 @@ dialog {
 @media (max-width: 991.98px) {
   .home-split-block-image {
     aspect-ratio: 16 / 10;
+  }
+
+  .home-split-block-title {
+    font-size: clamp(1.35rem, 6.2vw, 1.95rem);
+    line-height: 1.18;
   }
 }
 

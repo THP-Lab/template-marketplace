@@ -36,11 +36,11 @@
 
           <div class="<%= text_col_class %>">
           <% if block_title.present? %>
-            <h3 class="home-split-block-title <%= "text-light" if light_text %>"><%= block_title %></h3>
+            <h3 class="home-split-block-title text-break <%= "text-light" if light_text %>"><%= block_title %></h3>
           <% end %>
 
           <% if block_content.present? %>
-            <div class="home-split-block-content <%= "text-light" if light_text %>">
+            <div class="home-split-block-content text-break <%= "text-light" if light_text %>">
               <%= simple_format(block_content) %>
             </div>
           <% end %>
@@ -58,11 +58,11 @@
     <div class="container mt-5">
       <div class="card mt-5 mb-5">
         <% if block_title.present? %>
-          <h2 class="text-center mt-4"><%= block_title %></h2>
+          <h2 class="text-center mt-4 text-break"><%= block_title %></h2>
         <% end %>
 
         <% if block_content.present? %>
-          <div class="text-center mt-2 px-3">
+          <div class="text-center mt-2 px-3 text-break">
             <%= simple_format(block_content) %>
           </div>
         <% end %>
