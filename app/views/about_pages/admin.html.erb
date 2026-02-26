@@ -1,64 +1,93 @@
 <% content_for :title, "Admin - À propos" %>
 
-<div class="container py-4">
+<div class="container py-4" data-controller="quantity-modal">
   <div class="row g-4">
     <div class="col-lg-4 col-xl-3">
       <%= render_admin_sidebar %>
     </div>
     <div class="col-lg-8 col-xl-9">
-      <h1 class="mb-4">Sections “À propos” (administration)</h1>
+      <h1 class="mb-4">Page À propos (administration)</h1>
 
       <% if notice.present? %>
         <div class="alert alert-success"><%= notice %></div>
       <% end %>
-
-      <% if @about_pages.any? %>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover align-middle"
-                 data-controller="reorder"
-                 data-reorder-url-value="<%= reorder_about_pages_path %>">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Titre</th>
-                <th>Contenu</th>
-                <th class="text-end">Actions</th>
-                <th class="text-end" style="width: 40px;"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @about_pages.each do |about_page| %>
-                <tr id="<%= dom_id(about_page) %>"
-                    data-reorder-target="item"
-                    data-id="<%= about_page.id %>">
-                  <td><%= about_page.id %></td>
-                  <td>
-                    <%= attachment_thumb(about_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
-                  </td>
-                  <td><%= about_page.title %></td>
-                  <td><%= truncate(about_page.content.to_s, length: 100) %></td>
-                  <td class="text-end">
-                    <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "Modifier", edit_about_page_path(about_page), class: "btn btn-primary" %>
-                    </div>
-                  </td>
-                  <td class="text-end text-muted" style="width: 40px;">
-                    <span class="reorder-handle" title="Déplacer">&#8942;</span>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <p class="text-muted">Aucune section “À propos”.</p>
+      <% if alert.present? %>
+        <div class="alert alert-warning"><%= alert %></div>
       <% end %>
 
-      <div class="d-flex justify-content-end mt-3">
-        <%= link_to "Ajouter une section", new_about_page_path, class: "btn btn-success" %>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Titres et descriptions des parties</h2>
+          <%= form_with model: @company_information,
+                        url: update_settings_about_pages_path,
+                        method: :patch,
+                        local: true do |f| %>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <%= f.label :about_primary_title, "Titre section principale", class: "form-label" %>
+                <%= f.text_field :about_primary_title,
+                                 class: "form-control",
+                                 placeholder: CompanyInformation::DEFAULT_ABOUT_PRIMARY_TITLE %>
+              </div>
+              <div class="col-12 col-md-6">
+                <%= f.label :about_secondary_title, "Titre section secondaire", class: "form-label" %>
+                <%= f.text_field :about_secondary_title,
+                                 class: "form-control",
+                                 placeholder: CompanyInformation::DEFAULT_ABOUT_SECONDARY_TITLE %>
+              </div>
+              <div class="col-12">
+                <%= f.label :about_journey_title, "Titre section parcours", class: "form-label" %>
+                <%= f.text_field :about_journey_title,
+                                 class: "form-control",
+                                 placeholder: CompanyInformation::DEFAULT_ABOUT_JOURNEY_TITLE %>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <%= f.label :about_primary_description, "Description section principale", class: "form-label" %>
+                <%= f.text_area :about_primary_description, class: "form-control", rows: 3 %>
+              </div>
+              <div class="col-12 col-md-6">
+                <%= f.label :about_secondary_description, "Description section secondaire", class: "form-label" %>
+                <%= f.text_area :about_secondary_description, class: "form-control", rows: 3 %>
+              </div>
+              <div class="col-12">
+                <%= f.label :about_journey_description, "Description section parcours", class: "form-label" %>
+                <%= f.text_area :about_journey_description, class: "form-control", rows: 3 %>
+              </div>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-end">
+              <%= f.submit "Enregistrer les titres/descriptions", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
       </div>
-      <%= admin_pagination(@pagination) %>
+
+      <%= render partial: "admin_section_table",
+                 locals: {
+                   section_key: "primary",
+                   title: @company_information.about_primary_title_or_default,
+                   description: @company_information.about_primary_description,
+                   blocks: @about_primary_blocks
+                 } %>
+
+      <%= render partial: "admin_section_table",
+                 locals: {
+                   section_key: "secondary",
+                   title: @company_information.about_secondary_title_or_default,
+                   description: @company_information.about_secondary_description,
+                   blocks: @about_secondary_blocks
+                 } %>
+
+      <%= render partial: "admin_section_table",
+                 locals: {
+                   section_key: "journey",
+                   title: @company_information.about_journey_title_or_default,
+                   description: @company_information.about_journey_description,
+                   blocks: @about_journey_blocks
+                 } %>
+
+      <%= render "shared/confirm_modal" %>
     </div>
   </div>
 </div>

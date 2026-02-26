@@ -1,11 +1,25 @@
 <% content_for :title, "Admin - Modifier un bloc d’accueil" %>
 
 <%= admin_page(title: "Modifier un bloc d’accueil") do %>
-  <%= render "form", home_page: @home_page %>
+  <div data-controller="quantity-modal">
+    <%= render "form", home_page: @home_page %>
 
-  <div class="mt-3 d-flex gap-2">
-    <%= link_to "Voir la home page", home_pages_path, class: "btn btn-outline-secondary btn-sm" %>
-    <%= link_to "Retour aux blocs", admin_home_pages_path, class: "btn btn-outline-secondary btn-sm" %>
-    <%= button_to "Supprimer", @home_page, method: :delete, data: { confirm: "Supprimer ce bloc d’accueil ?" }, class: "btn btn-danger btn-sm" %>
+    <div class="mt-3 d-flex gap-2">
+      <%= link_to "Voir la home page", home_pages_path, class: "btn btn-outline-secondary btn-sm" %>
+      <%= link_to "Retour aux blocs", admin_home_pages_path, class: "btn btn-outline-secondary btn-sm" %>
+      <%= form_with url: home_page_path(@home_page), method: :delete, class: "d-inline" do %>
+        <%= button_tag "Supprimer",
+                       type: "submit",
+                       class: "btn btn-danger btn-sm",
+                       data: {
+                         action: "click->quantity-modal#open",
+                         modal_title: "Supprimer le bloc",
+                         modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer ce bloc d’accueil ?",
+                         modal_confirm_label: "Supprimer"
+                       } %>
+      <% end %>
+    </div>
+
+    <%= render "shared/confirm_modal" %>
   </div>
 <% end %>

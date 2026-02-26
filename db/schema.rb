@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
+    t.string "section_type", default: "mon_parcours", null: false
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["section_type"], name: "index_about_pages_on_section_type"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -67,6 +69,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
   end
 
   create_table "company_informations", force: :cascade do |t|
+    t.text "about_mon_parcours_description"
+    t.string "about_mon_parcours_title"
+    t.text "about_pontius_description"
+    t.string "about_pontius_title"
+    t.text "about_principal_description"
+    t.string "about_principal_title"
     t.text "additional_info"
     t.string "address_line1"
     t.string "address_line2"
@@ -74,6 +82,19 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
     t.string "country"
     t.datetime "created_at", null: false
     t.string "email"
+    t.text "footer_description"
+    t.string "home_banner_primary_cta_label"
+    t.string "home_banner_secondary_cta_label"
+    t.string "home_banner_subtitle"
+    t.string "home_banner_title"
+    t.text "home_highlight_1_description"
+    t.string "home_highlight_1_title"
+    t.text "home_highlight_2_description"
+    t.string "home_highlight_2_title"
+    t.text "home_highlight_3_description"
+    t.string "home_highlight_3_title"
+    t.text "home_highlight_4_description"
+    t.string "home_highlight_4_title"
     t.string "legal_name"
     t.string "phone"
     t.string "siret"
@@ -96,6 +117,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
     t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
+    t.datetime "end_date"
     t.datetime "event_date"
     t.string "image_url"
     t.string "location"
@@ -108,10 +130,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
   create_table "home_pages", force: :cascade do |t|
     t.string "bloc_type", default: "custom", null: false
     t.string "button_label"
+    t.string "button_url"
     t.text "content"
     t.datetime "created_at", null: false
+    t.string "layout_background", default: "theme", null: false
+    t.string "layout_image_position", default: "left", null: false
+    t.string "layout_text_tone", default: "theme", null: false
+    t.string "layout_variant", default: "split", null: false
     t.integer "position"
     t.string "shop_scope", default: "first", null: false
+    t.boolean "show_button", default: true, null: false
     t.integer "target_id"
     t.string "title"
     t.datetime "updated_at", null: false
@@ -161,7 +189,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_114040) do
     t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
+    t.text "highlight_1_description"
+    t.boolean "highlight_1_enabled", default: true, null: false
+    t.string "highlight_1_title"
+    t.text "highlight_2_description"
+    t.boolean "highlight_2_enabled", default: true, null: false
+    t.string "highlight_2_title"
+    t.text "highlight_3_description"
+    t.boolean "highlight_3_enabled", default: true, null: false
+    t.string "highlight_3_title"
     t.decimal "price"
+    t.boolean "show_product_highlights", default: true, null: false
     t.integer "stock"
     t.string "title"
     t.datetime "updated_at", null: false

@@ -38,6 +38,7 @@ module ApplicationHelper
         description: "Sections et blocs de la page d’accueil.",
         links: [
           { label: "Blocs d’accueil", path: admin_home_pages_path },
+          { label: "Configurer la bannière", path: home_banner_company_information_path },
           { label: "Ajouter une section d’accueil", path: new_home_page_path }
         ]
       },
@@ -57,8 +58,10 @@ module ApplicationHelper
         icon: "bi-people",
         description: "Sections de la page À propos.",
         links: [
-          { label: "Blocs À propos", path: admin_about_pages_path },
-          { label: "Ajouter une section À propos", path: new_about_page_path }
+          { label: "Blocs À propos", path: admin_about_pages_path(anchor: "primary") },
+          { label: "Ajouter bloc principal", path: new_about_page_path(section_type: "primary") },
+          { label: "Ajouter bloc secondaire", path: new_about_page_path(section_type: "secondary") },
+          { label: "Ajouter bloc parcours", path: new_about_page_path(section_type: "journey") }
         ]
       },
       {
@@ -81,16 +84,6 @@ module ApplicationHelper
           { label: "Ajouter une section légale", path: new_terms_page_path }
         ]
       },
-      {
-        id: "page-metas",
-        title: "Description",
-        icon: "bi-card-text",
-        description: "Titres et meta descriptions par page.",
-        links: [
-          { label: "Descriptions", path: page_metas_path },
-          { label: "Ajouter une description", path: new_page_meta_path }
-        ]
-      }
     ]
   end
 
@@ -113,6 +106,11 @@ module ApplicationHelper
 
   def attachment_thumb(attachment, variant_options: nil, **options)
     return unless attachment&.attached?
+
+    options = options.dup
+    options[:loading] = "lazy" unless options.key?(:loading)
+    options[:decoding] = "async" unless options.key?(:decoding)
+    variant_options ||= { resize_to_limit: [1600, 1600] } if attachment.variable?
 
     if variant_options && attachment.variable?
       image_tag attachment.variant(variant_options), **options
@@ -267,6 +265,11 @@ module ApplicationHelper
       "url": url,
       "description": description,
       "isPartOf": {
+        "@type": "WebSite",
+        "name": site_name,
+        "url": request.base_url
+      },
+      "publisher": {
         "@type": "Organization",
         "name": site_name,
         "url": request.base_url
@@ -313,6 +316,7 @@ module ApplicationHelper
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "eventStatus": "https://schema.org/EventScheduled",
       "startDate": event.event_date&.iso8601,
+      "endDate": event.end_date&.iso8601,
       "image": image_url,
       "location": location,
       "organizer": {

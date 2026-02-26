@@ -1,0 +1,69 @@
+<div class="card shadow-sm mb-4" id="<%= section_key %>">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+      <div>
+        <h2 class="h5 mb-1"><%= title %></h2>
+        <% if description.present? %>
+          <p class="text-muted small mb-0"><%= description %></p>
+        <% end %>
+      </div>
+      <%= link_to "Ajouter un bloc",
+                  new_about_page_path(section_type: section_key),
+                  class: "btn btn-success btn-sm" %>
+    </div>
+
+    <% if blocks.any? %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle"
+               data-controller="reorder"
+               data-reorder-url-value="<%= reorder_about_pages_path %>">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Titre</th>
+              <th>Contenu</th>
+              <th class="text-end" style="width: 230px;">Actions</th>
+              <th class="text-end" style="width: 40px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% blocks.each do |about_page| %>
+              <tr id="<%= dom_id(about_page) %>"
+                  data-reorder-target="item"
+                  data-id="<%= about_page.id %>">
+                <td>
+                  <%= attachment_thumb(about_page.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
+                </td>
+                <td><%= about_page.title %></td>
+                <td><%= truncate(about_page.content.to_s, length: 120) %></td>
+                <td class="text-end">
+                  <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap admin-product-actions">
+                    <%= link_to "Voir", about_pages_path(anchor: dom_id(about_page)), class: "btn btn-outline-secondary btn-sm" %>
+                    <%= link_to "Modifier", edit_about_page_path(about_page), class: "btn btn-primary btn-sm" %>
+                    <%= form_with(url: about_page_path(about_page), method: :delete, class: "d-inline-flex m-0") do %>
+                      <%= hidden_field_tag :redirect_to, admin_about_pages_path(anchor: section_key) %>
+                      <%= button_tag "Supprimer",
+                                     type: "submit",
+                                     class: "btn btn-danger btn-sm",
+                                     data: {
+                                       action: "click->quantity-modal#open",
+                                       modal_title: "Supprimer ce bloc À propos",
+                                       modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer ce bloc ?",
+                                       modal_confirm_label: "Supprimer"
+                                     } %>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="text-end text-muted" style="width: 40px;">
+                  <span class="reorder-handle" title="Déplacer">&#8942;</span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-muted mb-0">Aucun bloc dans cette section.</p>
+    <% end %>
+  </div>
+</div>

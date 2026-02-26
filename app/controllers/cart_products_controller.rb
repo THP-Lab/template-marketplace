@@ -45,14 +45,16 @@ class CartProductsController < ApplicationController
       )
     end
 
-    redirect_path =
-      case params[:redirect_to]
-      when "products" then products_path
-      when "cart" then cart_path(cart)
-      else product_path(product)
-      end
-
-    redirect_to redirect_path, notice: "Produit ajouté au panier."
+    case params[:redirect_to]
+    when "products"
+      redirect_to products_path, notice: "Produit ajouté au panier."
+    when "cart"
+      redirect_to cart_path(cart), notice: "Produit ajouté au panier."
+    when "product"
+      redirect_to product_path(product), notice: "Produit ajouté au panier."
+    else
+      redirect_back fallback_location: products_path, notice: "Produit ajouté au panier."
+    end
   end
 
   # PATCH/PUT /cart_products/1 or /cart_products/1.json

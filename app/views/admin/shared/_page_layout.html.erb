@@ -5,6 +5,12 @@
     </div>
     <div class="col-lg-8 col-xl-9">
       <h1 class="mb-4"><%= title %></h1>
+      <% if notice.present? %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="alert alert-warning"><%= alert %></div>
+      <% end %>
       <%= content %>
     </div>
   </div>

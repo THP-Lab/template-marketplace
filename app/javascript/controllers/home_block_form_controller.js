@@ -2,34 +2,54 @@ import { Controller } from "@hotwired/stimulus"
 
 // Gère l'affichage conditionnel des champs en fonction du type de bloc.
 export default class extends Controller {
-  static targets = ["blocType", "targetSection", "shopSection", "contentSection", "buttonSection", "targetSelect"]
+  static targets = [
+    "blocType",
+    "targetSection",
+    "shopSection",
+    "contentSection",
+    "splitOptionsSection",
+    "buttonSection",
+    "imageSection",
+    "targetSelect"
+  ]
 
   connect() {
-    this.aboutOptions = this._parseOptions(this.targetSelectTarget.dataset.aboutOptions)
-    this.repairOptions = this._parseOptions(this.targetSelectTarget.dataset.repairOptions)
-    this.selectedValue = this.targetSelectTarget.dataset.selectedValue
+    this.aboutOptions = this.hasTargetSelectTarget ? this._parseOptions(this.targetSelectTarget.dataset.aboutOptions) : []
+    this.repairOptions = this.hasTargetSelectTarget ? this._parseOptions(this.targetSelectTarget.dataset.repairOptions) : []
+    this.selectedValue = this.hasTargetSelectTarget ? this.targetSelectTarget.dataset.selectedValue : null
     this.toggle()
   }
 
   toggle() {
+    if (!this.hasBlocTypeTarget) return
+
     const type = this.blocTypeTarget.value
-    this._toggleSection(this.targetSectionTarget, ["about", "repair"].includes(type))
-    this._toggleSection(this.shopSectionTarget, type === "shop")
-    this._toggleSection(this.contentSectionTarget, type === "custom")
-    this._toggleSection(this.buttonSectionTarget, ["about", "repair", "shop"].includes(type))
+    const isShop = type === "shop"
+    const isCustom = type === "custom"
+
+    this._toggleIfPresent("targetSection", ["about", "repair"].includes(type))
+    this._toggleIfPresent("shopSection", isShop)
+    this._toggleIfPresent("contentSection", isCustom)
+    this._toggleIfPresent("splitOptionsSection", isCustom)
+    this._toggleIfPresent("buttonSection", !isCustom)
+    this._toggleIfPresent("imageSection", isCustom)
     this._populateTargetOptions(type)
   }
 
   _toggleSection(element, visible) {
     element.classList.toggle("d-none", !visible)
+    element.hidden = !visible
+    element.setAttribute("aria-hidden", (!visible).toString())
     element.querySelectorAll("select, textarea, input").forEach((input) => {
       input.disabled = !visible
     })
   }
 
   _populateTargetOptions(type) {
+    if (!this.hasTargetSelectTarget) return
+
     const select = this.targetSelectTarget
-    const current = this.selectedValue || select.value
+    const current = select.value || this.selectedValue
     let options = []
 
     if (type === "about") {
@@ -46,6 +66,19 @@ export default class extends Controller {
     })
 
     select.value = current
+    this.selectedValue = null
+  }
+
+  _toggleIfPresent(targetName, visible) {
+    const hasTargetMethod = `has${this._capitalize(targetName)}Target`
+    const targetMethod = `${targetName}Target`
+    if (!this[hasTargetMethod]) return
+
+    this._toggleSection(this[targetMethod], visible)
+  }
+
+  _capitalize(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1)
   }
 
   _addOption(select, value, label) {

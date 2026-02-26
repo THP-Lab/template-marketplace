@@ -69,6 +69,14 @@
   </div>
 
   <div class="card p-4 mt-4">
+    <h2 class="text-center mb-2">Sécurité du compte</h2>
+    <p class="text-center mb-3">Vous pouvez mettre à jour votre mot de passe à tout moment.</p>
+    <div class="d-flex justify-content-center">
+      <%= link_to "Changer mon mot de passe", edit_user_registration_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <div class="card p-4 mt-4">
     <h2 class="text-center mb-2">Historique des commandes</h2>
     <% if @orders.any? %>
       <ul class="list-unstyled">
@@ -101,17 +109,24 @@
     <% end %>
   </div>
 
-  <div class="account-danger-zone">
+  <div class="account-danger-zone" data-controller="quantity-modal">
     <h2 class="text-center mt-4">Supprimer mon compte</h2>
-    <p class="text-center mb-2">Cette action est définitive. Vos commandes resteront accessibles pour l'administration.</p>
+    <p class="text-center mb-2">Cette action est définitive. Vous perdrez immédiatement l'accès à votre historique de commandes.</p>
 
     <div class="d-flex justify-content-center mt-3 mb-4">
-      <%= button_to "Supprimer mon compte", user_path(@user), method: :delete,
-                    data: {
-                      confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?",
-                      turbo_confirm: "Cette action est définitive. Confirmez-vous la suppression de votre compte ?"
-                    }, class:"btn btn-primary" %>
+      <%= form_with url: user_path(@user), method: :delete, class: "d-inline m-0" do %>
+        <%= button_tag "Supprimer mon compte",
+                       type: "submit",
+                       class: "btn btn-danger",
+                       data: {
+                         action: "click->quantity-modal#open",
+                         modal_title: "Supprimer définitivement le compte",
+                         modal_message: "Cette action est irréversible. Le compte sera supprimé et l'accès à l'historique des commandes sera perdu pour cet utilisateur. Confirmez-vous la suppression ?",
+                         modal_confirm_label: "Supprimer le compte"
+                       } %>
+      <% end %>
     </div>
+    <%= render "shared/confirm_modal" %>
     <!-- <%= link_to "Annuler", root_path %> -->
 
   </div>
