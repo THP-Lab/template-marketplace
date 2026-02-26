@@ -84,16 +84,6 @@ module ApplicationHelper
           { label: "Ajouter une section légale", path: new_terms_page_path }
         ]
       },
-      {
-        id: "page-metas",
-        title: "Description",
-        icon: "bi-card-text",
-        description: "Titres et meta descriptions par page.",
-        links: [
-          { label: "Descriptions", path: page_metas_path },
-          { label: "Ajouter une description", path: new_page_meta_path }
-        ]
-      }
     ]
   end
 
