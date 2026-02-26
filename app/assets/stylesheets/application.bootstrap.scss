@@ -130,7 +130,7 @@ p,
   }
 
   .navbar-brand {
-    max-width: calc(100% - 56px);
+    max-width: calc(100% - 68px);
     overflow: hidden;
   }
 
@@ -145,12 +145,55 @@ p,
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.78rem;
+    font-size: 0.66rem !important;
+    line-height: 1.05;
+  }
+
+  .navbar-brand-text strong {
+    font-size: inherit !important;
   }
 
   .navbar-toggler {
     padding: 0.18rem 0.4rem;
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .navbar-brand {
+    max-width: calc(100% - 78px);
+  }
+
+  .navbar-brand-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.25rem !important;
+  }
+
+  .navbar-brand-text {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .navbar-brand {
+    max-width: calc(100% - 86px);
+    align-items: flex-start !important;
+  }
+
+  .navbar-brand-text {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    font-size: 0.56rem !important;
+    line-height: 1.02;
+  }
+
+  .navbar-brand-text strong {
+    display: block;
+    font-size: inherit !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 
@@ -220,21 +263,109 @@ footer h5{
 }
 
 .hero h1{
-  font-size: 4rem;
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: 1.1;
   color: $color-light;
 }
 
 .hero h4{
+  font-size: clamp(1rem, 4.6vw, 1.6rem);
+  line-height: 1.25;
   color: $color-light;
 }
 
 .hero-2 h1{
-  font-size: 3rem;
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  line-height: 1.1;
   color: $color-light;
 }
 
 .hero-2 h4{
+  font-size: clamp(0.95rem, 4.2vw, 1.35rem);
+  line-height: 1.25;
   color: $color-light;
+}
+
+@media (max-width: 420px) {
+  .hero .container {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.65rem, 9.4vw, 1.95rem);
+    line-height: 1.06;
+  }
+
+  .hero .container > h1.mt-4,
+  .hero h1.mt-4 {
+    font-size: clamp(1.65rem, 9.4vw, 1.95rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero h4 {
+    font-size: clamp(0.88rem, 4.9vw, 1.05rem);
+    line-height: 1.2;
+  }
+
+  .hero .container > h4.mt-2,
+  .hero h4.mt-2 {
+    font-size: clamp(0.88rem, 4.9vw, 1.05rem) !important;
+    line-height: 1.18 !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .hero h1 {
+    font-size: clamp(1.45rem, 8.8vw, 1.72rem);
+    line-height: 1.02;
+  }
+
+  .hero .container > h1.mt-4,
+  .hero h1.mt-4 {
+    font-size: clamp(1.45rem, 8.8vw, 1.72rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .hero .container > h4.mt-2,
+  .hero h4.mt-2 {
+    font-size: clamp(0.82rem, 4.4vw, 0.95rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  .navbar-brand {
+    max-width: calc(100% - 84px);
+  }
+
+  .navbar-brand-text {
+    font-size: 0.6rem !important;
+    line-height: 1.02;
+  }
+
+  .navbar-brand-text strong {
+    font-size: inherit !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero {
+    min-height: 44vh;
+  }
+
+  .hero .container > h1.mt-4,
+  .hero h1.mt-4 {
+    font-size: clamp(1.2rem, 7.2vw, 1.48rem) !important;
+    line-height: 1.02 !important;
+    margin-top: 0.65rem !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .hero .container > h4.mt-2,
+  .hero h4.mt-2 {
+    font-size: clamp(0.74rem, 4.1vw, 0.92rem) !important;
+    line-height: 1.15 !important;
+  }
 }
 
 // ====== CALENDAR ======
