@@ -1,5 +1,7 @@
 class HomePage < ApplicationRecord
   include Positionable
+  before_validation :apply_bloc_type_rules
+
   enum :bloc_type, {
     custom: "custom",
     about: "about",
@@ -76,5 +78,25 @@ class HomePage < ApplicationRecord
 
   def non_shop_block?
     !shop_bloc_type?
+  end
+
+  private
+
+  def apply_bloc_type_rules
+    case bloc_type
+    when "custom"
+      self.target_id = nil
+      self.layout_variant = "split"
+      self.show_button = false
+      self.button_label = nil
+      self.button_url = nil
+    when "about", "repair"
+      self.layout_variant = "cta_card"
+      self.show_button = true
+      self.button_url = nil
+    when "shop"
+      self.target_id = nil
+      self.button_url = nil
+    end
   end
 end

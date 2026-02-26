@@ -514,6 +514,43 @@ dialog {
   margin-bottom: 0;
 }
 
+/* Fallback dynamique du formulaire admin Home, même sans JS Stimulus */
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="targetSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="shopSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="buttonSection"] {
+  display: none !important;
+}
+
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="shopSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="contentSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="splitOptionsSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="imageSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="shopSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="contentSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="splitOptionsSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="imageSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="targetSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="contentSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="splitOptionsSection"],
+.home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="imageSection"] {
+  display: none !important;
+}
+
 @media (max-width: 991.98px) {
   .home-split-block-image {
     aspect-ratio: 16 / 10;

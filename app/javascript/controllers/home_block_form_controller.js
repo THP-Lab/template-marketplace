@@ -7,23 +7,16 @@ export default class extends Controller {
     "targetSection",
     "shopSection",
     "contentSection",
-    "designSection",
-    "designVariant",
     "splitOptionsSection",
-    "buttonToggleSection",
     "buttonSection",
-    "buttonUrlSection",
-    "showButtonInput",
     "imageSection",
     "targetSelect"
   ]
 
   connect() {
-    if (!this.hasTargetSelectTarget) return
-
-    this.aboutOptions = this._parseOptions(this.targetSelectTarget.dataset.aboutOptions)
-    this.repairOptions = this._parseOptions(this.targetSelectTarget.dataset.repairOptions)
-    this.selectedValue = this.targetSelectTarget.dataset.selectedValue
+    this.aboutOptions = this.hasTargetSelectTarget ? this._parseOptions(this.targetSelectTarget.dataset.aboutOptions) : []
+    this.repairOptions = this.hasTargetSelectTarget ? this._parseOptions(this.targetSelectTarget.dataset.repairOptions) : []
+    this.selectedValue = this.hasTargetSelectTarget ? this.targetSelectTarget.dataset.selectedValue : null
     this.toggle()
   }
 
@@ -33,23 +26,20 @@ export default class extends Controller {
     const type = this.blocTypeTarget.value
     const isShop = type === "shop"
     const isCustom = type === "custom"
-    const isSplitVariant = this.hasDesignVariantTarget && this.designVariantTarget.value === "split"
-    const showButton = this.hasShowButtonInputTarget && this.showButtonInputTarget.checked
 
     this._toggleIfPresent("targetSection", ["about", "repair"].includes(type))
     this._toggleIfPresent("shopSection", isShop)
     this._toggleIfPresent("contentSection", isCustom)
-    this._toggleIfPresent("designSection", !isShop)
-    this._toggleIfPresent("splitOptionsSection", !isShop && isSplitVariant)
-    this._toggleIfPresent("buttonToggleSection", !isShop)
-    this._toggleIfPresent("buttonSection", !isShop && showButton)
-    this._toggleIfPresent("buttonUrlSection", !isShop && isCustom && showButton)
-    this._toggleIfPresent("imageSection", !isShop && isSplitVariant)
+    this._toggleIfPresent("splitOptionsSection", isCustom)
+    this._toggleIfPresent("buttonSection", !isCustom)
+    this._toggleIfPresent("imageSection", isCustom)
     this._populateTargetOptions(type)
   }
 
   _toggleSection(element, visible) {
     element.classList.toggle("d-none", !visible)
+    element.hidden = !visible
+    element.setAttribute("aria-hidden", (!visible).toString())
     element.querySelectorAll("select, textarea, input").forEach((input) => {
       input.disabled = !visible
     })

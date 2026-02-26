@@ -3,8 +3,45 @@
      ["#{p.section_label} - #{position_label} - #{p.title}", p.id]
    } %>
 <% repair_options = RepairPage.order(:position, :title).map { |p| ["##{p.position} - #{p.title}", p.id] } %>
+<style>
+  .home-block-form [data-home-block-form-target="targetSection"],
+  .home-block-form [data-home-block-form-target="shopSection"],
+  .home-block-form [data-home-block-form-target="contentSection"],
+  .home-block-form [data-home-block-form-target="splitOptionsSection"],
+  .home-block-form [data-home-block-form-target="buttonSection"],
+  .home-block-form [data-home-block-form-target="imageSection"] {
+    display: none;
+  }
 
-<%= form_with(model: home_page, data: { controller: "home-block-form" }) do |form| %>
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="contentSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="imageSection"] {
+    display: block;
+  }
+
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
+  [data-home-block-form-target="splitOptionsSection"] {
+    display: flex;
+  }
+
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="targetSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="about"]:checked)
+  [data-home-block-form-target="buttonSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="targetSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="repair"]:checked)
+  [data-home-block-form-target="buttonSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="shopSection"],
+  .home-block-form:has(select[name="home_page[bloc_type]"] option[value="shop"]:checked)
+  [data-home-block-form-target="buttonSection"] {
+    display: block;
+  }
+</style>
+
+<%= form_with(model: home_page, class: "home-block-form", data: { controller: "home-block-form" }) do |form| %>
   <% if home_page.errors.any? %>
     <div class="alert alert-danger">
       <h2 class="h6 mb-2"><%= pluralize(home_page.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
@@ -31,7 +68,9 @@
                     {},
                     class: "form-select",
                     data: { "home-block-form-target": "blocType", action: "change->home-block-form#toggle" } %>
-    <div class="form-text">Choisissez la source du contenu affiché sur la home.</div>
+    <div class="form-text">
+      Règles automatiques: “Image + texte” pour les blocs personnalisés, “Encadré titre + description” pour À propos/Réparation.
+    </div>
   </div>
 
   <div class="mb-3" data-home-block-form-target="targetSection">
@@ -66,17 +105,6 @@
     <div class="form-text">S’affiche uniquement pour les blocs personnalisés.</div>
   </div>
 
-  <div class="mb-3" data-home-block-form-target="designSection">
-    <%= form.label :layout_variant, "Design du bloc", class: "form-label" %>
-    <%= form.select :layout_variant,
-                    [["Image + texte", "split"],
-                     ["Encadré titre + description", "cta_card"]],
-                    {},
-                    class: "form-select",
-                    data: { "home-block-form-target": "designVariant", action: "change->home-block-form#toggle" } %>
-    <div class="form-text">Le design ne s’applique pas aux blocs boutique.</div>
-  </div>
-
   <div class="row g-3 mb-3" data-home-block-form-target="splitOptionsSection">
     <div class="col-md-4">
       <%= form.label :layout_background, "Fond du bloc", class: "form-label" %>
@@ -104,25 +132,10 @@
     </div>
   </div>
 
-  <div class="form-check mb-3" data-home-block-form-target="buttonToggleSection">
-    <%= form.check_box :show_button,
-                       class: "form-check-input",
-                       data: { "home-block-form-target": "showButtonInput", action: "change->home-block-form#toggle" } %>
-    <%= form.label :show_button, "Afficher un bouton dans ce bloc", class: "form-check-label" %>
-  </div>
-
   <div class="mb-3" data-home-block-form-target="buttonSection">
     <%= form.label :button_label, "Texte du bouton", class: "form-label" %>
     <%= form.text_field :button_label, class: "form-control", placeholder: "Ex : Découvrir" %>
-    <div class="form-text">Pour À propos et Réparation, ce texte remplace le libellé par défaut.</div>
-  </div>
-
-  <div class="mb-3" data-home-block-form-target="buttonUrlSection">
-    <%= form.label :button_url, "Lien du bouton (bloc personnalisé)", class: "form-label" %>
-    <%= form.text_field :button_url,
-                        class: "form-control",
-                        placeholder: "/contacts ou https://exemple.com/page" %>
-    <div class="form-text">Utilisé uniquement pour les blocs personnalisés quand le bouton est activé.</div>
+    <div class="form-text">Disponible pour les blocs boutique, à propos et réparation.</div>
   </div>
 
   <div class="mb-3" data-home-block-form-target="imageSection">

@@ -26,19 +26,6 @@ module HomePagesHelper
       about_pages_path
     when "repair"
       repair_pages_path
-    when "custom"
-      normalized_home_block_url(home_page.button_url)
     end
-  end
-
-  private
-
-  def normalized_home_block_url(url)
-    return if url.blank?
-
-    value = url.to_s.strip
-    return value if value.start_with?("/", "http://", "https://")
-
-    "/#{value}"
   end
 end

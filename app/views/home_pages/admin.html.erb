@@ -1,6 +1,6 @@
 <% content_for :title, "Admin - Accueil" %>
 
-<div class="container py-4">
+<div class="container py-4" data-controller="quantity-modal">
   <div class="row g-4">
     <div class="col-lg-4 col-xl-3">
       <%= render_admin_sidebar %>
@@ -61,20 +61,31 @@
                   <td>
                     <% if home_page.shop_bloc_type? %>
                       <span class="text-muted">Boutique (inchangé)</span>
+                    <% elsif home_page.custom_bloc_type? %>
+                      Image + texte
+                      <small class="d-block text-muted">
+                        <%= home_page.layout_background %> · <%= home_page.layout_text_tone %> · image <%= home_page.layout_image_position %>
+                      </small>
                     <% else %>
-                      <%= home_page.layout_variant %>
-                      <% if home_page.split_layout_variant? %>
-                        <small class="d-block text-muted">
-                          <%= home_page.layout_background %> · <%= home_page.layout_text_tone %> · image <%= home_page.layout_image_position %>
-                        </small>
-                      <% end %>
+                      Encadré titre + description
                     <% end %>
                   </td>
                   <td><%= target_label %></td>
                   <td><%= truncate(home_page.content.to_s, length: 100) %></td>
                   <td class="text-end">
-                    <div class="btn-group btn-group-sm" role="group">
+                    <div class="d-flex justify-content-end gap-1">
                       <%= link_to "Modifier", edit_home_page_path(home_page), class: "btn btn-primary" %>
+                      <%= form_with(url: home_page_path(home_page), method: :delete, class: "d-inline-flex m-0") do %>
+                        <%= button_tag "Supprimer",
+                                       type: "submit",
+                                       class: "btn btn-danger btn-sm",
+                                       data: {
+                                         action: "click->quantity-modal#open",
+                                         modal_title: "Supprimer le bloc",
+                                         modal_message: "Cette action est définitive. Voulez-vous vraiment supprimer ce bloc d’accueil ?",
+                                         modal_confirm_label: "Supprimer"
+                                       } %>
+                      <% end %>
                     </div>
                   </td>
                   <td class="text-end text-muted" style="width: 40px;">
@@ -94,6 +105,7 @@
         <%= link_to "Ajouter une section", new_home_page_path, class: "btn btn-success" %>
       </div>
       <%= admin_pagination(@pagination) %>
+      <%= render "shared/confirm_modal" %>
     </div>
   </div>
 </div>
