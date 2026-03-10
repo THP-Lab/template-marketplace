@@ -56,4 +56,44 @@ RSpec.describe Product, type: :model do
     box = product.highlight_boxes.first
     expect(box[:document]).to eq(document)
   end
+
+  it "builds a selection snapshot for multiple options and computes price delta" do
+    product = Product.create!(title: "Haubert", price: 120.0, stock: 2)
+    size_option = product.product_options.create!(
+      name: "Taille",
+      option_kind: "size",
+      product_option_values_attributes: [{ label: "56", price_delta: 15 }]
+    )
+    size_56 = size_option.product_option_values.first
+    color_option = product.product_options.create!(
+      name: "Couleur",
+      option_kind: "color",
+      product_option_values_attributes: [{ label: "Noir", hex_color: "#111111", price_delta: 5 }]
+    )
+    color_noir = color_option.product_option_values.first
+    product.update!(show_product_options: true)
+
+    snapshot, errors = product.build_option_selection_snapshot(
+      size_option.id.to_s => size_56.id.to_s,
+      color_option.id.to_s => color_noir.id.to_s
+    )
+
+    expect(errors).to be_empty
+    expect(snapshot.size).to eq(2)
+    expect(product.option_price_delta(snapshot)).to eq(20.to_d)
+  end
+
+  it "returns an error when an option is missing in selected values" do
+    product = Product.create!(title: "Brassard", price: 80.0, stock: 3)
+    product.product_options.create!(
+      name: "Taille",
+      option_kind: "size",
+      product_option_values_attributes: [{ label: "S", price_delta: 0 }]
+    )
+    product.update!(show_product_options: true)
+
+    _snapshot, errors = product.build_option_selection_snapshot({})
+
+    expect(errors).not_to be_empty
+  end
 end

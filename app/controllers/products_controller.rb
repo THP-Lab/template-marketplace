@@ -93,12 +93,16 @@ class ProductsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
-      @product = Product.includes(image_attachment: :blob, images_attachments: :blob).find(params.expect(:id))
+      @product = Product.includes(
+        image_attachment: :blob,
+        images_attachments: :blob,
+        product_options: :product_option_values
+      ).find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.expect(product: [
+      params.require(:product).permit(
         :title,
         :description,
         :category,
@@ -107,6 +111,7 @@ class ProductsController < ApplicationController
         :image,
         { images: [] },
         { remove_image_attachment_ids: [] },
+        :show_product_options,
         :show_product_highlights,
         :highlight_1_enabled,
         :highlight_2_enabled,
@@ -122,8 +127,22 @@ class ProductsController < ApplicationController
         :highlight_2_title,
         :highlight_2_description,
         :highlight_3_title,
-        :highlight_3_description
-      ])
+        :highlight_3_description,
+        { product_options_attributes: [
+          :id,
+          :name,
+          :option_kind,
+          :required,
+          :_destroy,
+          { product_option_values_attributes: [
+            :id,
+            :label,
+            :price_delta,
+            :hex_color,
+            :_destroy
+          ] }
+        ] }
+      )
     end
 
     def attach_product_images(attributes)

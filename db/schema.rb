@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_173100) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_182300) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -54,8 +54,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_173100) do
     t.datetime "created_at", null: false
     t.integer "product_id", null: false
     t.integer "quantity"
+    t.text "selected_options", default: "[]", null: false
+    t.string "selected_options_signature", default: "base", null: false
     t.decimal "unit_price"
     t.datetime "updated_at", null: false
+    t.index ["cart_id", "product_id", "selected_options_signature"], name: "index_cart_products_on_cart_product_variant", unique: true
     t.index ["cart_id"], name: "index_cart_products_on_cart_id"
     t.index ["product_id"], name: "index_cart_products_on_product_id"
   end
@@ -159,6 +162,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_173100) do
     t.integer "order_id", null: false
     t.integer "product_id", null: false
     t.integer "quantity", default: 1
+    t.text "selected_options", default: "[]", null: false
+    t.string "selected_options_signature", default: "base", null: false
     t.decimal "unit_price"
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_products_on_order_id"
@@ -193,6 +198,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_173100) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "product_option_values", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "hex_color"
+    t.string "label", null: false
+    t.decimal "price_delta", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "product_option_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_option_id"], name: "index_product_option_values_on_product_option_id"
+  end
+
+  create_table "product_options", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "option_kind", default: "custom", null: false
+    t.integer "product_id", null: false
+    t.boolean "required", default: true, null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_options_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", null: false
@@ -214,6 +239,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_173100) do
     t.string "highlight_3_title"
     t.decimal "price"
     t.boolean "show_product_highlights", default: true, null: false
+    t.boolean "show_product_options", default: false, null: false
     t.integer "stock"
     t.string "title"
     t.datetime "updated_at", null: false
@@ -269,6 +295,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_173100) do
   add_foreign_key "order_products", "orders"
   add_foreign_key "order_products", "products"
   add_foreign_key "orders", "users", on_delete: :nullify
+  add_foreign_key "product_option_values", "product_options"
+  add_foreign_key "product_options", "products"
   add_foreign_key "products", "company_documents", column: "highlight_1_company_document_id", on_delete: :nullify
   add_foreign_key "products", "company_documents", column: "highlight_2_company_document_id", on_delete: :nullify
   add_foreign_key "products", "company_documents", column: "highlight_3_company_document_id", on_delete: :nullify

@@ -93,7 +93,12 @@
                       <ul class="list-unstyled mb-0 small">
                         <% order.order_products.each do |order_product| %>
                           <% product_name = order_product.product&.title || "Produit ##{order_product.product_id}" %>
-                          <li><strong><%= order_product.quantity %>x</strong> <%= product_name %></li>
+                          <li>
+                            <strong><%= order_product.quantity %>x</strong> <%= product_name %>
+                            <% if order_product.selected_options_label.present? %>
+                              <div class="text-muted"><%= order_product.selected_options_label %></div>
+                            <% end %>
+                          </li>
                         <% end %>
                       </ul>
                     <% else %>

@@ -22,15 +22,20 @@ class CheckoutController < ApplicationController
       {
         product_id: cp.product_id,
         quantity: cp.quantity.to_i,
-        unit_price: unit_price.to_s
+        unit_price: unit_price.to_s,
+        selected_options: cp.selected_options_list,
+        selected_options_signature: cp.selected_options_signature
       }
     end
 
     line_items = cart_products.map.with_index do |cp, index|
+      option_suffix = cp.selected_options_label.presence
+      product_name = [cp.product.title, option_suffix].compact.join(" - ")
+
       {
         price_data: {
           currency: "eur",
-          product_data: { name: cp.product.title },
+          product_data: { name: product_name },
           unit_amount: (cart_snapshot[index][:unit_price].to_d * 100).to_i
         },
         quantity: cart_snapshot[index][:quantity]
@@ -133,7 +138,9 @@ class CheckoutController < ApplicationController
         order.order_products.create!(
           product: product,
           quantity: quantity,
-          unit_price: unit_price
+          unit_price: unit_price,
+          selected_options: item["selected_options"] || item[:selected_options] || [],
+          selected_options_signature: item["selected_options_signature"] || item[:selected_options_signature] || "base"
         )
 
         total_amount += unit_price * quantity

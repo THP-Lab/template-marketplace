@@ -17,6 +17,8 @@ fr:
     models:
       user: "utilisateur"
       company_document: "document"
+      product_option: "option produit"
+      product_option_value: "choix d'option"
     attributes:
       user:
         first_name: "Prénom"
@@ -31,6 +33,13 @@ fr:
       company_document:
         title: "Titre"
         file: "Fichier"
+      product_option:
+        name: "Nom"
+        option_kind: "Type"
+      product_option_value:
+        label: "Choix"
+        price_delta: "Prix"
+        hex_color: "Code couleur"
     errors:
       messages:
         record_invalid: "Validation échouée : %{errors}"

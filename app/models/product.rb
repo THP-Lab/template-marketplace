@@ -21,10 +21,15 @@ class Product < ApplicationRecord
   has_many :cart_products, dependent: :destroy
   has_many :carts, through: :cart_products
   has_many :order_products, dependent: :restrict_with_error
+  has_many :product_options, -> { order(:id) }, dependent: :destroy, inverse_of: :product
   has_one_attached :image
   has_many_attached :images
+
+  accepts_nested_attributes_for :product_options, allow_destroy: true
+
   before_validation :normalize_highlight_document_fields
   validate :validate_highlight_document_links
+  validate :validate_product_options_when_enabled
 
   def gallery_images
     all_images = []
@@ -50,6 +55,51 @@ class Product < ApplicationRecord
         document: document
       }
     end.select { |box| box[:enabled] }
+  end
+
+  def active_product_options
+    return [] unless show_product_options?
+
+    product_options.ordered.includes(:product_option_values).select do |option|
+      !option.marked_for_destruction? && option.available_values.any?
+    end
+  end
+
+  def options_enabled_for_selection?
+    active_product_options.any?
+  end
+
+  def build_option_selection_snapshot(raw_selected_option_values)
+    return [[], []] unless options_enabled_for_selection?
+
+    selected_option_values = raw_selected_option_values.to_h.transform_keys(&:to_s)
+    selection_snapshot = []
+    errors = []
+
+    active_product_options.each do |option|
+      selected_value_id = selected_option_values[option.id.to_s].presence
+      if selected_value_id.blank?
+        errors << "Veuillez sélectionner #{option.display_name.downcase}."
+        next
+      end
+
+      value = option.product_option_values.find_by(id: selected_value_id.to_i)
+      unless value
+        errors << "Le choix sélectionné pour #{option.display_name.downcase} est invalide."
+        next
+      end
+
+      selection_snapshot << value.selection_payload
+    end
+
+    [selection_snapshot.sort_by { |entry| [entry[:option_id].to_i, entry[:value_id].to_i] }, errors]
+  end
+
+  def option_price_delta(selection_snapshot)
+    Array(selection_snapshot).sum do |entry|
+      value = entry.is_a?(Hash) ? entry.with_indifferent_access[:price_delta] : 0
+      value.to_d
+    end
   end
 
   def highlight_column_class
@@ -101,6 +151,22 @@ class Product < ApplicationRecord
       end
 
       errors.add("highlight_#{number}_company_document_id", "n'a pas de fichier PDF") unless document.file.attached?
+    end
+  end
+
+  def validate_product_options_when_enabled
+    return unless show_product_options?
+
+    available_options = product_options.reject(&:marked_for_destruction?)
+    if available_options.empty?
+      errors.add(:product_options, "Ajoutez au moins une option pour ce produit.")
+      return
+    end
+
+    available_options.each do |option|
+      next if option.available_values.any?
+
+      errors.add(:product_options, "L'option #{option.display_name} doit contenir au moins un choix.")
     end
   end
 end

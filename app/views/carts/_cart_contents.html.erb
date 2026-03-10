@@ -14,7 +14,12 @@
     <tbody>
       <% cart_products.each do |cart_product| %>
         <tr id="<%= dom_id(cart_product) %>">
-          <td><%= cart_product.product.title %></td>
+          <td>
+            <div><%= cart_product.product.title %></div>
+            <% if cart_product.selected_options_label.present? %>
+              <div class="small text-muted"><%= cart_product.selected_options_label %></div>
+            <% end %>
+          </td>
           <td><%= number_to_currency(cart_product.unit_price, unit: "€", format: "%n %u") %></td>
           <td>
             <%= form_with model: cart_product,

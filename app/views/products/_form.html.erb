@@ -41,6 +41,44 @@
     <%= form.number_field :stock, class: "form-control", min: 0 %>
   </div>
 
+  <div class="card p-3 mb-3" data-controller="product-options-form">
+    <div class="form-check">
+      <%= form.check_box :show_product_options,
+                         class: "form-check-input",
+                         data: {
+                           "product-options-form-target": "toggle",
+                           action: "change->product-options-form#updateVisibility"
+                         } %>
+      <%= form.label :show_product_options,
+                     "Activer les options produit (taille, couleur, etc.)",
+                     class: "form-check-label" %>
+    </div>
+
+    <div class="mt-3 <%= "d-none" unless product.show_product_options? %>" data-product-options-form-target="fields">
+      <p class="text-muted small mb-3">
+        Ajoutez une ou plusieurs options. Chaque choix peut avoir un supplément (ou réduction) de prix.
+      </p>
+
+      <div data-product-options-form-target="optionsList">
+        <%= form.fields_for :product_options do |option_fields| %>
+          <%= render "products/product_option_fields", form: option_fields %>
+        <% end %>
+      </div>
+
+      <template data-product-options-form-target="optionTemplate">
+        <%= form.fields_for :product_options, ProductOption.new, child_index: "NEW_OPTION" do |option_fields| %>
+          <%= render "products/product_option_fields", form: option_fields %>
+        <% end %>
+      </template>
+
+      <button type="button"
+              class="btn btn-outline-primary btn-sm"
+              data-action="product-options-form#addOption">
+        Ajouter une option
+      </button>
+    </div>
+  </div>
+
   <div class="card p-3 mb-3" data-controller="product-highlights-form">
     <div class="form-check">
       <%= form.check_box :show_product_highlights,
