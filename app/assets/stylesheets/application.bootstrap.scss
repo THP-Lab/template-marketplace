@@ -945,6 +945,19 @@ dialog {
   background: #711c1c;
 }
 
+.product-card-media-frame {
+  aspect-ratio: 700 / 520;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-card-media-image {
+  object-fit: contain;
+}
+
 @media (max-width: 991.98px) {
   .gallery-carousel {
     max-width: 100%;
@@ -963,5 +976,12 @@ dialog {
 
   .gallery-carousel .carousel-control-next {
     right: 8px;
+  }
+}
+
+@media (min-width: 992px) {
+  .product-detail-layout,
+  .event-detail-layout {
+    --bs-gutter-x: 5rem;
   }
 }
