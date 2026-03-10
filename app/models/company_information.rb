@@ -30,6 +30,7 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_ABOUT_JOURNEY_TITLE = DEFAULT_ABOUT_MON_PARCOURS_TITLE
 
   has_one_attached :home_banner_image
+  has_many :company_documents, dependent: :destroy
 
   def self.instance
     first_or_create!(

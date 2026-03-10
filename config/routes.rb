@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     patch :update_footer
     get :home_banner
     patch :update_home_banner
+    resources :documents, controller: "company_documents", only: [:index, :create, :edit, :update, :destroy]
   end
   resources :cart_products do
     collection { get :admin }

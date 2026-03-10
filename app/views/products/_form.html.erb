@@ -1,4 +1,6 @@
 <%= form_with(model: product) do |form| %>
+  <% available_company_documents = local_assigns[:available_company_documents] || @available_company_documents || [] %>
+
   <% if local_assigns[:redirect_to].present? %>
     <%= hidden_field_tag :redirect_to, local_assigns[:redirect_to] %>
   <% end %>
@@ -83,6 +85,37 @@
                                  class: "form-control",
                                  rows: 2,
                                  placeholder: defaults[:description] %>
+            </div>
+
+            <div class="form-check mt-3">
+              <%= form.check_box :"highlight_#{number}_document_enabled",
+                                 class: "form-check-input",
+                                 data: {
+                                   index: index,
+                                   "product-highlights-form-target": "documentToggle",
+                                   action: "change->product-highlights-form#updateDocumentSelection"
+                                 } %>
+              <%= form.label :"highlight_#{number}_document_enabled",
+                             "Intégrer un document",
+                             class: "form-check-label fw-semibold" %>
+            </div>
+
+            <% include_document = product.public_send("highlight_#{number}_document_enabled") %>
+            <% can_select_document = panel_open && include_document %>
+            <div class="mt-2 <%= "d-none" unless include_document %>" data-product-highlights-form-target="documentSelectGroup">
+              <% if available_company_documents.any? %>
+                <%= form.label :"highlight_#{number}_company_document_id", "Document PDF", class: "form-label" %>
+                <%= form.select :"highlight_#{number}_company_document_id",
+                                options_from_collection_for_select(available_company_documents, :id, :title, product.public_send("highlight_#{number}_company_document_id")),
+                                { include_blank: "Sélectionner un document" },
+                                class: "form-select",
+                                data: { "product-highlights-form-target": "documentSelect" },
+                                disabled: !can_select_document %>
+              <% else %>
+                <p class="small text-muted mb-0">
+                  Aucun document disponible. Ajoutez-en dans Information > Documents.
+                </p>
+              <% end %>
             </div>
           </div>
         </div>

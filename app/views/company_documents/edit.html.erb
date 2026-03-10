@@ -1,0 +1,9 @@
+<% content_for :title, "Admin - Modifier document" %>
+
+<%= admin_page(title: "Modifier le document") do %>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <%= render "form", company_document: @company_document, submit_label: "Enregistrer" %>
+    </div>
+  </div>
+<% end %>

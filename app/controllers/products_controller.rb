@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
   before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :set_available_company_documents, only: [:new, :edit, :create, :update]
   before_action :authenticate_user!, except: [:index, :show]
 
   # GET /products or /products.json
@@ -110,6 +111,12 @@ class ProductsController < ApplicationController
         :highlight_1_enabled,
         :highlight_2_enabled,
         :highlight_3_enabled,
+        :highlight_1_document_enabled,
+        :highlight_2_document_enabled,
+        :highlight_3_document_enabled,
+        :highlight_1_company_document_id,
+        :highlight_2_company_document_id,
+        :highlight_3_company_document_id,
         :highlight_1_title,
         :highlight_1_description,
         :highlight_2_title,
@@ -132,5 +139,9 @@ class ProductsController < ApplicationController
 
       removable_attachments = @product.gallery_images.select { |attachment| ids.include?(attachment.id) }
       removable_attachments.each(&:purge_later)
+    end
+
+    def set_available_company_documents
+      @available_company_documents = CompanyInformation.instance.company_documents.ordered
     end
 end
