@@ -1,0 +1,28 @@
+fr:
+  hello: "Bonjour"
+
+  activerecord:
+    models:
+      user: "utilisateur"
+    attributes:
+      user:
+        first_name: "Prénom"
+        last_name: "Nom"
+        email: "Email"
+        address: "Adresse"
+        zipcode: "Code postal"
+        city: "Ville"
+        country: "Pays"
+        phone: "Téléphone"
+        cgu_accepted: "CGU"
+
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "est obligatoire"
+      invalid: "est invalide"
+      taken: "est déjà utilisé"
+      too_short: "est trop court (minimum %{count} caractères)"
+      too_long: "est trop long (maximum %{count} caractères)"
+      not_a_number: "n'est pas un nombre"
+      accepted: "doit être accepté"

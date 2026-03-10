@@ -24,10 +24,22 @@ class UsersController < ApplicationController
 
   def update
     require_admin! unless @user == current_user
+    destination = params[:redirect_to].presence || user_path(@user)
+
+    if checkout_context?
+      @user.assign_attributes(user_params)
+
+      if @user.save(context: :checkout)
+        redirect_to destination, notice: "Profil mis à jour."
+      else
+        redirect_to destination, alert: @user.errors.full_messages.to_sentence
+      end
+      return
+    end
+
     respond_to do |format|
       if @user.update(user_params)
         format.html do
-          destination = params[:redirect_to].presence || user_path(@user)
           redirect_to destination, notice: "Profil mis à jour."
         end
       else
@@ -65,5 +77,9 @@ class UsersController < ApplicationController
       :country,
       :phone
     )
+  end
+
+  def checkout_context?
+    params[:checkout_context].to_s == "1"
   end
 end

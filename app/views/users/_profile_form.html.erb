@@ -1,5 +1,8 @@
 <% cart_context = local_assigns.fetch(:cart_context, false) %>
 <% redirect_path = local_assigns[:redirect_path] || (cart_context ? request.fullpath : nil) %>
+<% required_label = lambda do |text|
+     cart_context ? "#{text} <span class='text-danger'>*</span>".html_safe : text
+   end %>
 
 <%= form_with model: user,
               url: user_path(user),
@@ -13,43 +16,43 @@
       <% end %>
 
       <div class="mb-3">
-        <%= f.label :first_name, "Prénom", class: "form-label" %>
-        <%= f.text_field :first_name, required: true, class: "form-control" %>
+        <%= f.label :first_name, required_label.call("Prénom"), class: "form-label" %>
+        <%= f.text_field :first_name, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :last_name, "Nom", class: "form-label" %>
-        <%= f.text_field :last_name, required: true, class: "form-control" %>
+        <%= f.label :last_name, required_label.call("Nom"), class: "form-label" %>
+        <%= f.text_field :last_name, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :email, class: "form-label" %>
-        <%= f.email_field :email, required: true, class: "form-control" %>
+        <%= f.label :email, required_label.call("Email"), class: "form-label" %>
+        <%= f.email_field :email, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :address, "Adresse", class: "form-label" %>
-        <%= f.text_field :address, class: "form-control" %>
+        <%= f.label :address, required_label.call("Adresse"), class: "form-label" %>
+        <%= f.text_field :address, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :zipcode, "Code postal", class: "form-label" %>
-        <%= f.text_field :zipcode, class: "form-control" %>
+        <%= f.label :zipcode, required_label.call("Code postal"), class: "form-label" %>
+        <%= f.text_field :zipcode, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :city, "Ville", class: "form-label" %>
-        <%= f.text_field :city, class: "form-control" %>
+        <%= f.label :city, required_label.call("Ville"), class: "form-label" %>
+        <%= f.text_field :city, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-3">
-        <%= f.label :country, "Pays", class: "form-label" %>
-        <%= f.text_field :country, class: "form-control" %>
+        <%= f.label :country, required_label.call("Pays"), class: "form-label" %>
+        <%= f.text_field :country, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="mb-4">
-        <%= f.label :phone, "Téléphone", class: "form-label" %>
-        <%= f.telephone_field :phone, class: "form-control" %>
+        <%= f.label :phone, required_label.call("Téléphone"), class: "form-label" %>
+        <%= f.telephone_field :phone, required: cart_context, class: "form-control" %>
       </div>
 
       <div class="form-actions">
@@ -59,5 +62,8 @@
   </div>
   <% if redirect_path.present? %>
     <%= hidden_field_tag :redirect_to, redirect_path %>
+  <% end %>
+  <% if cart_context %>
+    <%= hidden_field_tag :checkout_context, "1" %>
   <% end %>
 <% end %>
