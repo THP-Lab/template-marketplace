@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_203000) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -54,8 +54,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.datetime "created_at", null: false
     t.integer "product_id", null: false
     t.integer "quantity"
+    t.text "selected_options", default: "[]", null: false
+    t.string "selected_options_signature", default: "base", null: false
     t.decimal "unit_price"
     t.datetime "updated_at", null: false
+    t.index ["cart_id", "product_id", "selected_options_signature"], name: "index_cart_products_on_cart_product_variant", unique: true
     t.index ["cart_id"], name: "index_cart_products_on_cart_id"
     t.index ["product_id"], name: "index_cart_products_on_product_id"
   end
@@ -66,6 +69,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
+  create_table "company_documents", force: :cascade do |t|
+    t.integer "company_information_id", null: false
+    t.datetime "created_at", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_information_id"], name: "index_company_documents_on_company_information_id"
   end
 
   create_table "company_informations", force: :cascade do |t|
@@ -79,9 +90,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.string "address_line1"
     t.string "address_line2"
     t.string "city"
+    t.string "contact_page_subtitle", default: "", null: false
+    t.string "contact_page_title", default: "", null: false
     t.string "country"
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "events_page_subtitle", default: "", null: false
+    t.string "events_page_title", default: "", null: false
     t.text "footer_description"
     t.string "home_banner_primary_cta_label"
     t.string "home_banner_secondary_cta_label"
@@ -97,6 +112,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.string "home_highlight_4_title"
     t.string "legal_name"
     t.string "phone"
+    t.string "repair_page_subtitle", default: "", null: false
+    t.string "repair_page_title", default: "", null: false
+    t.string "repair_partners_section_title", default: "", null: false
+    t.string "shop_page_subtitle", default: "", null: false
+    t.string "shop_page_title", default: "", null: false
     t.string "siret"
     t.datetime "updated_at", null: false
     t.string "vat_number"
@@ -151,6 +171,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.integer "order_id", null: false
     t.integer "product_id", null: false
     t.integer "quantity", default: 1
+    t.text "selected_options", default: "[]", null: false
+    t.string "selected_options_signature", default: "base", null: false
     t.decimal "unit_price"
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_products_on_order_id"
@@ -185,24 +207,54 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "product_option_values", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "hex_color"
+    t.string "label", null: false
+    t.decimal "price_delta", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "product_option_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_option_id"], name: "index_product_option_values_on_product_option_id"
+  end
+
+  create_table "product_options", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "option_kind", default: "custom", null: false
+    t.integer "product_id", null: false
+    t.boolean "required", default: true, null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_options_on_product_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
+    t.integer "highlight_1_company_document_id"
     t.text "highlight_1_description"
+    t.boolean "highlight_1_document_enabled", default: false, null: false
     t.boolean "highlight_1_enabled", default: true, null: false
     t.string "highlight_1_title"
+    t.integer "highlight_2_company_document_id"
     t.text "highlight_2_description"
+    t.boolean "highlight_2_document_enabled", default: false, null: false
     t.boolean "highlight_2_enabled", default: true, null: false
     t.string "highlight_2_title"
+    t.integer "highlight_3_company_document_id"
     t.text "highlight_3_description"
+    t.boolean "highlight_3_document_enabled", default: false, null: false
     t.boolean "highlight_3_enabled", default: true, null: false
     t.string "highlight_3_title"
     t.decimal "price"
     t.boolean "show_product_highlights", default: true, null: false
+    t.boolean "show_product_options", default: false, null: false
     t.integer "stock"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["highlight_1_company_document_id"], name: "index_products_on_highlight_1_company_document_id"
+    t.index ["highlight_2_company_document_id"], name: "index_products_on_highlight_2_company_document_id"
+    t.index ["highlight_3_company_document_id"], name: "index_products_on_highlight_3_company_document_id"
   end
 
   create_table "repair_pages", force: :cascade do |t|
@@ -211,6 +263,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
     t.integer "position"
     t.string "title"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "repair_partners", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.index ["position"], name: "index_repair_partners_on_position"
   end
 
   create_table "terms_pages", force: :cascade do |t|
@@ -247,8 +308,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_25_223250) do
   add_foreign_key "cart_products", "carts"
   add_foreign_key "cart_products", "products"
   add_foreign_key "carts", "users"
+  add_foreign_key "company_documents", "company_informations"
   add_foreign_key "events", "users"
   add_foreign_key "order_products", "orders"
   add_foreign_key "order_products", "products"
   add_foreign_key "orders", "users", on_delete: :nullify
+  add_foreign_key "product_option_values", "product_options"
+  add_foreign_key "product_options", "products"
+  add_foreign_key "products", "company_documents", column: "highlight_1_company_document_id", on_delete: :nullify
+  add_foreign_key "products", "company_documents", column: "highlight_2_company_document_id", on_delete: :nullify
+  add_foreign_key "products", "company_documents", column: "highlight_3_company_document_id", on_delete: :nullify
 end

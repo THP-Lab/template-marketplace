@@ -33,7 +33,10 @@
               <% @products.each do |product| %>
                 <tr id="<%= dom_id(product) %>">
                   <td>
-                    <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [80, 80] }, class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
+                    <%= attachment_thumb(product.primary_image,
+                                        variant_options: { resize_to_fill: [80, 80] },
+                                        class: "img-thumbnail",
+                                        style: "aspect-ratio: 1 / 1; object-fit: cover;") || content_tag(:span, "—", class: "text-muted") %>
                   </td>
                   <td><%= product.title %></td>
                   <td><%= product.category.presence || "—" %></td>

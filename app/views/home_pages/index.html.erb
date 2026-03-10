@@ -77,8 +77,11 @@
               <% products.each do |product| %>
                 <div class="col">
                   <div class="card h-100 shadow-sm">
-                    <% if product.image.attached? %>
-                      <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [600, 360] }, class: "card-img-top") %>
+                    <% if product.primary_image.present? %>
+                      <%= attachment_thumb(product.primary_image,
+                                          variant_options: { resize_to_fill: [600, 600] },
+                                          class: "card-img-top",
+                                          style: "aspect-ratio: 1 / 1; object-fit: cover;") %>
                     <% end %>
                     <div class="card-body d-flex flex-column">
                       <% if product.category.present? %>

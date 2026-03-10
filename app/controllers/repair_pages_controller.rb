@@ -4,7 +4,9 @@ class RepairPagesController < ApplicationController
 
   # GET /repair_pages or /repair_pages.json
   def index
+    @company_information = CompanyInformation.instance
     @repair_pages = RepairPage.order(:position)
+    @repair_partners = RepairPartner.ordered.with_attached_logo
     if action_name == "admin"
       @repair_pages, @pagination = paginate(@repair_pages)
     end

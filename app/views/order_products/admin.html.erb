@@ -28,7 +28,12 @@
               <% @order_products.each do |order_product| %>
                 <tr id="<%= dom_id(order_product) %>">
                   <td><%= order_product.order_id %></td>
-                  <td><%= order_product.product_id %></td>
+                  <td>
+                    <div><%= order_product.product_id %></div>
+                    <% if order_product.selected_options_label.present? %>
+                      <div class="small text-muted"><%= order_product.selected_options_label %></div>
+                    <% end %>
+                  </td>
                   <td class="text-end"><%= order_product.quantity %></td>
                   <td class="text-end"><%= order_product.unit_price.present? ? number_to_currency(order_product.unit_price, unit: "€") : "—" %></td>
                   <td class="text-end">

@@ -29,11 +29,21 @@ class CartProductsController < ApplicationController
   # POST /cart_products or /cart_products.json
   def create
     cart = current_user.cart || current_user.create_cart!(status: "open")
-    product = Product.find(params[:product_id])
+    product = Product.includes(product_options: :product_option_values).find(params[:product_id])
     quantity = params[:quantity].to_i
     quantity = 1 if quantity < 1
 
-    cart_product = cart.cart_products.find_by(product_id: product.id)
+    selected_options, selection_errors = product.build_option_selection_snapshot(selected_option_values_params)
+    if selection_errors.any?
+      redirect_to product_path(product), alert: selection_errors.join(" ") and return
+    end
+
+    unit_price = product.price.to_d + product.option_price_delta(selected_options)
+    selected_options_signature = CartProduct.signature_for(selected_options)
+    cart_product = cart.cart_products.find_by(
+      product_id: product.id,
+      selected_options_signature: selected_options_signature
+    )
 
     if cart_product
       cart_product.update(quantity: cart_product.quantity + quantity)
@@ -41,7 +51,9 @@ class CartProductsController < ApplicationController
       cart.cart_products.create(
         product: product,
         quantity: quantity,
-        unit_price: product.price
+        unit_price: unit_price,
+        selected_options: selected_options,
+        selected_options_signature: selected_options_signature
       )
     end
 
@@ -118,5 +130,13 @@ class CartProductsController < ApplicationController
         partial: "carts/cart_contents",
         locals: { cart_products: @cart_products }
       )
+    end
+
+    def selected_option_values_params
+      raw = params[:selected_option_values]
+      return raw.to_h if raw.is_a?(Hash)
+      return {} unless raw.respond_to?(:to_unsafe_h)
+
+      raw.to_unsafe_h
     end
 end

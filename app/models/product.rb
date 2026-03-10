@@ -1,38 +1,105 @@
 class Product < ApplicationRecord
   HIGHLIGHT_DEFAULTS = [
     {
-      icon: "bi-shield-check",
       title: "Garantie artisanale",
       description: "Chaque pièce est garantie 2 ans contre les défauts de fabrication"
     },
     {
-      icon: "bi-truck",
       title: "Livraison soignée",
       description: "Expédition sous 2-3 jours dans un emballage médiéval"
     },
     {
-      icon: "bi-box-seam",
       title: "Retour accepté",
       description: "30 jours pour changer d'avis"
     }
   ].freeze
 
   self.inheritance_column = :_type_disabled
+  belongs_to :highlight_1_company_document, class_name: "CompanyDocument", optional: true
+  belongs_to :highlight_2_company_document, class_name: "CompanyDocument", optional: true
+  belongs_to :highlight_3_company_document, class_name: "CompanyDocument", optional: true
   has_many :cart_products, dependent: :destroy
   has_many :carts, through: :cart_products
   has_many :order_products, dependent: :restrict_with_error
+  has_many :product_options, -> { order(:id) }, dependent: :destroy, inverse_of: :product
   has_one_attached :image
+  has_many_attached :images
+
+  accepts_nested_attributes_for :product_options, allow_destroy: true
+
+  before_validation :normalize_highlight_document_fields
+  validate :validate_highlight_document_links
+  validate :validate_product_options_when_enabled
+
+  def gallery_images
+    all_images = []
+    all_images << image.attachment if image.attached?
+    all_images.concat(images.attachments.to_a) if images.attached?
+    all_images.uniq(&:id)
+  end
+
+  def primary_image
+    gallery_images.first
+  end
 
   def highlight_boxes
     HIGHLIGHT_DEFAULTS.each_with_index.map do |defaults, idx|
       number = idx + 1
+      document = highlight_document_for(number)
+      document = nil unless highlight_document_enabled?(number) && document&.file&.attached?
+
       {
         enabled: send("highlight_#{number}_enabled"),
-        icon: defaults[:icon],
         title: send("highlight_#{number}_title").presence || defaults[:title],
-        description: send("highlight_#{number}_description").presence || defaults[:description]
+        description: send("highlight_#{number}_description").presence || defaults[:description],
+        document: document
       }
     end.select { |box| box[:enabled] }
+  end
+
+  def active_product_options
+    return [] unless show_product_options?
+
+    product_options.ordered.includes(:product_option_values).select do |option|
+      !option.marked_for_destruction? && option.available_values.any?
+    end
+  end
+
+  def options_enabled_for_selection?
+    active_product_options.any?
+  end
+
+  def build_option_selection_snapshot(raw_selected_option_values)
+    return [[], []] unless options_enabled_for_selection?
+
+    selected_option_values = raw_selected_option_values.to_h.transform_keys(&:to_s)
+    selection_snapshot = []
+    errors = []
+
+    active_product_options.each do |option|
+      selected_value_id = selected_option_values[option.id.to_s].presence
+      if selected_value_id.blank?
+        errors << "Veuillez sélectionner #{option.display_name.downcase}."
+        next
+      end
+
+      value = option.product_option_values.find_by(id: selected_value_id.to_i)
+      unless value
+        errors << "Le choix sélectionné pour #{option.display_name.downcase} est invalide."
+        next
+      end
+
+      selection_snapshot << value.selection_payload
+    end
+
+    [selection_snapshot.sort_by { |entry| [entry[:option_id].to_i, entry[:value_id].to_i] }, errors]
+  end
+
+  def option_price_delta(selection_snapshot)
+    Array(selection_snapshot).sum do |entry|
+      value = entry.is_a?(Hash) ? entry.with_indifferent_access[:price_delta] : 0
+      value.to_d
+    end
   end
 
   def highlight_column_class
@@ -43,6 +110,63 @@ class Product < ApplicationRecord
       "col-12 col-md-6"
     else
       "col-12 col-md-4"
+    end
+  end
+
+  def highlight_document_for(number)
+    public_send("highlight_#{number}_company_document")
+  end
+
+  def highlight_document_enabled?(number)
+    ActiveModel::Type::Boolean.new.cast(public_send("highlight_#{number}_document_enabled"))
+  end
+
+  private
+
+  def normalize_highlight_document_fields
+    (1..3).each do |number|
+      highlight_enabled = ActiveModel::Type::Boolean.new.cast(public_send("highlight_#{number}_enabled"))
+      document_enabled = ActiveModel::Type::Boolean.new.cast(public_send("highlight_#{number}_document_enabled"))
+
+      unless highlight_enabled
+        public_send("highlight_#{number}_document_enabled=", false)
+        public_send("highlight_#{number}_company_document_id=", nil)
+        next
+      end
+
+      public_send("highlight_#{number}_company_document_id=", nil) unless document_enabled
+    end
+  end
+
+  def validate_highlight_document_links
+    (1..3).each do |number|
+      highlight_enabled = ActiveModel::Type::Boolean.new.cast(public_send("highlight_#{number}_enabled"))
+      document_enabled = ActiveModel::Type::Boolean.new.cast(public_send("highlight_#{number}_document_enabled"))
+      next unless highlight_enabled && document_enabled
+
+      document = highlight_document_for(number)
+      if document.blank?
+        errors.add("highlight_#{number}_company_document_id", "doit être sélectionné")
+        next
+      end
+
+      errors.add("highlight_#{number}_company_document_id", "n'a pas de fichier PDF") unless document.file.attached?
+    end
+  end
+
+  def validate_product_options_when_enabled
+    return unless show_product_options?
+
+    available_options = product_options.reject(&:marked_for_destruction?)
+    if available_options.empty?
+      errors.add(:product_options, "Ajoutez au moins une option pour ce produit.")
+      return
+    end
+
+    available_options.each do |option|
+      next if option.available_values.any?
+
+      errors.add(:product_options, "L'option #{option.display_name} doit contenir au moins un choix.")
     end
   end
 end
