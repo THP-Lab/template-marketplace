@@ -47,20 +47,11 @@
   <div id="products" class="row g-4">
     <% @products.each do |product| %>
       <div class="col-12 col-md-4">
-        <div class="card h-100 mb-2">
-          <%= render product %>
-          
-          <div class="d-flex gap-2 mt-2 p-2">
-            <%= link_to "Voir plus", product, class: "btn btn-primary btn-sm" %>
-            
-            <% if user_signed_in? %>
-              <%= button_to "Ajouter au panier",
-                            cart_products_path(product_id: product.id, quantity: 1, redirect_to: "products"),
-                            method: :post,
-                            class: "btn btn-primary btn-sm" %>
-            <% end %>
+        <%= link_to product_path(product), class: "product-card-link text-reset text-decoration-none d-block h-100" do %>
+          <div class="card h-100 mb-2 product-card-clickable">
+            <%= render product %>
           </div>
-        </div>
+        <% end %>
       </div>
     <% end %>
   </div>
