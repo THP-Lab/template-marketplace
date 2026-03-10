@@ -105,14 +105,15 @@ module ApplicationHelper
   end
 
   def attachment_thumb(attachment, variant_options: nil, **options)
-    return unless attachment&.attached?
+    return if attachment.blank?
+    return if attachment.respond_to?(:attached?) && !attachment.attached?
 
     options = options.dup
     options[:loading] = "lazy" unless options.key?(:loading)
     options[:decoding] = "async" unless options.key?(:decoding)
-    variant_options ||= { resize_to_limit: [1600, 1600] } if attachment.variable?
+    variant_options ||= { resize_to_limit: [1600, 1600] } if attachment.respond_to?(:variable?) && attachment.variable?
 
-    if variant_options && attachment.variable?
+    if variant_options && attachment.respond_to?(:variable?) && attachment.variable?
       image_tag attachment.variant(variant_options), **options
     else
       image_tag attachment, **options
@@ -293,7 +294,7 @@ module ApplicationHelper
       "@type": "Product",
       "name": product.title,
       "description": meta_description_from(product.description),
-      "image": schema_image_url(product.image),
+      "image": schema_image_url(product.primary_image),
       "category": product.category,
       "offers": offer
     }.compact_blank
@@ -306,7 +307,7 @@ module ApplicationHelper
       "address": event.location
     }
 
-    image_url = schema_image_url(event.image_url.presence || event.image)
+    image_url = schema_image_url(event.image_url.presence || event.primary_image)
 
     {
       "@context": "https://schema.org",
@@ -415,7 +416,7 @@ module ApplicationHelper
         "@type": "Product",
         "name": product.title,
         "url": product_url(product),
-        "image": schema_image_url(product.image),
+        "image": schema_image_url(product.primary_image),
         "offers": {
           "@type": "Offer",
           "priceCurrency": "EUR",
@@ -458,7 +459,7 @@ module ApplicationHelper
       "@type": "Product",
       "name": product.title,
       "url": product_url(product),
-      "image": schema_image_url(product.image)
+      "image": schema_image_url(product.primary_image)
     }.compact_blank
 
     {
@@ -486,6 +487,10 @@ module ApplicationHelper
 
   def schema_image_url(source)
     return if source.blank?
+
+    if source.is_a?(ActiveStorage::Attachment)
+      return rails_blob_url(source, host: request.base_url)
+    end
 
     if source.respond_to?(:attached?) && source.attached?
       return rails_blob_url(source, host: request.base_url)

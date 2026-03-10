@@ -45,12 +45,27 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :image, "Image", class: "form-label" %>
-    <%= form.file_field :image, class: "form-control" %>
-    <% if event.image.attached? %>
-      <div class="mt-2">
-        <%= attachment_thumb(event.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail") %>
+    <%= form.label :images, "Photos de l’événement", class: "form-label" %>
+    <%= form.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
+    <small class="text-muted d-block mt-1">Vous pouvez sélectionner plusieurs photos. Affichage recadré en carré.</small>
+
+    <% if event.gallery_images.any? %>
+      <div class="row g-2 mt-2">
+        <% event.gallery_images.each do |gallery_image| %>
+          <% checkbox_id = dom_id(gallery_image, :remove) %>
+          <div class="col-4 col-md-3 col-lg-2">
+            <div class="gallery-admin-item">
+              <%= attachment_thumb(gallery_image,
+                                  variant_options: { resize_to_fill: [200, 200] },
+                                  class: "img-thumbnail w-100 gallery-admin-thumb",
+                                  style: "aspect-ratio: 1 / 1; object-fit: cover;") %>
+              <%= check_box_tag "event[remove_image_attachment_ids][]", gallery_image.id, false, id: checkbox_id, class: "gallery-remove-input" %>
+              <%= label_tag checkbox_id, "×", class: "gallery-remove-btn", title: "Supprimer cette photo" %>
+            </div>
+          </div>
+        <% end %>
       </div>
+      <small class="text-muted d-block mt-2">Survolez une photo puis cliquez sur la croix pour la supprimer.</small>
     <% end %>
   </div>
 

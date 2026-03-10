@@ -11,21 +11,56 @@
   <div class="container py-4">
     <%= link_to "Retour", products_path, class:"btn btn-outline-primary mb-4" %>
 
-    <div class="row g-4 align-items-start">
-      <div class="col-12 col-md-6">
-        <% if @product.image.attached? %>
-          <div>
-            <%= attachment_thumb(@product.image,
-                                variant_options: { resize_to_limit: [1200, 900] },
-                                alt: @product.title,
-                                class: "img img-fluid w-100",
-                                loading: "eager",
-                                fetchpriority: "high") %>
+    <div class="row g-4 align-items-start product-detail-layout">
+      <div class="col-12 col-lg-5">
+        <% if @product.gallery_images.any? %>
+          <% carousel_id = "product-carousel-#{@product.id}" %>
+          <div id="<%= carousel_id %>" class="carousel slide gallery-carousel gallery-carousel--product" data-bs-interval="false">
+            <% if @product.gallery_images.size > 1 %>
+              <div class="carousel-indicators">
+                <% @product.gallery_images.each_with_index do |_gallery_image, index| %>
+                  <button type="button"
+                          data-bs-target="#<%= carousel_id %>"
+                          data-bs-slide-to="<%= index %>"
+                          class="<%= "active" if index.zero? %>"
+                          <%= 'aria-current="true"'.html_safe if index.zero? %>
+                          aria-label="Photo <%= index + 1 %>"></button>
+                <% end %>
+              </div>
+            <% end %>
+
+            <div class="carousel-inner rounded-3">
+              <% @product.gallery_images.each_with_index do |gallery_image, index| %>
+                <div class="carousel-item <%= "active" if index.zero? %>">
+                  <div class="gallery-media-square">
+                    <%= attachment_thumb(gallery_image,
+                                        variant_options: { resize_to_limit: [1200, 1200] },
+                                        alt: "#{@product.title} - photo #{index + 1}",
+                                        class: "d-block w-100 h-100 gallery-media-image",
+                                        loading: (index.zero? ? "eager" : "lazy"),
+                                        fetchpriority: (index.zero? ? "high" : "auto")) %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <% if @product.gallery_images.size > 1 %>
+              <button class="carousel-control-prev gallery-carousel-control" type="button" data-bs-target="#<%= carousel_id %>" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+              </button>
+              <button class="carousel-control-next gallery-carousel-control" type="button" data-bs-target="#<%= carousel_id %>" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+              </button>
+            <% end %>
           </div>
+        <% else %>
+          <div class="text-muted">Aucune photo disponible.</div>
         <% end %>
       </div>
       
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-lg-7">
         <div>
           <h2><%= @product.title %></h2>
         </div>

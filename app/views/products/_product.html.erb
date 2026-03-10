@@ -1,9 +1,11 @@
 <div id="<%= dom_id product %>">
-  <% if product.image.attached? %>
+  <% if product.primary_image.present? %>
     <div class="card-img p-0">
-      <%= attachment_thumb(product.image,
-                          variant_options: { resize_to_limit: [700, 520] },
-                          alt: product.title) %>
+      <%= attachment_thumb(product.primary_image,
+                          variant_options: { resize_to_fill: [700, 700] },
+                          alt: product.title,
+                          class: "w-100",
+                          style: "aspect-ratio: 1 / 1; object-fit: cover;") %>
     </div>
   <% end %>
 

@@ -22,6 +22,18 @@ class Product < ApplicationRecord
   has_many :carts, through: :cart_products
   has_many :order_products, dependent: :restrict_with_error
   has_one_attached :image
+  has_many_attached :images
+
+  def gallery_images
+    all_images = []
+    all_images << image.attachment if image.attached?
+    all_images.concat(images.attachments.to_a) if images.attached?
+    all_images.uniq(&:id)
+  end
+
+  def primary_image
+    gallery_images.first
+  end
 
   def highlight_boxes
     HIGHLIGHT_DEFAULTS.each_with_index.map do |defaults, idx|
