@@ -28,6 +28,7 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_ABOUT_PRIMARY_TITLE = DEFAULT_ABOUT_PRINCIPAL_TITLE
   DEFAULT_ABOUT_SECONDARY_TITLE = DEFAULT_ABOUT_PONTIUS_TITLE
   DEFAULT_ABOUT_JOURNEY_TITLE = DEFAULT_ABOUT_MON_PARCOURS_TITLE
+  DEFAULT_REPAIR_PARTNERS_SECTION_TITLE = "Nos partenaires".freeze
 
   has_one_attached :home_banner_image
   has_many :company_documents, dependent: :destroy
@@ -63,7 +64,8 @@ class CompanyInformation < ApplicationRecord
       about_pontius_title: "",
       about_pontius_description: "",
       about_mon_parcours_title: "",
-      about_mon_parcours_description: ""
+      about_mon_parcours_description: "",
+      repair_partners_section_title: ""
     )
   end
 
@@ -175,5 +177,9 @@ class CompanyInformation < ApplicationRecord
 
   def about_journey_title_or_default
     about_journey_title.presence || DEFAULT_ABOUT_JOURNEY_TITLE
+  end
+
+  def repair_partners_section_title_or_default
+    repair_partners_section_title.presence || DEFAULT_REPAIR_PARTNERS_SECTION_TITLE
   end
 end

@@ -49,6 +49,7 @@ module ApplicationHelper
         description: "Pages dédiées aux offres de réparation.",
         links: [
           { label: "Blocs réparation", path: admin_repair_pages_path },
+          { label: "Partenaires réparation", path: admin_repair_partners_path },
           { label: "Ajouter une section réparation", path: new_repair_page_path }
         ]
       },

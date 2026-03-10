@@ -1,0 +1,5 @@
+<% content_for :title, "Admin - Modifier partenaire réparation" %>
+
+<%= admin_page(title: "Modifier un encart partenaire") do %>
+  <%= render "form", repair_partner: @repair_partner, submit_label: "Enregistrer" %>
+<% end %>

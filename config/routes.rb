@@ -6,6 +6,10 @@ Rails.application.routes.draw do
     collection { patch :reorder }
     collection { get :admin }
   end
+  resources :repair_partners, only: [:create, :edit, :update, :destroy] do
+    collection { get :admin }
+    collection { patch :update_section_title }
+  end
   resources :page_metas, path: "descriptions"
   resources :about_pages do
     collection { patch :reorder }

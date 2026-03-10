@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_182300) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_192100) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -108,6 +108,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_182300) do
     t.string "home_highlight_4_title"
     t.string "legal_name"
     t.string "phone"
+    t.string "repair_partners_section_title", default: "", null: false
     t.string "siret"
     t.datetime "updated_at", null: false
     t.string "vat_number"
@@ -254,6 +255,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_182300) do
     t.integer "position"
     t.string "title"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "repair_partners", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.index ["position"], name: "index_repair_partners_on_position"
   end
 
   create_table "terms_pages", force: :cascade do |t|

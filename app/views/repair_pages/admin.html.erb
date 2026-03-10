@@ -12,6 +12,10 @@
         <div class="alert alert-success"><%= notice %></div>
       <% end %>
 
+      <div class="d-flex justify-content-end mb-3">
+        <%= link_to "Gérer les partenaires", admin_repair_partners_path, class: "btn btn-outline-primary btn-sm" %>
+      </div>
+
       <% if @repair_pages.any? %>
         <div class="table-responsive">
           <table class="table table-striped table-hover align-middle"
