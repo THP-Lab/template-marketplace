@@ -1,68 +1,111 @@
-<div id="cart_contents" data-controller="auto-submit" data-auto-submit-currency-value="EUR" class="card p-4">
-<% if cart_products.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Produit</th>
-        <th>Prix</th>
-        <th>Quantité</th>
-        <th>Total</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
+<div id="cart_contents" class="card p-0">
+  <% if cart_products.any? %>
+    <div class="cart-lines p-4">
       <% cart_products.each do |cart_product| %>
-        <tr id="<%= dom_id(cart_product) %>">
-          <td>
-            <div><%= cart_product.product.title %></div>
-            <% if cart_product.selected_options_label.present? %>
-              <div class="small text-muted"><%= cart_product.selected_options_label %></div>
-            <% end %>
-          </td>
-          <td><%= number_to_currency(cart_product.unit_price, unit: "€", format: "%n %u") %></td>
-          <td>
-            <%= form_with model: cart_product,
-                          url: cart_product_path(cart_product),
-                          method: :patch do |f| %>
-              <%= f.number_field :quantity,
-                                 value: cart_product.quantity,
-                                 min: 0,
-                                 class: "cart-quantity-input",
-                                 data: {
-                                   action: "input->auto-submit#handle change->auto-submit#handle",
-                                   unit_price: cart_product.unit_price
-                                 } %>
-            <% end %>
-            <small>Saisir 0 pour retirer l'article.</small>
-          </td>
-          <td data-auto-submit-target="rowTotal"><%= number_to_currency(cart_product.quantity * cart_product.unit_price, unit: "€", format: "%n %u") %></td>
-          <td>
-            <%= button_to "Supprimer",
-                          cart_product_path(cart_product),
-                          method: :delete,
-                          data: { turbo_confirm: "Supprimer cet article du panier ?" }, class:"btn btn-primary" %>
-          </td>
-        </tr>
+        <% product = cart_product.product %>
+        <% quantity = cart_product.quantity.to_i %>
+        <% unit_price = (cart_product.unit_price || 0).to_d %>
+        <% line_total = unit_price * quantity %>
+        <% selected_options = cart_product.selected_options_list %>
+
+        <article id="<%= dom_id(cart_product) %>" class="cart-line py-3">
+          <div class="cart-line__inner">
+            <div class="cart-line__media">
+              <div class="cart-line__media-frame">
+                <% if product.primary_image.present? %>
+                  <%= attachment_thumb(product.primary_image,
+                                      variant_options: { resize_to_limit: [300, 300] },
+                                      class: "cart-line__image",
+                                      alt: product.title) %>
+                <% else %>
+                  <span class="cart-line__image-placeholder">
+                    <i class="bi bi-image"></i>
+                  </span>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="cart-line__content">
+              <h2 class="h5 mb-1"><%= product.title %></h2>
+
+              <% if selected_options.any? %>
+                <ul class="cart-line__options list-unstyled mb-2">
+                  <% selected_options.each do |option| %>
+                    <li>
+                      <strong><%= option[:option_name].presence || "Option" %> :</strong>
+                      <%= option[:value_label].presence || "—" %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% end %>
+
+              <div class="cart-line__details mb-3">
+                <span>Prix unitaire : <strong><%= number_to_currency(unit_price, unit: "€", format: "%n %u") %></strong></span>
+                <span>Quantité : <strong><%= quantity %></strong></span>
+              </div>
+
+              <div class="cart-line__footer">
+                <div class="cart-quantity-control" aria-label="Contrôle quantité">
+                  <% if quantity <= 1 %>
+                    <%= button_to cart_product_path(cart_product),
+                                  method: :delete,
+                                  form: { class: "d-inline m-0" },
+                                  data: { turbo_confirm: "Supprimer cet article du panier ?" },
+                                  class: "cart-quantity-btn",
+                                  title: "Supprimer l'article" do %>
+                      <i class="bi bi-trash3"></i>
+                    <% end %>
+                  <% else %>
+                    <%= button_to cart_product_path(cart_product),
+                                  method: :patch,
+                                  params: { cart_product: { quantity: quantity - 1 } },
+                                  form: { class: "d-inline m-0" },
+                                  class: "cart-quantity-btn",
+                                  title: "Diminuer la quantité" do %>
+                      <i class="bi bi-dash-lg"></i>
+                    <% end %>
+                  <% end %>
+
+                  <span class="cart-quantity-value"><%= quantity %></span>
+
+                  <%= button_to cart_product_path(cart_product),
+                                method: :patch,
+                                params: { cart_product: { quantity: quantity + 1 } },
+                                form: { class: "d-inline m-0" },
+                                class: "cart-quantity-btn",
+                                title: "Augmenter la quantité" do %>
+                    <i class="bi bi-plus-lg"></i>
+                  <% end %>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="cart-line__amount">
+              <span><%= number_to_currency(line_total, unit: "€", format: "%n %u") %></span>
+            </div>
+          </div>
+        </article>
       <% end %>
-    </tbody>
-  </table>
+    </div>
 
-  <div class="cart-summary d-flex justify-content-between align-items-center mt-4">
-    <h5>
-      Total panier :
-      <span data-auto-submit-target="overallTotal">
-        <%= number_to_currency(
-          cart_products.sum { |cp| cp.quantity * cp.unit_price }, unit: "€", format: "%n %u"
-        ) %>
-      </span>
-    </h5>
+    <div class="cart-summary d-flex justify-content-between align-items-center p-4">
+      <h5 class="mb-0">
+        Total panier :
+        <span>
+          <%= number_to_currency(
+            cart_products.sum { |cp| cp.quantity.to_i * (cp.unit_price || 0).to_d }, unit: "€", format: "%n %u"
+          ) %>
+        </span>
+      </h5>
 
-    <% if defined?(show_checkout_button) ? show_checkout_button : true %>
-      <%= button_to "Passer au paiement", checkout_path, method: :post, data: { turbo: false }, class:"btn btn-primary" %>
-    <% end %>
-    <% else %>
-      <p>Votre panier est vide.</p>
-    <% end %>
-  </div>
+      <% if defined?(show_checkout_button) ? show_checkout_button : true %>
+        <%= button_to "Passer au paiement", checkout_path, method: :post, data: { turbo: false }, class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="p-4">
+      <p class="mb-0">Votre panier est vide.</p>
+    </div>
+  <% end %>
 </div>
