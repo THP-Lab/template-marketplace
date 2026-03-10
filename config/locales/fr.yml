@@ -1,0 +1,56 @@
+fr:
+  hello: "Bonjour"
+
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m/%Y"
+      long: "%d %B %Y"
+
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d/%m/%Y %H:%M"
+      long: "%d %B %Y à %H:%M"
+
+  activerecord:
+    models:
+      user: "utilisateur"
+      company_document: "document"
+      product_option: "option produit"
+      product_option_value: "choix d'option"
+    attributes:
+      user:
+        first_name: "Prénom"
+        last_name: "Nom"
+        email: "Email"
+        address: "Adresse"
+        zipcode: "Code postal"
+        city: "Ville"
+        country: "Pays"
+        phone: "Téléphone"
+        cgu_accepted: "CGU"
+      company_document:
+        title: "Titre"
+        file: "Fichier"
+      product_option:
+        name: "Nom"
+        option_kind: "Type"
+      product_option_value:
+        label: "Choix"
+        price_delta: "Prix"
+        hex_color: "Code couleur"
+    errors:
+      messages:
+        record_invalid: "Validation échouée : %{errors}"
+
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "est obligatoire"
+      invalid: "est invalide"
+      taken: "est déjà utilisé"
+      too_short: "est trop court (minimum %{count} caractères)"
+      too_long: "est trop long (maximum %{count} caractères)"
+      not_a_number: "n'est pas un nombre"
+      accepted: "doit être accepté"

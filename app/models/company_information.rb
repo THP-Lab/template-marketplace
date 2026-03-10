@@ -28,8 +28,18 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_ABOUT_PRIMARY_TITLE = DEFAULT_ABOUT_PRINCIPAL_TITLE
   DEFAULT_ABOUT_SECONDARY_TITLE = DEFAULT_ABOUT_PONTIUS_TITLE
   DEFAULT_ABOUT_JOURNEY_TITLE = DEFAULT_ABOUT_MON_PARCOURS_TITLE
+  DEFAULT_REPAIR_PARTNERS_SECTION_TITLE = "Nos partenaires".freeze
+  DEFAULT_SHOP_PAGE_TITLE = "Boutique de Pontius".freeze
+  DEFAULT_SHOP_PAGE_SUBTITLE = "Des produits de qualité supérieur, fait à la main dans un savoir faire authentique.".freeze
+  DEFAULT_EVENTS_PAGE_TITLE = "Événements".freeze
+  DEFAULT_EVENTS_PAGE_SUBTITLE = "Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.".freeze
+  DEFAULT_REPAIR_PAGE_TITLE = "Service de réparation".freeze
+  DEFAULT_REPAIR_PAGE_SUBTITLE = "Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale".freeze
+  DEFAULT_CONTACT_PAGE_TITLE = "Contactez l'Artisan".freeze
+  DEFAULT_CONTACT_PAGE_SUBTITLE = "Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.".freeze
 
   has_one_attached :home_banner_image
+  has_many :company_documents, dependent: :destroy
 
   def self.instance
     first_or_create!(
@@ -62,7 +72,16 @@ class CompanyInformation < ApplicationRecord
       about_pontius_title: "",
       about_pontius_description: "",
       about_mon_parcours_title: "",
-      about_mon_parcours_description: ""
+      about_mon_parcours_description: "",
+      repair_partners_section_title: "",
+      shop_page_title: "",
+      shop_page_subtitle: "",
+      events_page_title: "",
+      events_page_subtitle: "",
+      repair_page_title: "",
+      repair_page_subtitle: "",
+      contact_page_title: "",
+      contact_page_subtitle: ""
     )
   end
 
@@ -174,5 +193,41 @@ class CompanyInformation < ApplicationRecord
 
   def about_journey_title_or_default
     about_journey_title.presence || DEFAULT_ABOUT_JOURNEY_TITLE
+  end
+
+  def repair_partners_section_title_or_default
+    repair_partners_section_title.presence || DEFAULT_REPAIR_PARTNERS_SECTION_TITLE
+  end
+
+  def shop_page_title_or_default
+    shop_page_title.presence || DEFAULT_SHOP_PAGE_TITLE
+  end
+
+  def shop_page_subtitle_or_default
+    shop_page_subtitle.presence || DEFAULT_SHOP_PAGE_SUBTITLE
+  end
+
+  def events_page_title_or_default
+    events_page_title.presence || DEFAULT_EVENTS_PAGE_TITLE
+  end
+
+  def events_page_subtitle_or_default
+    events_page_subtitle.presence || DEFAULT_EVENTS_PAGE_SUBTITLE
+  end
+
+  def repair_page_title_or_default
+    repair_page_title.presence || DEFAULT_REPAIR_PAGE_TITLE
+  end
+
+  def repair_page_subtitle_or_default
+    repair_page_subtitle.presence || DEFAULT_REPAIR_PAGE_SUBTITLE
+  end
+
+  def contact_page_title_or_default
+    contact_page_title.presence || DEFAULT_CONTACT_PAGE_TITLE
+  end
+
+  def contact_page_subtitle_or_default
+    contact_page_subtitle.presence || DEFAULT_CONTACT_PAGE_SUBTITLE
   end
 end

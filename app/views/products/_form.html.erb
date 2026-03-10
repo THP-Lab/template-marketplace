@@ -1,4 +1,6 @@
 <%= form_with(model: product) do |form| %>
+  <% available_company_documents = local_assigns[:available_company_documents] || @available_company_documents || [] %>
+
   <% if local_assigns[:redirect_to].present? %>
     <%= hidden_field_tag :redirect_to, local_assigns[:redirect_to] %>
   <% end %>
@@ -37,6 +39,44 @@
   <div class="mb-3">
     <%= form.label :stock, "Stock", class: "form-label" %>
     <%= form.number_field :stock, class: "form-control", min: 0 %>
+  </div>
+
+  <div class="card p-3 mb-3" data-controller="product-options-form">
+    <div class="form-check">
+      <%= form.check_box :show_product_options,
+                         class: "form-check-input",
+                         data: {
+                           "product-options-form-target": "toggle",
+                           action: "change->product-options-form#updateVisibility"
+                         } %>
+      <%= form.label :show_product_options,
+                     "Activer les options produit (taille, couleur, etc.)",
+                     class: "form-check-label" %>
+    </div>
+
+    <div class="mt-3 <%= "d-none" unless product.show_product_options? %>" data-product-options-form-target="fields">
+      <p class="text-muted small mb-3">
+        Ajoutez une ou plusieurs options. Chaque choix peut avoir un supplément (ou réduction) de prix.
+      </p>
+
+      <div data-product-options-form-target="optionsList">
+        <%= form.fields_for :product_options do |option_fields| %>
+          <%= render "products/product_option_fields", form: option_fields %>
+        <% end %>
+      </div>
+
+      <template data-product-options-form-target="optionTemplate">
+        <%= form.fields_for :product_options, ProductOption.new, child_index: "NEW_OPTION" do |option_fields| %>
+          <%= render "products/product_option_fields", form: option_fields %>
+        <% end %>
+      </template>
+
+      <button type="button"
+              class="btn btn-outline-primary btn-sm"
+              data-action="product-options-form#addOption">
+        Ajouter une option
+      </button>
+    </div>
   </div>
 
   <div class="card p-3 mb-3" data-controller="product-highlights-form">
@@ -84,6 +124,37 @@
                                  rows: 2,
                                  placeholder: defaults[:description] %>
             </div>
+
+            <div class="form-check mt-3">
+              <%= form.check_box :"highlight_#{number}_document_enabled",
+                                 class: "form-check-input",
+                                 data: {
+                                   index: index,
+                                   "product-highlights-form-target": "documentToggle",
+                                   action: "change->product-highlights-form#updateDocumentSelection"
+                                 } %>
+              <%= form.label :"highlight_#{number}_document_enabled",
+                             "Intégrer un document",
+                             class: "form-check-label fw-semibold" %>
+            </div>
+
+            <% include_document = product.public_send("highlight_#{number}_document_enabled") %>
+            <% can_select_document = panel_open && include_document %>
+            <div class="mt-2 <%= "d-none" unless include_document %>" data-product-highlights-form-target="documentSelectGroup">
+              <% if available_company_documents.any? %>
+                <%= form.label :"highlight_#{number}_company_document_id", "Document PDF", class: "form-label" %>
+                <%= form.select :"highlight_#{number}_company_document_id",
+                                options_from_collection_for_select(available_company_documents, :id, :title, product.public_send("highlight_#{number}_company_document_id")),
+                                { include_blank: "Sélectionner un document" },
+                                class: "form-select",
+                                data: { "product-highlights-form-target": "documentSelect" },
+                                disabled: !can_select_document %>
+              <% else %>
+                <p class="small text-muted mb-0">
+                  Aucun document disponible. Ajoutez-en dans Information > Documents.
+                </p>
+              <% end %>
+            </div>
           </div>
         </div>
       <% end %>
@@ -91,12 +162,27 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :image, "Image", class: "form-label" %>
-    <%= form.file_field :image, class: "form-control" %>
-    <% if product.image.attached? %>
-      <div class="mt-2">
-        <%= attachment_thumb(product.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail" ) %>
+    <%= form.label :images, "Photos du produit", class: "form-label" %>
+    <%= form.file_field :images, multiple: true, accept: "image/*", class: "form-control" %>
+    <small class="text-muted d-block mt-1">Vous pouvez sélectionner plusieurs photos. Affichage recadré en carré.</small>
+
+    <% if product.gallery_images.any? %>
+      <div class="row g-2 mt-2">
+        <% product.gallery_images.each do |gallery_image| %>
+          <% checkbox_id = dom_id(gallery_image, :remove) %>
+          <div class="col-4 col-md-3 col-lg-2">
+            <div class="gallery-admin-item">
+              <%= attachment_thumb(gallery_image,
+                                  variant_options: { resize_to_fill: [200, 200] },
+                                  class: "img-thumbnail w-100 gallery-admin-thumb",
+                                  style: "aspect-ratio: 1 / 1; object-fit: cover;") %>
+              <%= check_box_tag "product[remove_image_attachment_ids][]", gallery_image.id, false, id: checkbox_id, class: "gallery-remove-input" %>
+              <%= label_tag checkbox_id, "×", class: "gallery-remove-btn", title: "Supprimer cette photo" %>
+            </div>
+          </div>
+        <% end %>
       </div>
+      <small class="text-muted d-block mt-2">Survolez une photo puis cliquez sur la croix pour la supprimer.</small>
     <% end %>
   </div>
 

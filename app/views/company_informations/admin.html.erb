@@ -8,7 +8,11 @@
     <div class="col-lg-8 col-xl-9">
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
         <h1 class="mb-0">Informations entreprise</h1>
-        <%= link_to "Configurer le footer", footer_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+        <div class="d-flex gap-2">
+          <%= link_to "Onglets", tabs_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "Configurer le footer", footer_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "Documents PDF", company_information_documents_path, class: "btn btn-outline-secondary btn-sm" %>
+        </div>
       </div>
 
       <% if notice.present? %>

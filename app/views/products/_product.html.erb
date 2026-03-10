@@ -1,9 +1,10 @@
 <div id="<%= dom_id product %>">
-  <% if product.image.attached? %>
-    <div class="card-img p-0">
-      <%= attachment_thumb(product.image,
+  <% if product.primary_image.present? %>
+    <div class="card-img p-0 product-card-media-frame">
+      <%= attachment_thumb(product.primary_image,
                           variant_options: { resize_to_limit: [700, 520] },
-                          alt: product.title) %>
+                          alt: product.title,
+                          class: "w-100 h-100 product-card-media-image") %>
     </div>
   <% end %>
 
@@ -17,7 +18,7 @@
     </div>
 
     <div>
-      <p><%= product.description %></p>
+      <%= simple_format(truncate(product.description.to_s, length: 120), {}, sanitize: true) %>
     </div>
 
     <div>

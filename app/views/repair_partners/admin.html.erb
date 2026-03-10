@@ -1,0 +1,82 @@
+<% content_for :title, "Admin - Partenaires réparation" %>
+
+<%= admin_page(title: "Partenaires - Réparation") do %>
+  <div class="d-flex justify-content-end mb-3">
+    <%= link_to "Blocs réparation", admin_repair_pages_path, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Titre de la section publique</h2>
+      <%= form_with model: @company_information,
+                    url: update_section_title_repair_partners_path,
+                    method: :patch,
+                    local: true do |form| %>
+        <div class="mb-3">
+          <%= form.label :repair_partners_section_title, "Titre", class: "form-label" %>
+          <%= form.text_field :repair_partners_section_title,
+                              class: "form-control",
+                              placeholder: CompanyInformation::DEFAULT_REPAIR_PARTNERS_SECTION_TITLE %>
+          <small class="form-text text-muted d-block mt-1">
+            Laissez vide pour utiliser le titre par défaut.
+          </small>
+        </div>
+        <%= form.submit "Enregistrer le titre", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Ajouter un encart partenaire</h2>
+      <%= render "form", repair_partner: @repair_partner, submit_label: "Ajouter" %>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Encarts enregistrés</h2>
+      <% if @repair_partners.any? %>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Logo</th>
+                <th>Titre</th>
+                <th>URL</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @repair_partners.each do |partner| %>
+                <tr>
+                  <td>
+                    <%= attachment_thumb(partner.logo,
+                                        variant_options: { resize_to_limit: [80, 80] },
+                                        class: "img-thumbnail") || content_tag(:span, "—", class: "text-muted") %>
+                  </td>
+                  <td><%= partner.title %></td>
+                  <td>
+                    <%= link_to partner.url, partner.url, target: "_blank", rel: "noopener noreferrer" %>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                      <%= link_to "Modifier", edit_repair_partner_path(partner), class: "btn btn-primary btn-sm" %>
+                      <%= button_to "Supprimer",
+                                    repair_partner_path(partner),
+                                    method: :delete,
+                                    class: "btn btn-danger btn-sm",
+                                    data: { confirm: "Supprimer ce partenaire ?" } %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0">Aucun partenaire enregistré.</p>
+      <% end %>
+    </div>
+  </div>
+<% end %>

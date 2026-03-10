@@ -20,8 +20,8 @@
 <% end %>
 
 <div class="container py-4 mt-5">
-  <h1 class="text-center mb-2">Service de réparation</h1>
-  <p class="text-center mb-4">Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale</p>
+  <h1 class="text-center mb-2"><%= @company_information.repair_page_title_or_default %></h1>
+  <p class="text-center mb-4"><%= @company_information.repair_page_subtitle_or_default %></p>
 
   <div id="repair_pages">
     <div class="row g-4">
@@ -41,5 +41,26 @@
       <%= link_to "besoin d'une réparation ?", new_contact_path, class: "btn btn-primary" %>
     </div>
   </div>
+
+  <% if @repair_partners.any? %>
+    <section class="repair-partners-section pb-3">
+      <h2 class="text-center mb-4"><%= @company_information.repair_partners_section_title_or_default %></h2>
+      <div class="row g-4 justify-content-center">
+        <% @repair_partners.each do |partner| %>
+          <div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center">
+            <%= link_to partner.url,
+                        class: "repair-partner-logo-link",
+                        target: "_blank",
+                        rel: "noopener noreferrer" do %>
+              <%= attachment_thumb(partner.logo,
+                                  variant_options: { resize_to_limit: [420, 420] },
+                                  class: "repair-partner-logo-link__image",
+                                  alt: partner.title) %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
 
 </div>

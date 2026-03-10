@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Show or hide the highlight-box fields based on the product option toggle.
 export default class extends Controller {
-  static targets = ["toggle", "fields", "itemToggle", "itemPanel"]
+  static targets = ["toggle", "fields", "itemToggle", "itemPanel", "documentToggle", "documentSelectGroup", "documentSelect"]
 
   connect() {
     this.update()
@@ -35,5 +35,25 @@ export default class extends Controller {
     panel.querySelectorAll("input, textarea, select").forEach((input) => {
       input.disabled = !visible
     })
+
+    this.updateDocumentSelection(index)
+  }
+
+  updateDocumentSelection(eventOrIndex) {
+    const index = typeof eventOrIndex === "number"
+      ? eventOrIndex
+      : Number(eventOrIndex.currentTarget.dataset.index)
+
+    const documentToggle = this.documentToggleTargets[index]
+    const documentSelectGroup = this.documentSelectGroupTargets[index]
+    const documentSelect = this.documentSelectTargets[index]
+    const highlightToggle = this.itemToggleTargets[index]
+    if (!documentToggle || !documentSelectGroup || !highlightToggle) return
+
+    const visible = this.toggleTarget.checked && highlightToggle.checked && documentToggle.checked
+    documentSelectGroup.classList.toggle("d-none", !visible)
+    if (documentSelect) {
+      documentSelect.disabled = !visible
+    }
   }
 }

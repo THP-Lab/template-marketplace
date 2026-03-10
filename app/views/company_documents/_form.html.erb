@@ -1,0 +1,37 @@
+<%= form_with model: company_document,
+              url: company_document.persisted? ? company_information_document_path(company_document) : company_information_documents_path,
+              method: company_document.persisted? ? :patch : :post,
+              local: true do |form| %>
+  <% if company_document.errors.any? %>
+    <div class="alert alert-danger">
+      <p class="mb-1"><%= pluralize(company_document.errors.count, "erreur") %> empêchent l’enregistrement :</p>
+      <ul class="mb-0">
+        <% company_document.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, "Titre du document", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :file, "Fichier PDF", class: "form-label" %>
+    <%= form.file_field :file, class: "form-control", accept: "application/pdf", required: !company_document.persisted? %>
+    <% if company_document.persisted? && company_document.file.attached? %>
+      <small class="form-text text-muted d-block mt-1">
+        Fichier actuel: <%= company_document.file.filename.to_s %>. Ajoutez un nouveau PDF pour le remplacer.
+      </small>
+    <% end %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit submit_label, class: "btn btn-primary" %>
+    <% if company_document.persisted? %>
+      <%= link_to "Annuler", company_information_documents_path, class: "btn btn-outline-secondary" %>
+    <% end %>
+  </div>
+<% end %>

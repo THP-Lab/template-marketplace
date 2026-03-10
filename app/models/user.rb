@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   NAME_REGEX = /\A[a-zA-Z]+\z/
   EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\z/
+  CHECKOUT_ZIPCODE_REGEX = /\A[A-Za-z0-9\- ]{3,12}\z/
+  CHECKOUT_PHONE_REGEX = /\A[0-9+\-(). ]{6,20}\z/
   PROFILE_FIELDS = %i[first_name last_name address zipcode city country phone].freeze
 
 
@@ -16,6 +18,11 @@ class User < ApplicationRecord
   validates :first_name, :last_name, format: { with: NAME_REGEX, message: "n'accepte que des lettres" }, allow_blank: true
   validates :email, format: { with: EMAIL_REGEX }
   validates :cgu_accepted, acceptance: { accept: true }
+  with_options on: :checkout do
+    validates :first_name, :last_name, :email, :address, :zipcode, :city, :country, :phone, presence: true
+    validates :zipcode, format: { with: CHECKOUT_ZIPCODE_REGEX, message: "est invalide" }, allow_blank: true
+    validates :phone, format: { with: CHECKOUT_PHONE_REGEX, message: "est invalide" }, allow_blank: true
+  end
 
   after_commit :send_welcome_email, on: :create
 

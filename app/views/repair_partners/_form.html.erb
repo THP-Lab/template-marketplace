@@ -1,0 +1,42 @@
+<%= form_with model: repair_partner, local: true do |form| %>
+  <% if repair_partner.errors.any? %>
+    <div class="alert alert-danger">
+      <p class="mb-1"><%= pluralize(repair_partner.errors.count, "erreur") %> empêchent l’enregistrement :</p>
+      <ul class="mb-0">
+        <% repair_partner.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, "Titre", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :url, "URL", class: "form-label" %>
+    <%= form.text_field :url,
+                        class: "form-control",
+                        required: true,
+                        placeholder: "https://www.exemple.com" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :logo, "Logo", class: "form-label" %>
+    <%= form.file_field :logo, class: "form-control", accept: "image/*", required: !repair_partner.persisted? %>
+    <% if repair_partner.persisted? && repair_partner.logo.attached? %>
+      <small class="form-text text-muted d-block mt-1">
+        Logo actuel : <%= repair_partner.logo.filename.to_s %>. Ajoutez une nouvelle image pour le remplacer.
+      </small>
+    <% end %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit submit_label, class: "btn btn-primary" %>
+    <% if repair_partner.persisted? %>
+      <%= link_to "Annuler", admin_repair_partners_path, class: "btn btn-outline-secondary" %>
+    <% end %>
+  </div>
+<% end %>

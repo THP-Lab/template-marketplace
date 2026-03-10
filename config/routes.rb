@@ -6,6 +6,10 @@ Rails.application.routes.draw do
     collection { patch :reorder }
     collection { get :admin }
   end
+  resources :repair_partners, only: [:create, :edit, :update, :destroy] do
+    collection { get :admin }
+    collection { patch :update_section_title }
+  end
   resources :page_metas, path: "descriptions"
   resources :about_pages do
     collection { patch :reorder }
@@ -36,10 +40,13 @@ Rails.application.routes.draw do
   end
   resource :company_information, only: [:update], path: "information" do
     get :admin
+    get :tabs
     get :footer
     patch :update_footer
+    patch :update_tabs
     get :home_banner
     patch :update_home_banner
+    resources :documents, controller: "company_documents", only: [:index, :create, :edit, :update, :destroy]
   end
   resources :cart_products do
     collection { get :admin }

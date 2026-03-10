@@ -1,6 +1,7 @@
 class Event < ApplicationRecord
   belongs_to :user
   has_one_attached :image
+  has_many_attached :images
 
   validate :end_date_not_before_event_date
 
@@ -11,6 +12,17 @@ class Event < ApplicationRecord
 
   def end_time
     end_date || event_date
+  end
+
+  def gallery_images
+    all_images = []
+    all_images << image.attachment if image.attached?
+    all_images.concat(images.attachments.to_a) if images.attached?
+    all_images.uniq(&:id)
+  end
+
+  def primary_image
+    gallery_images.first
   end
 
   private

@@ -1,0 +1,42 @@
+<% option_kind = local_assigns[:option_kind].presence || form.object.product_option&.option_kind || ProductOption::OPTION_KIND_CUSTOM %>
+<% color_option = option_kind.to_s == ProductOption::OPTION_KIND_COLOR %>
+
+<div class="product-option-value-row border rounded p-2 mb-2" data-product-options-form-value>
+  <%= form.hidden_field :id if form.object.persisted? %>
+  <%= form.hidden_field :_destroy,
+                        value: (form.object.marked_for_destruction? ? "1" : "0"),
+                        data: { role: "value-destroy" } %>
+
+  <div class="row g-2 align-items-end">
+    <div class="col-12 col-md-5">
+      <%= form.label :label, "Choix", class: "form-label" %>
+      <%= form.text_field :label, class: "form-control", placeholder: "Ex: 56 / Noir" %>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <%= form.label :price_delta, "Prix (+/-)", class: "form-label" %>
+      <%= form.number_field :price_delta,
+                            class: "form-control",
+                            step: 0.01,
+                            value: (form.object.price_delta.presence || 0) %>
+    </div>
+
+    <div class="col-12 col-md-3 <%= "d-none" unless color_option %>" data-role="hex-wrap">
+      <%= form.label :hex_color, "Couleur (HEX)", class: "form-label" %>
+      <%= form.text_field :hex_color,
+                          class: "form-control",
+                          placeholder: "#A02222",
+                          disabled: !color_option,
+                          data: { role: "hex-input" } %>
+    </div>
+
+    <div class="col-12 col-md-1 d-grid">
+      <button type="button"
+              class="btn btn-outline-danger btn-sm"
+              title="Supprimer ce choix"
+              data-action="product-options-form#removeValue">
+        ×
+      </button>
+    </div>
+  </div>
+</div>

@@ -23,15 +23,10 @@
 
   <section class="checkout-profile-form">
     <%= render partial: "users/profile_form",
-              locals: { user: current_user, cart_context: true, redirect_path: checkout_profile_path } %>
+              locals: { user: current_user, cart_context: true, redirect_path: cart_path(current_user.cart) } %>
   </section>
 
   <section class="checkout-actions">
-    <%= link_to "Retour au panier", cart_path(current_user.cart), class: "btn btn-primary" %>
-    <%= button_to "Passer au paiement Stripe",
-                  checkout_path,
-                  method: :post,
-                  data: { turbo: false },
-                  class: "btn btn-primary" %>
+    <%= link_to "Retour au panier", cart_path(current_user.cart), class: "btn btn-outline-secondary" %>
   </section>
 </div>
