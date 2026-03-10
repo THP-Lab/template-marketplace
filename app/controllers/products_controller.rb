@@ -6,6 +6,7 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
+    @company_information = CompanyInformation.instance
     @categories = Product.distinct.where.not(category: [nil, ""]).order(:category).pluck(:category)
     @selected_category = params[:category]
 

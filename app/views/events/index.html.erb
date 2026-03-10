@@ -67,8 +67,8 @@
 <% end %>
 
 <div class="container py-4 mt-4">
-  <h1 class="text-center mb-2">Événements</h1>
-  <p class="text-center mb-4">Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.</p>
+  <h1 class="text-center mb-2"><%= @company_information.events_page_title_or_default %></h1>
+  <p class="text-center mb-4"><%= @company_information.events_page_subtitle_or_default %></p>
 
   <div class="card p-4">
     <%= month_calendar(events: @events) do |date, events| %>

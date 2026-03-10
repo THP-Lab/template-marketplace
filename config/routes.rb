@@ -40,8 +40,10 @@ Rails.application.routes.draw do
   end
   resource :company_information, only: [:update], path: "information" do
     get :admin
+    get :tabs
     get :footer
     patch :update_footer
+    patch :update_tabs
     get :home_banner
     patch :update_home_banner
     resources :documents, controller: "company_documents", only: [:index, :create, :edit, :update, :destroy]

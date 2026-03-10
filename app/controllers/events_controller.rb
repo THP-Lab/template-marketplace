@@ -4,6 +4,7 @@ class EventsController < ApplicationController
 
   # GET /events or /events.json
   def index
+    @company_information = CompanyInformation.instance
     scope = Event.order(event_date: :asc)
     unless action_name == "admin"
       scope = scope.where("(event_date IS NULL AND end_date IS NULL) OR COALESCE(end_date, event_date) >= ?", Time.current)

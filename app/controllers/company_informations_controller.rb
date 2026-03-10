@@ -9,6 +9,9 @@ class CompanyInformationsController < ApplicationController
   def footer
   end
 
+  def tabs
+  end
+
   def home_banner
   end
 
@@ -27,6 +30,15 @@ class CompanyInformationsController < ApplicationController
     else
       flash.now[:alert] = "Impossible d'enregistrer la description du footer."
       render :footer, status: :unprocessable_entity
+    end
+  end
+
+  def update_tabs
+    if @company_information.update(tabs_params)
+      redirect_to tabs_company_information_path, notice: "Titres des onglets enregistrés."
+    else
+      flash.now[:alert] = "Impossible d'enregistrer les titres des onglets."
+      render :tabs, status: :unprocessable_entity
     end
   end
 
@@ -81,6 +93,19 @@ class CompanyInformationsController < ApplicationController
       :home_highlight_3_description,
       :home_highlight_4_title,
       :home_highlight_4_description
+    )
+  end
+
+  def tabs_params
+    params.require(:company_information).permit(
+      :shop_page_title,
+      :shop_page_subtitle,
+      :events_page_title,
+      :events_page_subtitle,
+      :repair_page_title,
+      :repair_page_subtitle,
+      :contact_page_title,
+      :contact_page_subtitle
     )
   end
 

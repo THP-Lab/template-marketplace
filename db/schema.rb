@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_192100) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_203000) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -90,9 +90,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_192100) do
     t.string "address_line1"
     t.string "address_line2"
     t.string "city"
+    t.string "contact_page_subtitle", default: "", null: false
+    t.string "contact_page_title", default: "", null: false
     t.string "country"
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "events_page_subtitle", default: "", null: false
+    t.string "events_page_title", default: "", null: false
     t.text "footer_description"
     t.string "home_banner_primary_cta_label"
     t.string "home_banner_secondary_cta_label"
@@ -108,7 +112,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_192100) do
     t.string "home_highlight_4_title"
     t.string "legal_name"
     t.string "phone"
+    t.string "repair_page_subtitle", default: "", null: false
+    t.string "repair_page_title", default: "", null: false
     t.string "repair_partners_section_title", default: "", null: false
+    t.string "shop_page_subtitle", default: "", null: false
+    t.string "shop_page_title", default: "", null: false
     t.string "siret"
     t.datetime "updated_at", null: false
     t.string "vat_number"

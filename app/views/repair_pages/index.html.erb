@@ -20,8 +20,8 @@
 <% end %>
 
 <div class="container py-4 mt-5">
-  <h1 class="text-center mb-2">Service de réparation</h1>
-  <p class="text-center mb-4">Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale</p>
+  <h1 class="text-center mb-2"><%= @company_information.repair_page_title_or_default %></h1>
+  <p class="text-center mb-4"><%= @company_information.repair_page_subtitle_or_default %></p>
 
   <div id="repair_pages">
     <div class="row g-4">

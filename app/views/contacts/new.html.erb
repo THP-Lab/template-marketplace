@@ -5,8 +5,8 @@
 <% end %>
 
 <div class="container py-4 mt-4">
-  <h1 class="text-center mb-2">Contactez l'Artisan</h1>
-  <p class="text-center mb-4">Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.</p>
+  <h1 class="text-center mb-2"><%= @company_information.contact_page_title_or_default %></h1>
+  <p class="text-center mb-4"><%= @company_information.contact_page_subtitle_or_default %></p>
 
   <div class="d-flex justify-content-center mb-5">
     <div class="row g-4 text-center">

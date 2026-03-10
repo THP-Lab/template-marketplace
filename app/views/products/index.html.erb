@@ -25,8 +25,8 @@
 <% end %>
 
 <div class="container py-4 mt-4">
-  <h1 class="text-center mb-2">Boutique de Pontius</h1>
-  <p class="text-center mb-4">Des produits de qualité supérieur, fait à la main dans un savoir faire authentique.</p>
+  <h1 class="text-center mb-2"><%= @company_information.shop_page_title_or_default %></h1>
+  <p class="text-center mb-4"><%= @company_information.shop_page_subtitle_or_default %></p>
 
   <div class="mb-4">
     <div class="d-flex flex-wrap justify-content-center gap-2">
