@@ -16,8 +16,8 @@ class Order < ApplicationRecord
   has_many :products, through: :order_products
   has_one :payment, dependent: :destroy
 
-  after_create_commit :order_send
-  after_create_commit :notify_admins
+  after_create_commit :order_send, if: -> { status == "paid" }
+  after_create_commit :notify_admins, if: -> { status == "paid" }
   after_update_commit :notify_status_change, if: :notify_status_update?
 
   def order_send
