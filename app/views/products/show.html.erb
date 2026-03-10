@@ -70,7 +70,7 @@
         </div>
 
         <div>
-          <p><%= @product.description %></p>
+          <%= simple_format(@product.description.to_s, {}, sanitize: true) %>
         </div>
 
         <div>

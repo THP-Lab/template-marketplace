@@ -18,7 +18,7 @@
     </div>
 
     <div>
-      <p><%= product.description %></p>
+      <%= simple_format(truncate(product.description.to_s, length: 120), {}, sanitize: true) %>
     </div>
 
     <div>
