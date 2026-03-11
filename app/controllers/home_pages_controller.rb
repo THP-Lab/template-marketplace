@@ -81,6 +81,6 @@ class HomePagesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def home_page_params
       params.expect(home_page: [ :title, :content, :position, :bloc_type, :target_id, :shop_scope, :image, :button_label,
-                                 :layout_background, :layout_text_tone, :layout_image_position ])
+                                 :layout_background, :layout_text_tone, :layout_image_position, :shop_products_limit ])
     end
 end
