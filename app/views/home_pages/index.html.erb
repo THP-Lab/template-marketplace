@@ -73,49 +73,31 @@
           <h2 class="text-center mb-4"><%= home_page.title %></h2>
           <% products = home_page.shop_products.to_a %>
           <% if products.any? %>
-            <% product_count = products.size %>
-            <% grid_classes =
-                 if product_count == 1
-                   "row row-cols-1 justify-content-center g-3"
-                 elsif product_count == 2
-                   "row row-cols-1 row-cols-md-2 g-3"
-                 else
-                   "row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3"
-                 end %>
-            <div class="<%= grid_classes %>">
-              <% products.each do |product| %>
-                <% column_classes = product_count == 1 ? "col-12 col-md-8 col-lg-6 col-xl-5" : "col" %>
-                <div class="<%= column_classes %>">
-                  <div class="card h-100 shadow-sm">
-                    <% if product.primary_image.present? %>
-                      <div class="card-img p-0 product-card-media-frame">
-                        <%= attachment_thumb(product.primary_image,
-                                            variant_options: { resize_to_limit: [700, 520] },
-                                            alt: product.title,
-                                            class: "w-100 h-100 product-card-media-image") %>
-                      </div>
-                    <% end %>
-                    <div class="card-body d-flex flex-column">
-                      <% if product.category.present? %>
-                        <p class="gold"><strong><%= product.category %></strong></p>
-                      <% end %>
-                      <h5 class="card-title"><%= product.title %></h5>
-                      <% if product.description.present? %>
-                        <p class="card-text"><%= truncate(product.description, length: 120) %></p>
-                      <% end %>
-                      <% if product.price.present? %>
-                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3">
-                          <h5 class="gold mb-0">
-                            <%= number_to_currency(product.price, unit: "€", format: "%n %u") %>
-                          </h5>
-                          <%= link_to "Voir le produit", product_path(product), class: "btn btn-primary btn-sm" %>
-                        </div>
-                      <% end %>
+            <section class="home-shop-swiper swiper"
+                     data-controller="shop-swiper"
+                     data-action="mouseenter->shop-swiper#pause mouseleave->shop-swiper#resume wheel->shop-swiper#wheel">
+              <div class="home-shop-swiper__parallax parallax-bg"
+                   data-swiper-parallax="600"
+                   data-swiper-parallax-scale="0.88"></div>
+
+              <div class="swiper-wrapper" data-shop-swiper-target="wrapper">
+                <% products.each do |product| %>
+                  <figure class="swiper-slide"
+                          data-shop-swiper-target="slide"
+                          data-action="click->shop-swiper#advanceFromClick">
+                    <div class="cardPopout home-shop-swiper__card"
+                         data-swiper-parallax="30"
+                         data-swiper-parallax-scale="0.94"
+                         data-swiper-parallax-opacity="0.85"
+                         data-swiper-parallax-duration="900">
+                      <%= render "home_pages/shop_product_card", product: product %>
                     </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
+                  </figure>
+                <% end %>
+              </div>
+
+              <div class="swiper-scrollbar" data-shop-swiper-target="scrollbar"></div>
+            </section>
             <div class="text-center mt-3">
               <% button_label = home_page.button_label.presence || "Accéder à la boutique" %>
               <%= link_to button_label, products_path, class: "btn btn-primary" %>

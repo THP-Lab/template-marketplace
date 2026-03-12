@@ -856,6 +856,184 @@ dialog {
   font-size: clamp(1.35rem, 5.6vw, 2.25rem);
 }
 
+.home-shop-swiper {
+  position: relative;
+  --shop-swiper-card-width: min(28rem, 68vw);
+  --shop-swiper-offset: min(24rem, 38vw);
+  --shop-swiper-offset-far: min(40rem, 58vw);
+  --shop-swiper-progress: 0;
+  padding: 1.5rem 0 2.5rem;
+  overflow: visible;
+}
+
+.home-shop-swiper.swiper {
+  overflow: visible;
+}
+
+.home-shop-swiper .swiper-wrapper {
+  position: relative;
+  min-height: 32rem;
+}
+
+.home-shop-swiper .parallax-bg {
+  position: absolute;
+  inset: -1.25rem -4%;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at top, rgba(255, 248, 238, 0.94), rgba(243, 231, 211, 0.76) 55%, rgba(199, 176, 126, 0.24) 100%),
+    linear-gradient(135deg, rgba(113, 28, 28, 0.06), rgba(104, 83, 35, 0.12));
+  pointer-events: none;
+}
+
+.home-shop-swiper .swiper-wrapper {
+  align-items: stretch;
+}
+
+.home-shop-swiper .swiper-slide {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--shop-swiper-card-width);
+  max-width: 100%;
+  flex-shrink: 0;
+  height: auto;
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+  transform-origin: center center;
+  transition: transform 0.85s ease, opacity 0.85s ease, filter 0.85s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.home-shop-swiper .cardPopout {
+  width: 100%;
+  display: flex;
+  border-radius: 1rem;
+  padding: 0.2rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.18));
+  box-shadow: 0 20px 45px rgba(58, 23, 10, 0.12);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.home-shop-swiper .swiper-slide-active .cardPopout,
+.home-shop-swiper .swiper-slide:hover .cardPopout {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 48px rgba(58, 23, 10, 0.18);
+}
+
+.home-shop-swiper .swiper-slide.is-active {
+  opacity: 1;
+  z-index: 5;
+  pointer-events: auto;
+  transform: translateX(-50%) translateZ(0) scale(1);
+  filter: none;
+}
+
+.home-shop-swiper .swiper-slide.is-prev {
+  opacity: 0.82;
+  z-index: 4;
+  pointer-events: auto;
+  transform: translateX(calc(-50% - var(--shop-swiper-offset))) rotateY(34deg) scale(0.84);
+  filter: saturate(0.7);
+}
+
+.home-shop-swiper .swiper-slide.is-next {
+  opacity: 0.82;
+  z-index: 4;
+  pointer-events: auto;
+  transform: translateX(calc(-50% + var(--shop-swiper-offset))) rotateY(-34deg) scale(0.84);
+  filter: saturate(0.7);
+}
+
+.home-shop-swiper .swiper-slide.is-prev-2 {
+  opacity: 0.34;
+  z-index: 3;
+  pointer-events: auto;
+  transform: translateX(calc(-50% - var(--shop-swiper-offset-far))) rotateY(42deg) scale(0.7);
+  filter: blur(0.4px) saturate(0.5);
+}
+
+.home-shop-swiper .swiper-slide.is-next-2 {
+  opacity: 0.34;
+  z-index: 3;
+  pointer-events: auto;
+  transform: translateX(calc(-50% + var(--shop-swiper-offset-far))) rotateY(-42deg) scale(0.7);
+  filter: blur(0.4px) saturate(0.5);
+}
+
+.home-shop-swiper .swiper-slide.is-hidden-left {
+  transform: translateX(calc(-50% - var(--shop-swiper-offset-far) - 8rem)) scale(0.62);
+}
+
+.home-shop-swiper .swiper-slide.is-hidden-right {
+  transform: translateX(calc(-50% + var(--shop-swiper-offset-far) + 8rem)) scale(0.62);
+}
+
+.home-shop-swiper__product-card {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.home-shop-swiper .swiper-slide-shadow-left,
+.home-shop-swiper .swiper-slide-shadow-right {
+  border-radius: 1rem;
+}
+
+.home-shop-swiper .swiper-scrollbar {
+  position: relative;
+  width: min(21rem, 80%);
+  height: 10px;
+  margin-inline: auto;
+  margin-top: 1.2rem;
+  background: rgba(113, 28, 28, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.home-shop-swiper .swiper-scrollbar-drag {
+  background: linear-gradient(90deg, rgba(113, 28, 28, 0.9), rgba(199, 176, 126, 0.9));
+}
+
+.home-shop-swiper .swiper-scrollbar::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: max(18%, 3.75rem);
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(113, 28, 28, 0.9), rgba(199, 176, 126, 0.9));
+  transform: translateX(calc(var(--shop-swiper-progress) * (100% - 3.75rem)));
+  transition: transform 0.45s ease;
+}
+
+@media (max-width: 767.98px) {
+  .home-shop-swiper {
+    --shop-swiper-card-width: min(24rem, 90vw);
+    --shop-swiper-offset: min(10rem, 28vw);
+    --shop-swiper-offset-far: min(16rem, 40vw);
+    padding-inline: 0.2rem;
+  }
+
+  .home-shop-swiper .parallax-bg {
+    inset-inline: 0;
+  }
+
+  .home-shop-swiper .swiper-slide.is-prev,
+  .home-shop-swiper .swiper-slide.is-next {
+    opacity: 0.2;
+  }
+
+  .home-shop-swiper .swiper-slide.is-prev-2,
+  .home-shop-swiper .swiper-slide.is-next-2,
+  .home-shop-swiper .swiper-slide.is-hidden-left,
+  .home-shop-swiper .swiper-slide.is-hidden-right {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
 /* Fallback dynamique du formulaire admin Home, même sans JS Stimulus */
 .home-block-form:has(select[name="home_page[bloc_type]"] option[value="custom"]:checked)
   [data-home-block-form-target="targetSection"],
@@ -1134,7 +1312,9 @@ dialog {
 }
 
 .product-card-link:hover .product-card-clickable,
-.product-card-link:focus-visible .product-card-clickable {
+.product-card-link:focus-visible .product-card-clickable,
+.home-shop-swiper .swiper-slide:hover .product-card-clickable,
+.home-shop-swiper .swiper-slide:focus-within .product-card-clickable {
   border-color: rgba(113, 28, 28, 0.85);
   box-shadow: 0 12px 28px rgba(113, 28, 28, 0.2);
   transform: translateY(-3px);

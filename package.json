@@ -10,7 +10,8 @@
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "sass": "^1.94.1"
+    "sass": "^1.94.1",
+    "swiper": "^12.1.2"
   },
   "scripts": {
     "build:css:compile": "sass --quiet-deps ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
