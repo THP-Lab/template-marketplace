@@ -63,7 +63,7 @@ class HomePage < ApplicationRecord
       Product.left_joins(:order_products)
              .select("products.*, COALESCE(SUM(order_products.quantity), 0) AS total_sold")
              .group("products.id")
-             .order(Arel.sql("total_sold DESC"))
+             .order(Arel.sql("COALESCE(SUM(order_products.quantity), 0) DESC"))
              .limit(safe_limit)
     else
       Product.order(created_at: :asc).limit(safe_limit)

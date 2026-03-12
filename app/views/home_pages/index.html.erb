@@ -71,7 +71,7 @@
       <% if home_page.shop_bloc_type? %>
         <div class="container">
           <h2 class="text-center mb-4"><%= home_page.title %></h2>
-          <% products = home_page.shop_products %>
+          <% products = home_page.shop_products.to_a %>
           <% if products.any? %>
             <% product_count = products.size %>
             <% grid_classes =

@@ -14,6 +14,14 @@ RSpec.describe HomePage, type: :model do
     let!(:product_1) { Product.create!(title: "Produit 1") }
     let!(:product_2) { Product.create!(title: "Produit 2") }
     let!(:product_3) { Product.create!(title: "Produit 3") }
+    let!(:user) do
+      User.create!(
+        email: "buyer@example.com",
+        password: "password123",
+        password_confirmation: "password123",
+        cgu_accepted: true
+      )
+    end
 
     before do
       product_1.update_columns(created_at: Time.zone.local(2026, 1, 1, 9, 0, 0), updated_at: Time.zone.local(2026, 1, 1, 9, 0, 0))
@@ -37,6 +45,16 @@ RSpec.describe HomePage, type: :model do
       home_page = described_class.create!(bloc_type: :shop, shop_scope: :first, shop_products_limit: 3)
 
       expect(home_page.shop_products(0).size).to eq(1)
+    end
+
+    it "orders top sellers by sold quantity" do
+      order = Order.create!(user: user, status: "pending")
+      OrderProduct.create!(order: order, product: product_2, quantity: 1)
+      OrderProduct.create!(order: order, product: product_3, quantity: 4)
+
+      home_page = described_class.create!(bloc_type: :shop, shop_scope: :top_sellers, shop_products_limit: 2)
+
+      expect(home_page.shop_products.pluck(:id)).to eq([product_3.id, product_2.id])
     end
   end
 end
