@@ -5,7 +5,13 @@
   </head>
   <body>
     <h1>Nouvelle commande reçue</h1>
-    <p>Commande n°<%= @order.id %> passée par <%= @user.email %>.</p>
-    <p>Consulter : <a href="<%= @url %>"><%= @url %></a></p>
+    <p>La commande n°<%= @order.id %> a été validée par <%= @user.email %>.</p>
+    <% if @order.order_date.present? %>
+      <p>Date de commande : <strong><%= @order.order_date.strftime("%d/%m/%Y") %></strong></p>
+    <% end %>
+    <p>
+      Consulter la commande :
+      <%= link_to @order_url, @order_url %>
+    </p>
   </body>
 </html>

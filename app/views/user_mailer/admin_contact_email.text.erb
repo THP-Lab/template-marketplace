@@ -1,4 +1,4 @@
-Nouvelle demande de contact
+Nouveau message de contact
 ==========================
 
 Nom : <%= @contact.name.presence || "Non renseigné" %>
@@ -8,4 +8,4 @@ Sujet : <%= @contact.subject %>
 Message :
 <%= @contact.message %>
 
-Consultez l'espace admin via <%= @url || root_url %>.
+Formulaire de contact : <%= @contact_url %>
