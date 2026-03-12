@@ -1,8 +1,10 @@
-Salut <%= @user.email %> et bienvenue chez nous !
-==========================================================
+Bienvenue sur l'atelier
+=======================
 
-Tu t'es inscrit sur monsite.fr en utilisant l'e-mail suivant : <%= @user.email %>.
+Bonjour <%= @user.email %>,
 
-Pour accéder à ton espace client, connecte-toi via : <%= @url %>.
+Votre compte a bien été créé avec l'adresse <%= @user.email %>.
 
-À très vite sur monsite.fr !
+Vous pouvez vous connecter ici : <%= @login_url %>
+
+Accéder au site : <%= @home_url %>

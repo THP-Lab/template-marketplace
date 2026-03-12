@@ -38,6 +38,12 @@ class HomePage < ApplicationRecord
   has_one_attached :image
 
   validates :button_url, length: { maximum: 1024 }, allow_blank: true
+  validates :shop_products_limit,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+              message: "doit être un entier supérieur à 0"
+            }
 
   def target_record
     case bloc_type
@@ -47,18 +53,20 @@ class HomePage < ApplicationRecord
     end
   end
 
-  def shop_products(limit = 5)
+  def shop_products(limit = shop_products_limit)
+    safe_limit = [limit.to_i, 1].max
+
     case shop_scope
     when "last"
-      Product.order(created_at: :desc).limit(limit)
+      Product.order(created_at: :desc).limit(safe_limit)
     when "top_sellers"
       Product.left_joins(:order_products)
              .select("products.*, COALESCE(SUM(order_products.quantity), 0) AS total_sold")
              .group("products.id")
              .order(Arel.sql("total_sold DESC"))
-             .limit(limit)
+             .limit(safe_limit)
     else
-      Product.order(created_at: :asc).limit(limit)
+      Product.order(created_at: :asc).limit(safe_limit)
     end
   end
 

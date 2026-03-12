@@ -91,12 +91,17 @@
   <div class="mb-3" data-home-block-form-target="shopSection">
     <%= form.label :shop_scope, "Sélection boutique", class: "form-label" %>
     <%= form.select :shop_scope,
-                    [["5 premiers", "first"],
-                     ["5 derniers", "last"],
-                     ["5 plus achetés", "top_sellers"]],
+                    [["Premiers produits", "first"],
+                     ["Derniers produits", "last"],
+                     ["Produits les plus achetés", "top_sellers"]],
                     {},
                     class: "form-select" %>
     <div class="form-text">Utilisé si le type est “Bloc boutique”.</div>
+    <div class="mt-3">
+      <%= form.label :shop_products_limit, "Nombre d’articles à afficher", class: "form-label" %>
+      <%= form.number_field :shop_products_limit, class: "form-control", min: 1, step: 1 %>
+      <div class="form-text">Minimum 1. L’affichage s’adapte automatiquement.</div>
+    </div>
   </div>
 
   <div class="mb-3" data-home-block-form-target="contentSection">

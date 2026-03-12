@@ -3,20 +3,17 @@ class UserMailer < Devise::Mailer
   layout "mailer"
 
   def welcome_email(user)
-    # on récupère l'instance user pour ensuite pouvoir la passer à la view en @user
     @user = user
+    @login_url = "#{app_host}/users/sign_in"
+    @home_url = app_host
 
-    # on définit une variable @url qu'on utilisera dans la view d’e-mail
-    @url  = "http://monsite.fr/login"
-
-    # c'est cet appel à mail() qui permet d'envoyer l’e-mail en définissant destinataire et sujet.
-    mail(to: @user.email, subject: "Bienvenue Templier !")
+    mail(to: @user.email, subject: "Bienvenue sur l'atelier")
   end
 
   def order_email(order)
     @order = order
     @user = order.user
-    @url  = "http://localhost:3000/orders/#{order.id}"
+    @order_url = "#{app_host}/orders/#{order.id}"
 
     mail(to: @user.email, subject: "Confirmation de commande ##{order.id}")
   end
@@ -25,18 +22,18 @@ class UserMailer < Devise::Mailer
     @admins = User.where(is_admin: true)
     @order = order
     @user = order.user
-    @url  = "http://localhost:3000/orders/#{order.id}"
+    @order_url = "#{app_host}/orders/#{order.id}"
 
     mail(
       to: @admins.pluck(:email),
-      subject: "Nouvelle commande ##{@order.id} reçue !"
+      subject: "Nouvelle commande ##{@order.id}"
     )
   end
 
   def order_status_update_email(order, previous_status:)
     @order = order
     @user = order.user
-    @url = "http://localhost:3000/orders/#{order.id}"
+    @order_url = "#{app_host}/orders/#{order.id}"
     @current_status = order.status_label
     if previous_status.present? && previous_status != order.status
       @previous_status = order.status_label(previous_status)
@@ -51,19 +48,25 @@ class UserMailer < Devise::Mailer
 
   def request_treatment_email(contact)
     @contact = contact
-    @url = "http://localhost:3000/contacts/new"
-    mail(to: @contact.email, subject: "Demande en cours de traitement")
+    @contact_url = "#{app_host}/contacts/new"
+    @home_url = app_host
+    mail(to: @contact.email, subject: "Confirmation de réception de votre message")
   end
 
   def admin_contact_email(contact)
     @admins = User.where(is_admin: true)
     @contact = contact
-    @url = "http://localhost:3000/contacts/new"
-    
+    @contact_url = "#{app_host}/contacts/new"
+
     mail(
       to: @admins.pluck(:email),
-      subject: "Nouvelle demande de contact !"
+      subject: "Nouvelle demande de contact"
     )
   end
 
+  private
+
+  def app_host
+    ENV["APP_HOST"].to_s.chomp("/")
+  end
 end
