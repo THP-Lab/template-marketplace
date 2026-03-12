@@ -41,10 +41,11 @@
                        end
                      when "repair" then "Bloc Réparation ##{home_page.target_id}"
                      when "shop"
+                       product_limit = [home_page.shop_products_limit.to_i, 1].max
                        case home_page.shop_scope
-                       when "first" then "Boutique - 5 premiers"
-                       when "last" then "Boutique - 5 derniers"
-                       else "Boutique - 5 plus achetés"
+                       when "first" then "Boutique - #{product_limit} premiers"
+                       when "last" then "Boutique - #{product_limit} derniers"
+                       else "Boutique - #{product_limit} plus achetés"
                        end
                      else
                        "Bloc personnalisé"

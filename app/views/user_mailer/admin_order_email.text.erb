@@ -1,6 +1,10 @@
 Nouvelle commande reçue
 =======================
 
-Commande n°<%= @order.id %> passée par <%= @user.email %>.
+La commande n°<%= @order.id %> a été validée par <%= @user.email %>.
 
-Consulter : <%= @url %>
+<% if @order.order_date.present? %>
+Date de commande : <%= @order.order_date.strftime("%d/%m/%Y") %>.
+<% end %>
+
+Consulter la commande : <%= @order_url %>

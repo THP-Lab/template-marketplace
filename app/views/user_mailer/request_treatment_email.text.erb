@@ -1,6 +1,10 @@
-Salut <%= @contact.name.presence || @contact.email %>, ta demande sera bientôt traitée !
-======================================================================================
+Nous avons bien reçu votre message
+==================================
 
-Pour accéder à ton espace client et consulter ta demande, connecte-toi via : <%= @url %>.
+Bonjour <%= @contact.name.presence || @contact.email %>,
 
-À très vite sur monsite.fr !
+Votre demande a bien été transmise. Nous reviendrons vers vous dès que possible.
+
+Vous pouvez retrouver le formulaire de contact ici : <%= @contact_url %>
+
+Merci pour votre message.

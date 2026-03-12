@@ -73,15 +73,27 @@
           <h2 class="text-center mb-4"><%= home_page.title %></h2>
           <% products = home_page.shop_products %>
           <% if products.any? %>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+            <% product_count = products.size %>
+            <% grid_classes =
+                 if product_count == 1
+                   "row row-cols-1 justify-content-center g-3"
+                 elsif product_count == 2
+                   "row row-cols-1 row-cols-md-2 g-3"
+                 else
+                   "row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3"
+                 end %>
+            <div class="<%= grid_classes %>">
               <% products.each do |product| %>
-                <div class="col">
+                <% column_classes = product_count == 1 ? "col-12 col-md-8 col-lg-6 col-xl-5" : "col" %>
+                <div class="<%= column_classes %>">
                   <div class="card h-100 shadow-sm">
                     <% if product.primary_image.present? %>
-                      <%= attachment_thumb(product.primary_image,
-                                          variant_options: { resize_to_fill: [600, 600] },
-                                          class: "card-img-top",
-                                          style: "aspect-ratio: 1 / 1; object-fit: cover;") %>
+                      <div class="card-img p-0 product-card-media-frame">
+                        <%= attachment_thumb(product.primary_image,
+                                            variant_options: { resize_to_limit: [700, 520] },
+                                            alt: product.title,
+                                            class: "w-100 h-100 product-card-media-image") %>
+                      </div>
                     <% end %>
                     <div class="card-body d-flex flex-column">
                       <% if product.category.present? %>

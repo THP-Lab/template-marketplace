@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-    </head>
-    <body>
-        <h1>Salut <%= @contact.name.presence || @contact.email %>, ta demande sera bientôt traitée !</h1>
-        <p>Pour accéder à ton espace client et consulter ta demande, connecte-toi via : <%= @url %>.</p>
-        <p>À très vite sur monsite.fr !</p>
-    </body>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Nous avons bien reçu votre message</h1>
+    <p>Bonjour <%= @contact.name.presence || @contact.email %>,</p>
+    <p>Votre demande a bien été transmise. Nous reviendrons vers vous dès que possible.</p>
+    <p>
+      Vous pouvez retrouver le formulaire de contact ici :
+      <%= link_to @contact_url, @contact_url %>
+    </p>
+    <p>Merci pour votre message.</p>
+  </body>
 </html>
