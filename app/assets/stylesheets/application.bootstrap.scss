@@ -872,17 +872,10 @@ dialog {
 
 .home-shop-swiper .swiper-wrapper {
   position: relative;
-  min-height: 32rem;
 }
 
 .home-shop-swiper .parallax-bg {
-  position: absolute;
-  inset: -1.25rem -4%;
-  border-radius: 1.5rem;
-  background:
-    radial-gradient(circle at top, rgba(255, 248, 238, 0.94), rgba(243, 231, 211, 0.76) 55%, rgba(199, 176, 126, 0.24) 100%),
-    linear-gradient(135deg, rgba(113, 28, 28, 0.06), rgba(104, 83, 35, 0.12));
-  pointer-events: none;
+  display: none;
 }
 
 .home-shop-swiper .swiper-wrapper {
