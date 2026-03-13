@@ -377,6 +377,15 @@ footer h5{
   color: $color-text;
 }
 
+.simple-calendar nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
 .simple-calendar table {
   table-layout: fixed;
   width: 100%;
@@ -391,6 +400,12 @@ footer h5{
   margin-bottom: 0;
 }
 
+.simple-calendar th,
+.simple-calendar td {
+  padding: 0.2rem !important;
+  vertical-align: top;
+}
+
 .simple-calendar .calendar-heading {
   text-align: center;
   margin-bottom: 1rem;
@@ -401,6 +416,18 @@ footer h5{
   font-weight: 700;
 }
 
+.simple-calendar th {
+  text-align: center;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  font-size: clamp(0.68rem, 2.5vw, 0.95rem);
+}
+
+.simple-calendar td.day {
+  height: auto;
+}
+
 .simple-calendar .day-square {
   aspect-ratio: 1 / 1;
   width: 100%;
@@ -409,12 +436,59 @@ footer h5{
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
+  min-height: clamp(3rem, 13vw, 5rem);
+  overflow: hidden;
 }
 
 .simple-calendar .day-number {
   font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.simple-calendar .calendar-events {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.25rem;
+}
+
+.simple-calendar .calendar-event {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  color: $color-primary;
+  text-decoration: none;
+  border: 1.5px solid $color-primary;
+  border-radius: 999px;
+  padding: 0.16rem 0.45rem;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  overflow: hidden;
+}
+
+.simple-calendar .calendar-event:hover,
+.simple-calendar .calendar-event:focus-visible {
+  background-color: rgba($color-primary, 0.08);
+}
+
+.simple-calendar .calendar-event__dot {
+  display: none;
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background-color: currentColor;
+  flex: 0 0 auto;
+}
+
+.simple-calendar .calendar-event__title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .simple-calendar .calendar-heading a {
@@ -439,46 +513,140 @@ footer h5{
   padding: 3px;
 }
 
-@media (min-width: 992px) {
+@media (max-width: 767.98px) {
   .simple-calendar {
-    width: min(700px, 90vw);
-    margin-inline: auto;
-    padding: 0.5rem;
-  }
-
-  .simple-calendar .calendar-heading {
-    margin-bottom: 0.35rem;
+    padding: 0.75rem;
   }
 
   .simple-calendar .calendar-title {
-    font-size: 1rem;
+    font-size: clamp(1.05rem, 5vw, 1.4rem);
   }
 
-  .simple-calendar th {
-    font-size: 0.75rem;
-    padding: 0.1rem !important;
-  }
-
-  .simple-calendar td {
-    padding: 0.12rem !important;
-  }
-
-  .simple-calendar .day-square {
-    aspect-ratio: auto;
-    height: clamp(52px, 7vh, 72px);
-    min-height: 52px;
-    padding: 0.2rem;
-  }
-
-  .simple-calendar .day-number {
-    font-size: 0.72rem;
-    margin-bottom: 0.1rem;
+  .simple-calendar .calendar-heading {
+    margin-bottom: 0.7rem;
   }
 
   .simple-calendar .calendar-heading a:first-child::before,
   .simple-calendar .calendar-heading a:last-child::before {
-    font-size: 0.75rem;
-    padding: 1px 5px;
+    font-size: 0.9rem;
+    padding: 2px 6px;
+  }
+
+  .simple-calendar th {
+    font-size: 0.72rem;
+    padding: 0.12rem !important;
+  }
+
+  .simple-calendar td {
+    padding: 0.1rem !important;
+  }
+
+  .simple-calendar .day-square {
+    padding: 0.3rem;
+    min-height: clamp(2.8rem, 12vw, 4rem);
+  }
+
+  .simple-calendar .day-number {
+    font-size: 0.82rem;
+    margin-bottom: 0.05rem;
+  }
+
+  .simple-calendar .calendar-event {
+    width: 0.6rem;
+    height: 0.6rem;
+    padding: 0;
+    border-radius: 999px;
+    flex: 0 0 auto;
+    justify-content: center;
+  }
+
+  .simple-calendar .calendar-event__dot {
+    display: block;
+  }
+
+  .simple-calendar .calendar-event__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .simple-calendar {
+    width: min(980px, 96vw);
+    margin-inline: auto;
+    padding: 0.75rem;
+  }
+
+  .simple-calendar .calendar-heading {
+    margin-bottom: 0.6rem;
+  }
+
+  .simple-calendar .calendar-title {
+    font-size: 1.2rem;
+  }
+
+  .simple-calendar th {
+    font-size: 0.9rem;
+    padding: 0.2rem !important;
+  }
+
+  .simple-calendar td.day {
+    height: 116px;
+    min-height: 116px;
+    padding: 0.2rem !important;
+  }
+
+  .simple-calendar .day-square {
+    aspect-ratio: auto;
+    height: 108px;
+    min-height: 108px;
+    padding: 0.35rem;
+    overflow-y: auto;
+  }
+
+  .simple-calendar .day-number {
+    font-size: 0.82rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .simple-calendar .calendar-events {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .simple-calendar .calendar-event {
+    width: 100%;
+    min-height: 0;
+    justify-content: flex-start;
+    font-size: 0.68rem;
+    padding: 0.1rem 0.35rem;
+  }
+
+  .simple-calendar .calendar-event__dot {
+    display: none;
+  }
+
+  .simple-calendar .calendar-event__title {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .simple-calendar .calendar-heading a:first-child::before,
+  .simple-calendar .calendar-heading a:last-child::before {
+    font-size: 0.82rem;
+    padding: 2px 6px;
   }
 }
 
