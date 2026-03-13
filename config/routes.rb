@@ -46,6 +46,8 @@ Rails.application.routes.draw do
     patch :update_tabs
     get :home_banner
     patch :update_home_banner
+    get :streaming
+    patch :update_streaming
     resources :documents, controller: "company_documents", only: [:index, :create, :edit, :update, :destroy]
   end
   resources :cart_products do
@@ -77,6 +79,8 @@ Rails.application.routes.draw do
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
+  get "twitch/live_state", to: "twitch_live_states#show", as: :twitch_live_state
+  post "twitch/eventsub", to: "twitch_eventsub#create", as: :twitch_eventsub
   # root "static_pages#index"
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

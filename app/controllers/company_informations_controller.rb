@@ -15,6 +15,9 @@ class CompanyInformationsController < ApplicationController
   def home_banner
   end
 
+  def streaming
+  end
+
   def update
     if @company_information.update(company_information_params)
       redirect_to admin_company_information_path, notice: "Informations enregistrées."
@@ -49,6 +52,17 @@ class CompanyInformationsController < ApplicationController
     else
       flash.now[:alert] = "Impossible d'enregistrer la bannière d’accueil."
       render :home_banner, status: :unprocessable_entity
+    end
+  end
+
+  def update_streaming
+    if @company_information.update(streaming_params)
+      flash[:notice] = "Configuration Twitch enregistrée."
+      synchronize_twitch_configuration
+      redirect_to streaming_company_information_path
+    else
+      flash.now[:alert] = "Impossible d'enregistrer la configuration Twitch."
+      render :streaming, status: :unprocessable_entity
     end
   end
 
@@ -109,11 +123,30 @@ class CompanyInformationsController < ApplicationController
     )
   end
 
+  def streaming_params
+    params.require(:company_information).permit(
+      :twitch_live_enabled,
+      :twitch_channel_login,
+      :twitch_popup_title
+    )
+  end
+
   def purge_home_banner_image_if_requested
     remove_image = ActiveModel::Type::Boolean.new.cast(params.dig(:company_information, :remove_home_banner_image))
     new_image_uploaded = params.dig(:company_information, :home_banner_image).present?
     return unless remove_image && !new_image_uploaded && @company_information.home_banner_image.attached?
 
     @company_information.home_banner_image.purge_later
+  end
+
+  def synchronize_twitch_configuration
+    message = Twitch::SubscriptionSync.call(
+      company_information: @company_information,
+      callback_base_url: request.base_url
+    )
+
+    flash[:notice] = [flash[:notice], message].compact.join(" ")
+  rescue Twitch::Error => e
+    flash[:alert] = e.message
   end
 end

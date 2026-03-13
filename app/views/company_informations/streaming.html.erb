@@ -1,0 +1,99 @@
+<% content_for :title, "Admin - Streaming Twitch" %>
+<% stream_state = TwitchStreamState.current %>
+
+<%= admin_page(title: "Streaming Twitch") do %>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div class="d-flex gap-2">
+      <%= link_to "Infos entreprise", admin_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+      <%= link_to "Onglets", tabs_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+    </div>
+  </div>
+
+  <% if notice.present? %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+  <% if alert.present? %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+
+  <div class="row g-4">
+    <div class="col-12 col-xl-7">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted small mb-4">
+            Cette configuration crée les abonnements EventSub Twitch et pilote la popup live globale sur tout le site.
+          </p>
+
+          <%= form_with model: @company_information,
+                        url: update_streaming_company_information_path,
+                        method: :patch,
+                        local: true do |f| %>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="form-check form-switch">
+                  <%= f.check_box :twitch_live_enabled, class: "form-check-input" %>
+                  <%= f.label :twitch_live_enabled, "Activer la popup Twitch globale", class: "form-check-label" %>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <%= f.label :twitch_channel_login, "Login de la chaîne Twitch", class: "form-label" %>
+                <%= f.text_field :twitch_channel_login, class: "form-control", placeholder: "pontius" %>
+                <div class="form-text">Le login Twitch, sans URL ni @.</div>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <%= f.label :twitch_popup_title, "Titre de la popup", class: "form-label" %>
+                <%= f.text_field :twitch_popup_title, class: "form-control", placeholder: CompanyInformation::DEFAULT_TWITCH_POPUP_TITLE %>
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end">
+              <%= f.submit "Enregistrer et synchroniser", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-5">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">État actuel</h2>
+          <dl class="row mb-0">
+            <dt class="col-sm-5">Chaîne</dt>
+            <dd class="col-sm-7"><%= @company_information.twitch_channel_display_name.presence || @company_information.twitch_channel_login.presence || "Non configurée" %></dd>
+
+            <dt class="col-sm-5">Live</dt>
+            <dd class="col-sm-7"><%= stream_state.online? ? "En direct" : "Hors ligne" %></dd>
+
+            <dt class="col-sm-5">Titre</dt>
+            <dd class="col-sm-7"><%= stream_state.title.presence || "—" %></dd>
+
+            <dt class="col-sm-5">Dernière sync</dt>
+            <dd class="col-sm-7"><%= l(@company_information.twitch_last_synced_at, format: :short) if @company_information.twitch_last_synced_at.present? %><%= "—" if @company_information.twitch_last_synced_at.blank? %></dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Prérequis serveur</h2>
+          <ul class="small text-muted mb-0">
+            <li><code>TWITCH_CLIENT_ID</code></li>
+            <li><code>TWITCH_CLIENT_SECRET</code></li>
+            <li><code>TWITCH_EVENTSUB_SECRET</code></li>
+            <li><code>TWITCH_EVENTSUB_CALLBACK_URL</code> ou <code>APP_BASE_URL</code> en HTTPS public</li>
+          </ul>
+
+          <% if @company_information.twitch_last_sync_error.present? %>
+            <div class="alert alert-warning mt-3 mb-0">
+              <strong>Dernière erreur Twitch :</strong>
+              <div><%= @company_information.twitch_last_sync_error %></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

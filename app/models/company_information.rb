@@ -37,9 +37,15 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_REPAIR_PAGE_SUBTITLE = "Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale".freeze
   DEFAULT_CONTACT_PAGE_TITLE = "Contactez l'Artisan".freeze
   DEFAULT_CONTACT_PAGE_SUBTITLE = "Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.".freeze
+  DEFAULT_TWITCH_POPUP_TITLE = "Pontius est en direct sur Twitch".freeze
 
   has_one_attached :home_banner_image
   has_many :company_documents, dependent: :destroy
+
+  validates :twitch_channel_login,
+            format: { with: /\A[a-zA-Z0-9_]+\z/, message: "doit contenir uniquement des lettres, chiffres ou _" },
+            allow_blank: true
+  validate :twitch_channel_login_presence_if_live_enabled
 
   def self.instance
     first_or_create!(
@@ -81,7 +87,15 @@ class CompanyInformation < ApplicationRecord
       repair_page_title: "",
       repair_page_subtitle: "",
       contact_page_title: "",
-      contact_page_subtitle: ""
+      contact_page_subtitle: "",
+      twitch_live_enabled: false,
+      twitch_channel_login: "",
+      twitch_channel_display_name: "",
+      twitch_broadcaster_id: "",
+      twitch_popup_title: "",
+      twitch_eventsub_online_subscription_id: "",
+      twitch_eventsub_offline_subscription_id: "",
+      twitch_last_sync_error: ""
     )
   end
 
@@ -229,5 +243,22 @@ class CompanyInformation < ApplicationRecord
 
   def contact_page_subtitle_or_default
     contact_page_subtitle.presence || DEFAULT_CONTACT_PAGE_SUBTITLE
+  end
+
+  def twitch_popup_title_or_default
+    twitch_popup_title.presence || DEFAULT_TWITCH_POPUP_TITLE
+  end
+
+  def twitch_live_configured?
+    twitch_live_enabled? && twitch_channel_login.present?
+  end
+
+  private
+
+  def twitch_channel_login_presence_if_live_enabled
+    return unless twitch_live_enabled?
+    return if twitch_channel_login.present?
+
+    errors.add(:twitch_channel_login, "est requis pour activer le live Twitch")
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_13_120100) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -118,6 +118,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.string "shop_page_subtitle", default: "", null: false
     t.string "shop_page_title", default: "", null: false
     t.string "siret"
+    t.string "twitch_broadcaster_id", default: "", null: false
+    t.string "twitch_channel_display_name", default: "", null: false
+    t.string "twitch_channel_login", default: "", null: false
+    t.string "twitch_eventsub_offline_subscription_id", default: "", null: false
+    t.string "twitch_eventsub_online_subscription_id", default: "", null: false
+    t.text "twitch_last_sync_error"
+    t.datetime "twitch_last_synced_at"
+    t.boolean "twitch_live_enabled", default: false, null: false
+    t.string "twitch_popup_title", default: "", null: false
     t.datetime "updated_at", null: false
     t.string "vat_number"
     t.string "zipcode"
@@ -281,6 +290,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.integer "position"
     t.string "title"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "twitch_stream_states", force: :cascade do |t|
+    t.string "broadcaster_id"
+    t.string "broadcaster_login"
+    t.string "broadcaster_name"
+    t.datetime "created_at", null: false
+    t.string "game_name"
+    t.datetime "last_event_at"
+    t.datetime "last_synced_at"
+    t.boolean "online", default: false, null: false
+    t.datetime "started_at"
+    t.string "stream_id"
+    t.string "thumbnail_url_template"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.integer "viewer_count", default: 0, null: false
   end
 
   create_table "users", force: :cascade do |t|
