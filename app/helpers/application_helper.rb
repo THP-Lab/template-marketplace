@@ -142,6 +142,10 @@ module ApplicationHelper
     "#{number_with_precision(value, precision: 3, strip_insignificant_zeros: true)} kg"
   end
 
+  def format_percentage(value)
+    "#{number_with_precision(value.to_d, precision: 2, strip_insignificant_zeros: true)}%"
+  end
+
   def site_name
     CompanyInformation.instance.legal_name.presence || "Template Marketplace"
   end
@@ -449,7 +453,7 @@ module ApplicationHelper
       "@context": "https://schema.org",
       "@type": "Order",
       "orderNumber": order.id,
-      "price": order.total_amount,
+      "price": order.respond_to?(:total_amount_value) ? order.total_amount_value : order.total_amount,
       "priceCurrency": "EUR",
       "orderStatus": schema_order_status(order.status),
       "url": request.original_url,

@@ -11,6 +11,7 @@
         <div class="d-flex gap-2">
           <%= link_to "Onglets", tabs_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
           <%= link_to "Frais de port", shipping_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "TVA", vat_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
           <%= link_to "Streaming Twitch", streaming_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
           <%= link_to "Configurer le footer", footer_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
           <%= link_to "Documents PDF", company_information_documents_path, class: "btn btn-outline-secondary btn-sm" %>
@@ -76,11 +77,6 @@
                 <%= f.label :siret, "SIRET / SIREN", class: "form-label" %>
                 <%= f.text_field :siret, class: "form-control" %>
               </div>
-              <div class="col-12 col-md-6">
-                <%= f.label :vat_number, "Numéro de TVA", class: "form-label" %>
-                <%= f.text_field :vat_number, class: "form-control" %>
-              </div>
-
               <div class="col-12 col-md-6">
                 <%= f.label :phone, "Téléphone", class: "form-label" %>
                 <%= f.text_field :phone, class: "form-control" %>

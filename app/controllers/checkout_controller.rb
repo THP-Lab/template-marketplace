@@ -59,6 +59,19 @@ class CheckoutController < ApplicationController
       }
     end
 
+    if pricing.tax_amount.positive?
+      line_items << {
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: "TVA (#{pricing.tax_rate.to_s("F")}%)"
+          },
+          unit_amount: (pricing.tax_amount * 100).to_i
+        },
+        quantity: 1
+      }
+    end
+
     checkout_session = Stripe::Checkout::Session.create(
       payment_method_types: [ "card" ],
       line_items: line_items,
@@ -73,6 +86,8 @@ class CheckoutController < ApplicationController
       items: cart_snapshot,
       items_amount: pricing.items_total.to_s("F"),
       shipping_amount: pricing.shipping_amount.to_s("F"),
+      tax_rate: pricing.tax_rate.to_s("F"),
+      tax_amount: pricing.tax_amount.to_s("F"),
       shipping_weight: pricing.total_weight.to_s("F"),
       total_amount: pricing.total_amount.to_s("F")
     }
@@ -142,6 +157,8 @@ class CheckoutController < ApplicationController
     pricing = CartPricing.new(items).summary
     items_amount = snapshot_hash[:items_amount].presence&.to_d || pricing.items_total
     shipping_amount = snapshot_hash[:shipping_amount].presence&.to_d || pricing.shipping_amount
+    tax_rate = snapshot_hash[:tax_rate].presence&.to_d || pricing.tax_rate
+    tax_amount = snapshot_hash[:tax_amount].presence&.to_d || pricing.tax_amount
     shipping_weight = snapshot_hash[:shipping_weight].presence&.to_d || pricing.total_weight
     order = nil
 
@@ -152,6 +169,8 @@ class CheckoutController < ApplicationController
         total_amount: 0,
         items_amount: 0,
         shipping_amount: shipping_amount,
+        tax_rate: tax_rate,
+        tax_amount: tax_amount,
         shipping_weight: shipping_weight
       )
 
@@ -189,8 +208,10 @@ class CheckoutController < ApplicationController
       order.update!(
         items_amount: final_items_amount,
         shipping_amount: shipping_amount,
+        tax_rate: tax_rate,
+        tax_amount: tax_amount,
         shipping_weight: shipping_weight,
-        total_amount: final_items_amount + shipping_amount
+        total_amount: final_items_amount + shipping_amount + tax_amount
       )
     end
 

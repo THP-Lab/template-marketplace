@@ -1,5 +1,13 @@
 class CartPricing
-  Summary = Struct.new(:items_total, :shipping_amount, :total_amount, :total_weight, keyword_init: true)
+  Summary = Struct.new(
+    :items_total,
+    :shipping_amount,
+    :tax_rate,
+    :tax_amount,
+    :total_amount,
+    :total_weight,
+    keyword_init: true
+  )
 
   def initialize(line_items, company_information: CompanyInformation.instance)
     @line_items = Array(line_items)
@@ -10,11 +18,15 @@ class CartPricing
     items_total = @line_items.sum { |item| unit_price_for(item) * quantity_for(item) }
     total_weight = @line_items.sum { |item| unit_weight_for(item) * quantity_for(item) }
     shipping_amount = @company_information.shipping_amount_for(total_weight)
+    tax_rate = @company_information.vat_rate_value
+    tax_amount = (items_total + shipping_amount) * tax_rate / 100
 
     Summary.new(
       items_total: items_total,
       shipping_amount: shipping_amount,
-      total_amount: items_total + shipping_amount,
+      tax_rate: tax_rate,
+      tax_amount: tax_amount,
+      total_amount: items_total + shipping_amount + tax_amount,
       total_weight: total_weight
     )
   end

@@ -17,4 +17,8 @@ RSpec.describe CompanyInformation, type: :model do
 
     expect(company_information.shipping_amount_for(9.2)).to eq(9.5.to_d)
   end
+
+  it "exposes a zero vat rate by default" do
+    expect(CompanyInformation.instance.vat_rate_value).to eq(0.to_d)
+  end
 end

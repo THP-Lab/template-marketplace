@@ -50,6 +50,7 @@ RSpec.describe "Checkout", type: :request do
     sign_in user, scope: :user
 
     company_information = CompanyInformation.instance
+    company_information.update!(vat_rate: 20, vat_number: "FR00123456789")
     company_information.shipping_rates.create!(max_weight: 1.0, price: 5.0)
     company_information.shipping_rates.create!(max_weight: 3.0, price: 8.0)
 
@@ -74,12 +75,19 @@ RSpec.describe "Checkout", type: :request do
     post checkout_path
 
     expect(response).to redirect_to("https://stripe.test/checkout")
-    expect(created_session[:line_items].size).to eq(2)
+    expect(created_session[:line_items].size).to eq(3)
 
-    shipping_line = created_session[:line_items].last
+    shipping_line = created_session[:line_items].find do |line|
+      line.dig(:price_data, :product_data, :name) == "Frais de port"
+    end
     expect(shipping_line[:quantity]).to eq(1)
-    expect(shipping_line.dig(:price_data, :product_data, :name)).to eq("Frais de port")
     expect(shipping_line.dig(:price_data, :unit_amount)).to eq(800)
+
+    vat_line = created_session[:line_items].find do |line|
+      line.dig(:price_data, :product_data, :name) == "TVA (20.0%)"
+    end
+    expect(vat_line[:quantity]).to eq(1)
+    expect(vat_line.dig(:price_data, :unit_amount)).to eq(960)
   end
 
   it "stores shipping totals on the paid order after Stripe success" do
@@ -101,8 +109,10 @@ RSpec.describe "Checkout", type: :request do
 
     expect(order.items_amount_value).to eq(40.to_d)
     expect(order.shipping_amount_value).to eq(8.to_d)
+    expect(order.tax_rate_value).to eq(20.to_d)
+    expect(order.tax_amount_value).to eq(9.6.to_d)
     expect(order.shipping_weight_value).to eq(2.4.to_d)
-    expect(order.total_amount_value).to eq(48.to_d)
+    expect(order.total_amount_value).to eq(57.6.to_d)
     expect(order.order_products.first.unit_weight_value).to eq(1.2.to_d)
     expect(user.cart.cart_products.reload).to be_empty
   end

@@ -12,6 +12,9 @@ class CompanyInformationsController < ApplicationController
   def shipping
   end
 
+  def vat
+  end
+
   def tabs
   end
 
@@ -45,6 +48,15 @@ class CompanyInformationsController < ApplicationController
     else
       flash.now[:alert] = "Impossible d'enregistrer les frais de port."
       render :shipping, status: :unprocessable_entity
+    end
+  end
+
+  def update_vat
+    if @company_information.update(vat_params)
+      redirect_to vat_company_information_path, notice: "TVA enregistrée."
+    else
+      flash.now[:alert] = "Impossible d'enregistrer la TVA."
+      render :vat, status: :unprocessable_entity
     end
   end
 
@@ -93,7 +105,6 @@ class CompanyInformationsController < ApplicationController
       :city,
       :country,
       :siret,
-      :vat_number,
       :phone,
       :email,
       :additional_info
@@ -108,6 +119,10 @@ class CompanyInformationsController < ApplicationController
     params.require(:company_information).permit(
       { shipping_rates_attributes: [:id, :max_weight, :price, :_destroy] }
     )
+  end
+
+  def vat_params
+    params.require(:company_information).permit(:vat_number, :vat_rate)
   end
 
   def home_banner_params

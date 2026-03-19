@@ -52,10 +52,18 @@ class Order < ApplicationRecord
     order_products.sum(&:line_weight)
   end
 
+  def tax_rate_value
+    tax_rate.to_d
+  end
+
+  def tax_amount_value
+    tax_amount.to_d
+  end
+
   def total_amount_value
     return total_amount.to_d if total_amount.present?
 
-    items_amount_value + shipping_amount_value
+    items_amount_value + shipping_amount_value + tax_amount_value
   end
 
   private

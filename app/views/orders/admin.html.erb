@@ -110,6 +110,9 @@
                     <div class="small text-muted">
                       Port : <%= number_to_currency(order.shipping_amount_value, unit: "€") %>
                     </div>
+                    <div class="small text-muted">
+                      TVA : <%= number_to_currency(order.tax_amount_value, unit: "€") %>
+                    </div>
                   </td>
                   <td>
                     <%= form_with(model: order,

@@ -92,6 +92,9 @@ fr:
         hex_color: "Code couleur"
       product:
         weight: "Poids produit"
+      company_information:
+        vat_rate: "Taux de TVA"
+        vat_number: "Numéro de TVA"
       shipping_rate:
         max_weight: "Poids total max"
         price: "Prix du port"

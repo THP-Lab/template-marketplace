@@ -47,6 +47,7 @@ class CompanyInformation < ApplicationRecord
                                 allow_destroy: true,
                                 reject_if: proc { |attributes| attributes["max_weight"].blank? && attributes["price"].blank? }
 
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
   validates :twitch_channel_login,
             format: { with: /\A[a-zA-Z0-9_]+\z/, message: "doit contenir uniquement des lettres, chiffres ou _" },
             allow_blank: true
@@ -62,6 +63,7 @@ class CompanyInformation < ApplicationRecord
       country: "",
       siret: "",
       vat_number: "",
+      vat_rate: 0,
       phone: "",
       email: "",
       additional_info: "",
@@ -274,6 +276,10 @@ class CompanyInformation < ApplicationRecord
 
   def shipping_amount_for(total_weight)
     shipping_rate_for(total_weight)&.price.to_d || 0.to_d
+  end
+
+  def vat_rate_value
+    vat_rate.to_d
   end
 
   private
