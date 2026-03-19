@@ -58,11 +58,11 @@ RSpec.describe Product, type: :model do
   end
 
   it "builds a selection snapshot for multiple options and computes price delta" do
-    product = Product.create!(title: "Haubert", price: 120.0, stock: 2)
+    product = Product.create!(title: "Haubert", price: 120.0, stock: 2, weight: 1.25)
     size_option = product.product_options.create!(
       name: "Taille",
       option_kind: "size",
-      product_option_values_attributes: [{ label: "56", price_delta: 15 }]
+      product_option_values_attributes: [{ label: "56", price_delta: 15, weight_override: 1.8 }]
     )
     size_56 = size_option.product_option_values.first
     color_option = product.product_options.create!(
@@ -81,6 +81,7 @@ RSpec.describe Product, type: :model do
     expect(errors).to be_empty
     expect(snapshot.size).to eq(2)
     expect(product.option_price_delta(snapshot)).to eq(20.to_d)
+    expect(product.weight_for_selection(snapshot)).to eq(1.8.to_d)
   end
 
   it "returns an error when an option is missing in selected values" do
@@ -95,5 +96,28 @@ RSpec.describe Product, type: :model do
     _snapshot, errors = product.build_option_selection_snapshot({})
 
     expect(errors).not_to be_empty
+  end
+
+  it "uses the heaviest selected variant weight instead of stacking with the base product weight" do
+    product = Product.create!(title: "Tunique", price: 70.0, stock: 2, weight: 0.9)
+    size_option = product.product_options.create!(
+      name: "Taille",
+      option_kind: "size",
+      product_option_values_attributes: [{ label: "L", price_delta: 0, weight_override: 1.1 }]
+    )
+    finish_option = product.product_options.create!(
+      name: "Finition",
+      option_kind: "custom",
+      product_option_values_attributes: [{ label: "Renforcée", price_delta: 12, weight_override: 1.7 }]
+    )
+    product.update!(show_product_options: true)
+
+    snapshot, errors = product.build_option_selection_snapshot(
+      size_option.id.to_s => size_option.product_option_values.first.id.to_s,
+      finish_option.id.to_s => finish_option.product_option_values.first.id.to_s
+    )
+
+    expect(errors).to be_empty
+    expect(product.weight_for_selection(snapshot)).to eq(1.7.to_d)
   end
 end

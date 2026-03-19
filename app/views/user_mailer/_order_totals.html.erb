@@ -1,0 +1,7 @@
+<% tax_rate_label = number_with_precision(@order.tax_rate_value, precision: 2, strip_insignificant_zeros: true) %>
+<div style="margin: 16px 0; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px;">
+  <p style="margin: 0 0 6px 0;"><strong>Sous-total produits HT :</strong> <%= number_to_currency(@order.items_amount_value, unit: "€") %></p>
+  <p style="margin: 0 0 6px 0;"><strong>Frais de port HT :</strong> <%= number_to_currency(@order.shipping_amount_value, unit: "€") %></p>
+  <p style="margin: 0 0 6px 0;"><strong>TVA (<%= tax_rate_label %>%) :</strong> <%= number_to_currency(@order.tax_amount_value, unit: "€") %></p>
+  <p style="margin: 0;"><strong>Total TTC :</strong> <%= number_to_currency(@order.total_amount_value, unit: "€") %></p>
+</div>

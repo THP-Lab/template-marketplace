@@ -5,6 +5,7 @@ class ProductOptionValue < ApplicationRecord
 
   validates :label, presence: true
   validates :price_delta, numericality: true
+  validates :weight_override, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
   validates :hex_color, format: { with: HEX_COLOR_FORMAT, message: "doit être un code HEX valide (#RRGGBB)" }, allow_blank: true
   validate :hex_color_required_for_color_option
 
@@ -20,7 +21,8 @@ class ProductOptionValue < ApplicationRecord
       value_id: id,
       value_label: label,
       hex_color: hex_color.presence,
-      price_delta: price_delta.to_d.to_s("F")
+      price_delta: price_delta.to_d.to_s("F"),
+      weight_override: weight_override.presence&.to_d&.to_s("F")
     }
   end
 

@@ -105,7 +105,15 @@
                       <span class="text-muted">—</span>
                     <% end %>
                   </td>
-                  <td class="text-end"><%= order.total_amount.present? ? number_to_currency(order.total_amount, unit: "€") : "—" %></td>
+                  <td class="text-end">
+                    <%= number_to_currency(order.total_amount_value, unit: "€") %>
+                    <div class="small text-muted">
+                      Port : <%= number_to_currency(order.shipping_amount_value, unit: "€") %>
+                    </div>
+                    <div class="small text-muted">
+                      TVA : <%= number_to_currency(order.tax_amount_value, unit: "€") %>
+                    </div>
+                  </td>
                   <td>
                     <%= form_with(model: order,
                                   url: order_path(order),

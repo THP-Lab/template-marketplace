@@ -9,6 +9,8 @@ Date de commande : <%= @order.order_date.strftime("%d/%m/%Y") %>.
 
 Nous vous confirmons la bonne réception de votre commande.
 
+<%= render "order_totals" %>
+
 Vous pouvez consulter son détail ici : <%= @order_url %>
 
 Merci pour votre confiance.

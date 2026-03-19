@@ -7,4 +7,6 @@ La commande n°<%= @order.id %> a été validée par <%= @user.email %>.
 Date de commande : <%= @order.order_date.strftime("%d/%m/%Y") %>.
 <% end %>
 
+<%= render "order_totals" %>
+
 Consulter la commande : <%= @order_url %>

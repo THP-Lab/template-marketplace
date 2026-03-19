@@ -9,6 +9,7 @@
     <% if @order.order_date.present? %>
       <p>Date de commande : <strong><%= @order.order_date.strftime("%d/%m/%Y") %></strong></p>
     <% end %>
+    <%= render "order_totals" %>
     <p>
       Consulter la commande :
       <%= link_to @order_url, @order_url %>

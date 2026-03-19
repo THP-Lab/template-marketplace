@@ -10,6 +10,7 @@
       <p>Date de commande : <strong><%= @order.order_date.strftime("%d/%m/%Y") %></strong></p>
     <% end %>
     <p>Nous vous confirmons la bonne réception de votre commande.</p>
+    <%= render "order_totals" %>
     <p>
       Vous pouvez consulter son détail ici :
       <%= link_to @order_url, @order_url %>

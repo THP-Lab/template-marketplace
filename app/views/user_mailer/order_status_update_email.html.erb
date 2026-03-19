@@ -29,6 +29,7 @@
         <p>Numéro de suivi : <strong><%= @tracking_number %></strong>.</p>
       <% end %>
     <% end %>
+    <%= render "order_totals" %>
     <p>
       Consultez le détail et le suivi :
       <%= link_to @order_url, @order_url %>

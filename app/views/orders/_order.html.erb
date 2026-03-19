@@ -11,7 +11,27 @@
 
   <div>
     <strong>Total amount:</strong>
-    <%= order.total_amount %>
+    <%= number_to_currency(order.total_amount_value, unit: "€") %>
+  </div>
+
+  <div>
+    <strong>Sous-total produits HT:</strong>
+    <%= number_to_currency(order.items_amount_value, unit: "€") %>
+  </div>
+
+  <div>
+    <strong>Frais de port HT:</strong>
+    <%= number_to_currency(order.shipping_amount_value, unit: "€") %>
+  </div>
+
+  <div>
+    <strong>TVA (<%= format_percentage(order.tax_rate_value) %>):</strong>
+    <%= number_to_currency(order.tax_amount_value, unit: "€") %>
+  </div>
+
+  <div>
+    <strong>Poids total:</strong>
+    <%= format_weight(order.shipping_weight_value) %>
   </div>
 
   <div>

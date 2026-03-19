@@ -9,10 +9,19 @@ class CompanyInformationsController < ApplicationController
   def footer
   end
 
+  def shipping
+  end
+
+  def vat
+  end
+
   def tabs
   end
 
   def home_banner
+  end
+
+  def streaming
   end
 
   def update
@@ -30,6 +39,24 @@ class CompanyInformationsController < ApplicationController
     else
       flash.now[:alert] = "Impossible d'enregistrer la description du footer."
       render :footer, status: :unprocessable_entity
+    end
+  end
+
+  def update_shipping
+    if @company_information.update(shipping_params)
+      redirect_to shipping_company_information_path, notice: "Frais de port enregistrés."
+    else
+      flash.now[:alert] = "Impossible d'enregistrer les frais de port."
+      render :shipping, status: :unprocessable_entity
+    end
+  end
+
+  def update_vat
+    if @company_information.update(vat_params)
+      redirect_to vat_company_information_path, notice: "TVA enregistrée."
+    else
+      flash.now[:alert] = "Impossible d'enregistrer la TVA."
+      render :vat, status: :unprocessable_entity
     end
   end
 
@@ -52,6 +79,17 @@ class CompanyInformationsController < ApplicationController
     end
   end
 
+  def update_streaming
+    if @company_information.update(streaming_params)
+      flash[:notice] = "Configuration Twitch enregistrée."
+      synchronize_twitch_configuration
+      redirect_to streaming_company_information_path
+    else
+      flash.now[:alert] = "Impossible d'enregistrer la configuration Twitch."
+      render :streaming, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_company_information
@@ -67,7 +105,6 @@ class CompanyInformationsController < ApplicationController
       :city,
       :country,
       :siret,
-      :vat_number,
       :phone,
       :email,
       :additional_info
@@ -76,6 +113,16 @@ class CompanyInformationsController < ApplicationController
 
   def footer_params
     params.require(:company_information).permit(:footer_description)
+  end
+
+  def shipping_params
+    params.require(:company_information).permit(
+      { shipping_rates_attributes: [:id, :max_weight, :price, :_destroy] }
+    )
+  end
+
+  def vat_params
+    params.require(:company_information).permit(:vat_number, :vat_rate)
   end
 
   def home_banner_params
@@ -109,11 +156,30 @@ class CompanyInformationsController < ApplicationController
     )
   end
 
+  def streaming_params
+    params.require(:company_information).permit(
+      :twitch_live_enabled,
+      :twitch_channel_login,
+      :twitch_popup_title
+    )
+  end
+
   def purge_home_banner_image_if_requested
     remove_image = ActiveModel::Type::Boolean.new.cast(params.dig(:company_information, :remove_home_banner_image))
     new_image_uploaded = params.dig(:company_information, :home_banner_image).present?
     return unless remove_image && !new_image_uploaded && @company_information.home_banner_image.attached?
 
     @company_information.home_banner_image.purge_later
+  end
+
+  def synchronize_twitch_configuration
+    message = Twitch::SubscriptionSync.call(
+      company_information: @company_information,
+      callback_base_url: request.base_url
+    )
+
+    flash[:notice] = [flash[:notice], message].compact.join(" ")
+  rescue Twitch::Error => e
+    flash[:alert] = e.message
   end
 end

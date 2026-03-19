@@ -30,6 +30,7 @@ class Product < ApplicationRecord
   before_validation :normalize_highlight_document_fields
   validate :validate_highlight_document_links
   validate :validate_product_options_when_enabled
+  validates :weight, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
 
   def gallery_images
     all_images = []
@@ -100,6 +101,20 @@ class Product < ApplicationRecord
       value = entry.is_a?(Hash) ? entry.with_indifferent_access[:price_delta] : 0
       value.to_d
     end
+  end
+
+  def weight_for_selection(selection_snapshot)
+    overrides = Array(selection_snapshot).filter_map do |entry|
+      value = entry.is_a?(Hash) ? entry.with_indifferent_access[:weight_override] : nil
+      next if value.blank?
+
+      value.to_d
+    end
+
+    return weight.to_d if overrides.empty?
+
+    # Variant weights replace the base product weight and never stack together.
+    overrides.max
   end
 
   def highlight_column_class
