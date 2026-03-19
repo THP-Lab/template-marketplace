@@ -15,7 +15,12 @@ class ProductOption < ApplicationRecord
 
   accepts_nested_attributes_for :product_option_values,
                                 allow_destroy: true,
-                                reject_if: proc { |attributes| attributes["label"].blank? && attributes["hex_color"].blank? && attributes["price_delta"].blank? }
+                                reject_if: proc { |attributes|
+                                  attributes["label"].blank? &&
+                                    attributes["hex_color"].blank? &&
+                                    attributes["price_delta"].blank? &&
+                                    attributes["weight_override"].blank?
+                                }
 
   validates :name, presence: true
   validates :option_kind, inclusion: { in: OPTION_KINDS }

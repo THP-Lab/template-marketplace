@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_19_105546) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -57,6 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.text "selected_options", default: "[]", null: false
     t.string "selected_options_signature", default: "base", null: false
     t.decimal "unit_price"
+    t.decimal "unit_weight", precision: 10, scale: 3
     t.datetime "updated_at", null: false
     t.index ["cart_id", "product_id", "selected_options_signature"], name: "index_cart_products_on_cart_product_variant", unique: true
     t.index ["cart_id"], name: "index_cart_products_on_cart_id"
@@ -118,8 +119,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.string "shop_page_subtitle", default: "", null: false
     t.string "shop_page_title", default: "", null: false
     t.string "siret"
+    t.string "twitch_broadcaster_id", default: "", null: false
+    t.string "twitch_channel_display_name", default: "", null: false
+    t.string "twitch_channel_login", default: "", null: false
+    t.string "twitch_eventsub_offline_subscription_id", default: "", null: false
+    t.string "twitch_eventsub_online_subscription_id", default: "", null: false
+    t.text "twitch_last_sync_error"
+    t.datetime "twitch_last_synced_at"
+    t.boolean "twitch_live_enabled", default: false, null: false
+    t.string "twitch_popup_title", default: "", null: false
     t.datetime "updated_at", null: false
     t.string "vat_number"
+    t.decimal "vat_rate", precision: 5, scale: 2, default: "0.0", null: false
     t.string "zipcode"
   end
 
@@ -175,6 +186,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.text "selected_options", default: "[]", null: false
     t.string "selected_options_signature", default: "base", null: false
     t.decimal "unit_price"
+    t.decimal "unit_weight", precision: 10, scale: 3
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_products_on_order_id"
     t.index ["product_id"], name: "index_order_products_on_product_id"
@@ -182,8 +194,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
 
   create_table "orders", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.decimal "items_amount", precision: 10, scale: 2
     t.datetime "order_date"
+    t.decimal "shipping_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "shipping_weight", precision: 10, scale: 3, default: "0.0", null: false
     t.string "status"
+    t.decimal "tax_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "tax_rate", precision: 5, scale: 2, default: "0.0", null: false
     t.decimal "total_amount"
     t.string "tracking_number"
     t.datetime "updated_at", null: false
@@ -215,6 +232,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.decimal "price_delta", precision: 10, scale: 2, default: "0.0", null: false
     t.integer "product_option_id", null: false
     t.datetime "updated_at", null: false
+    t.decimal "weight_override", precision: 10, scale: 3
     t.index ["product_option_id"], name: "index_product_option_values_on_product_option_id"
   end
 
@@ -253,6 +271,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.integer "stock"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.decimal "weight", precision: 10, scale: 3
     t.index ["highlight_1_company_document_id"], name: "index_products_on_highlight_1_company_document_id"
     t.index ["highlight_2_company_document_id"], name: "index_products_on_highlight_2_company_document_id"
     t.index ["highlight_3_company_document_id"], name: "index_products_on_highlight_3_company_document_id"
@@ -275,12 +294,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
     t.index ["position"], name: "index_repair_partners_on_position"
   end
 
+  create_table "shipping_rates", force: :cascade do |t|
+    t.integer "company_information_id", null: false
+    t.datetime "created_at", null: false
+    t.decimal "max_weight", precision: 10, scale: 3, null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_information_id", "max_weight"], name: "index_shipping_rates_on_company_information_id_and_max_weight", unique: true
+    t.index ["company_information_id"], name: "index_shipping_rates_on_company_information_id"
+  end
+
   create_table "terms_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
     t.integer "position"
     t.string "title"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "twitch_stream_states", force: :cascade do |t|
+    t.string "broadcaster_id"
+    t.string "broadcaster_login"
+    t.string "broadcaster_name"
+    t.datetime "created_at", null: false
+    t.string "game_name"
+    t.datetime "last_event_at"
+    t.datetime "last_synced_at"
+    t.boolean "online", default: false, null: false
+    t.datetime "started_at"
+    t.string "stream_id"
+    t.string "thumbnail_url_template"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.integer "viewer_count", default: 0, null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -319,4 +365,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_161000) do
   add_foreign_key "products", "company_documents", column: "highlight_1_company_document_id", on_delete: :nullify
   add_foreign_key "products", "company_documents", column: "highlight_2_company_document_id", on_delete: :nullify
   add_foreign_key "products", "company_documents", column: "highlight_3_company_document_id", on_delete: :nullify
+  add_foreign_key "shipping_rates", "company_informations"
 end

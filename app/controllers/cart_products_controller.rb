@@ -39,6 +39,7 @@ class CartProductsController < ApplicationController
     end
 
     unit_price = product.price.to_d + product.option_price_delta(selected_options)
+    unit_weight = product.weight_for_selection(selected_options)
     selected_options_signature = CartProduct.signature_for(selected_options)
     cart_product = cart.cart_products.find_by(
       product_id: product.id,
@@ -46,12 +47,13 @@ class CartProductsController < ApplicationController
     )
 
     if cart_product
-      cart_product.update(quantity: cart_product.quantity + quantity)
+      cart_product.update(quantity: cart_product.quantity + quantity, unit_weight: unit_weight)
     else
       cart.cart_products.create(
         product: product,
         quantity: quantity,
         unit_price: unit_price,
+        unit_weight: unit_weight,
         selected_options: selected_options,
         selected_options_signature: selected_options_signature
       )

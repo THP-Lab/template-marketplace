@@ -67,6 +67,7 @@ fr:
       company_document: "document"
       product_option: "option produit"
       product_option_value: "choix d'option"
+      shipping_rate: "palier de frais de port"
     attributes:
       user:
         first_name: "Prénom"
@@ -87,7 +88,16 @@ fr:
       product_option_value:
         label: "Choix"
         price_delta: "Prix"
+        weight_override: "Poids variante"
         hex_color: "Code couleur"
+      product:
+        weight: "Poids produit"
+      company_information:
+        vat_rate: "Taux de TVA"
+        vat_number: "Numéro de TVA"
+      shipping_rate:
+        max_weight: "Poids total max"
+        price: "Prix du port"
     errors:
       messages:
         record_invalid: "Validation échouée : %{errors}"

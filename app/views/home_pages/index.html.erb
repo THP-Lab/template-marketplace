@@ -61,7 +61,7 @@
   <% @home_pages.each do |home_page| %>
     <% section_classes =
          if home_page.shop_bloc_type?
-           "mb-5 pb-4"
+           "home-blocks__section home-blocks__section--shop mb-5 pb-4"
          elsif home_page.split_layout_variant?
            "home-blocks__section home-blocks__section--split"
          else
@@ -95,8 +95,6 @@
                   </figure>
                 <% end %>
               </div>
-
-              <div class="swiper-scrollbar" data-shop-swiper-target="scrollbar"></div>
             </section>
             <div class="text-center mt-3">
               <% button_label = home_page.button_label.presence || "Accéder à la boutique" %>

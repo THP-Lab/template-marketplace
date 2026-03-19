@@ -5,6 +5,7 @@ class OrderProduct < ApplicationRecord
   serialize :selected_options, coder: JSON
 
   before_validation :normalize_selected_options
+  validates :unit_weight, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
 
   def selected_options_list
     Array(selected_options).map { |entry| entry.is_a?(Hash) ? entry.with_indifferent_access : {} }
@@ -16,6 +17,20 @@ class OrderProduct < ApplicationRecord
       value_label = entry[:value_label].presence || "—"
       "#{option_name} : #{value_label}"
     end.join(" | ")
+  end
+
+  def unit_weight_value
+    return unit_weight.to_d if unit_weight.present?
+
+    product&.weight_for_selection(selected_options_list).to_d
+  end
+
+  def line_total
+    quantity.to_i * (unit_price || 0).to_d
+  end
+
+  def line_weight
+    quantity.to_i * unit_weight_value
   end
 
   private

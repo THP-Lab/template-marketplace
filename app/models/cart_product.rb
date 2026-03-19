@@ -7,6 +7,7 @@ class CartProduct < ApplicationRecord
   before_validation :normalize_selected_options
 
   validates :selected_options_signature, presence: true
+  validates :unit_weight, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
 
   def self.signature_for(options)
     normalized = Array(options).map do |entry|
@@ -29,6 +30,20 @@ class CartProduct < ApplicationRecord
       value_label = entry[:value_label].presence || "—"
       "#{option_name} : #{value_label}"
     end.join(" | ")
+  end
+
+  def unit_weight_value
+    return unit_weight.to_d if unit_weight.present?
+
+    product&.weight_for_selection(selected_options_list).to_d
+  end
+
+  def line_total
+    quantity.to_i * (unit_price || 0).to_d
+  end
+
+  def line_weight
+    quantity.to_i * unit_weight_value
   end
 
   private

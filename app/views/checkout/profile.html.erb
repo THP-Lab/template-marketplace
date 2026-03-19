@@ -26,6 +26,19 @@
               locals: { user: current_user, cart_context: true, redirect_path: cart_path(current_user.cart) } %>
   </section>
 
+  <% if @cart_products.any? %>
+    <section class="card shadow-sm border-0 mt-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Récapitulatif avant paiement</h2>
+        <p class="mb-1">Sous-total produits HT : <strong><%= number_to_currency(@cart_pricing.items_total, unit: "€") %></strong></p>
+        <p class="mb-1">Poids total : <strong><%= format_weight(@cart_pricing.total_weight) %></strong></p>
+        <p class="mb-1">Frais de port HT : <strong><%= number_to_currency(@cart_pricing.shipping_amount, unit: "€") %></strong></p>
+        <p class="mb-1">TVA (<%= format_percentage(@cart_pricing.tax_rate) %>) : <strong><%= number_to_currency(@cart_pricing.tax_amount, unit: "€") %></strong></p>
+        <p class="mb-0">Total à payer : <strong><%= number_to_currency(@cart_pricing.total_amount, unit: "€") %></strong></p>
+      </div>
+    </section>
+  <% end %>
+
   <section class="checkout-actions">
     <%= link_to "Retour au panier", cart_path(current_user.cart), class: "btn btn-outline-secondary" %>
   </section>

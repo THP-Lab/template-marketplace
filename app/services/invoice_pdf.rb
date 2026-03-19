@@ -68,8 +68,11 @@ class InvoicePdf
   end
 
   def totals(pdf)
-    total = @order.total_amount || computed_total
-    pdf.text "Total TTC : #{number_to_currency(total, unit: "€")}", size: 12, style: :bold
+    pdf.text "Sous-total produits HT : #{number_to_currency(@order.items_amount_value, unit: "€")}", size: 11
+    pdf.text "Frais de port HT : #{number_to_currency(@order.shipping_amount_value, unit: "€")}", size: 11
+    pdf.text "TVA (#{format_percentage(@order.tax_rate_value)}) : #{number_to_currency(@order.tax_amount_value, unit: "€")}", size: 11
+    pdf.text "Poids total : #{format_weight(@order.shipping_weight_value)}", size: 11
+    pdf.text "Total TTC : #{number_to_currency(@order.total_amount_value, unit: "€")}", size: 12, style: :bold
     pdf.text "Paiement traité via Stripe.", size: 10
     pdf.move_down 10
   end
@@ -119,9 +122,11 @@ class InvoicePdf
     (order_product.unit_price || order_product.product&.price || 0).to_d
   end
 
-  def computed_total
-    @order.order_products.sum do |order_product|
-      unit_price_for(order_product) * order_product.quantity.to_i
-    end
+  def format_weight(weight)
+    "#{number_with_precision(weight.to_d, precision: 3, strip_insignificant_zeros: true)} kg"
+  end
+
+  def format_percentage(value)
+    "#{number_with_precision(value.to_d, precision: 2, strip_insignificant_zeros: true)}%"
   end
 end

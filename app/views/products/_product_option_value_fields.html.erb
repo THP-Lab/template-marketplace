@@ -8,17 +8,25 @@
                         data: { role: "value-destroy" } %>
 
   <div class="row g-2 align-items-end">
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-md-4">
       <%= form.label :label, "Choix", class: "form-label" %>
       <%= form.text_field :label, class: "form-control", placeholder: "Ex: 56 / Noir" %>
     </div>
 
-    <div class="col-12 col-md-3">
+    <div class="col-12 col-md-2">
       <%= form.label :price_delta, "Prix (+/-)", class: "form-label" %>
       <%= form.number_field :price_delta,
                             class: "form-control",
                             step: 0.01,
                             value: (form.object.price_delta.presence || 0) %>
+    </div>
+
+    <div class="col-12 col-md-2">
+      <%= form.label :weight_override, "Poids variante (kg)", class: "form-label" %>
+      <%= form.number_field :weight_override,
+                            class: "form-control",
+                            min: 0,
+                            step: 0.001 %>
     </div>
 
     <div class="col-12 col-md-3 <%= "d-none" unless color_option %>" data-role="hex-wrap">

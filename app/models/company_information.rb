@@ -37,9 +37,21 @@ class CompanyInformation < ApplicationRecord
   DEFAULT_REPAIR_PAGE_SUBTITLE = "Donnez une nouvelle vie à vos pièces médiévales avec notre expertise artisanale".freeze
   DEFAULT_CONTACT_PAGE_TITLE = "Contactez l'Artisan".freeze
   DEFAULT_CONTACT_PAGE_SUBTITLE = "Une question sur mes créations ? Un projet personnalisé ? N'hésitez pas à me contacter.".freeze
+  DEFAULT_TWITCH_POPUP_TITLE = "Pontius est en direct sur Twitch".freeze
 
   has_one_attached :home_banner_image
   has_many :company_documents, dependent: :destroy
+  has_many :shipping_rates, -> { order(:max_weight, :id) }, dependent: :destroy
+
+  accepts_nested_attributes_for :shipping_rates,
+                                allow_destroy: true,
+                                reject_if: proc { |attributes| attributes["max_weight"].blank? && attributes["price"].blank? }
+
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
+  validates :twitch_channel_login,
+            format: { with: /\A[a-zA-Z0-9_]+\z/, message: "doit contenir uniquement des lettres, chiffres ou _" },
+            allow_blank: true
+  validate :twitch_channel_login_presence_if_live_enabled
 
   def self.instance
     first_or_create!(
@@ -51,6 +63,7 @@ class CompanyInformation < ApplicationRecord
       country: "",
       siret: "",
       vat_number: "",
+      vat_rate: 0,
       phone: "",
       email: "",
       additional_info: "",
@@ -81,7 +94,15 @@ class CompanyInformation < ApplicationRecord
       repair_page_title: "",
       repair_page_subtitle: "",
       contact_page_title: "",
-      contact_page_subtitle: ""
+      contact_page_subtitle: "",
+      twitch_live_enabled: false,
+      twitch_channel_login: "",
+      twitch_channel_display_name: "",
+      twitch_broadcaster_id: "",
+      twitch_popup_title: "",
+      twitch_eventsub_online_subscription_id: "",
+      twitch_eventsub_offline_subscription_id: "",
+      twitch_last_sync_error: ""
     )
   end
 
@@ -229,5 +250,44 @@ class CompanyInformation < ApplicationRecord
 
   def contact_page_subtitle_or_default
     contact_page_subtitle.presence || DEFAULT_CONTACT_PAGE_SUBTITLE
+  end
+
+  def twitch_popup_title_or_default
+    twitch_popup_title.presence || DEFAULT_TWITCH_POPUP_TITLE
+  end
+
+  def twitch_live_configured?
+    twitch_live_enabled? && twitch_channel_login.present?
+  end
+
+  def shipping_rates_ordered
+    shipping_rates.ordered
+  end
+
+  def shipping_rate_for(total_weight)
+    weight = total_weight.to_d
+    return if weight <= 0
+
+    ordered_rates = shipping_rates_ordered.to_a
+    return if ordered_rates.empty?
+
+    ordered_rates.find { |rate| rate.max_weight.to_d >= weight } || ordered_rates.last
+  end
+
+  def shipping_amount_for(total_weight)
+    shipping_rate_for(total_weight)&.price.to_d || 0.to_d
+  end
+
+  def vat_rate_value
+    vat_rate.to_d
+  end
+
+  private
+
+  def twitch_channel_login_presence_if_live_enabled
+    return unless twitch_live_enabled?
+    return if twitch_channel_login.present?
+
+    errors.add(:twitch_channel_login, "est requis pour activer le live Twitch")
   end
 end

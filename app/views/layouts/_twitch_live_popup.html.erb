@@ -1,0 +1,67 @@
+<% company_information = CompanyInformation.instance %>
+<% if company_information.twitch_live_configured? %>
+  <% live_state = Twitch::LiveStatePresenter.new(
+       company_information: company_information,
+       stream_state: TwitchStreamState.current,
+       request: request
+     ).as_json %>
+
+  <div class="twitch-live-shell"
+       data-controller="twitch-live"
+       data-twitch-live-endpoint-value="<%= twitch_live_state_path %>"
+       data-twitch-live-stream-id-value="<%= live_state[:stream_id].to_s %>">
+    <section class="twitch-live-popup" data-twitch-live-target="popup" <%= "hidden" unless live_state[:live] %>>
+      <button type="button"
+              class="twitch-live-popup__close"
+              data-action="twitch-live#dismiss"
+              aria-label="Masquer le live Twitch">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="twitch-live-popup__header">
+        <p class="twitch-live-popup__eyebrow">LIVE TWITCH</p>
+        <h2 class="twitch-live-popup__headline" data-twitch-live-target="headline"><%= live_state[:popup_title] %></h2>
+        <p class="twitch-live-popup__meta" data-twitch-live-target="meta">
+          <%=
+            [
+              ("En direct" if live_state[:live]),
+              live_state[:game_name],
+              (pluralize(live_state[:viewer_count], "spectateur") if live_state[:viewer_count].to_i.positive?),
+              ("depuis #{live_state[:started_at_label]}" if live_state[:started_at_label].present?)
+            ].compact.join(" · ")
+          %>
+        </p>
+      </div>
+
+      <div class="twitch-live-popup__player-frame">
+        <iframe
+          title="Lecteur Twitch"
+          src="<%= live_state[:live] ? live_state[:embed_url] : "about:blank" %>"
+          allowfullscreen
+          scrolling="no"
+          data-twitch-live-target="iframe"></iframe>
+      </div>
+
+      <div class="twitch-live-popup__mobile-card">
+        <img src="<%= live_state[:thumbnail_url].presence || asset_path("favicon.png") %>"
+             alt="<%= live_state[:title].presence || live_state[:channel_name].presence || "Live Twitch" %>"
+             loading="lazy"
+             data-twitch-live-target="thumbnail">
+      </div>
+
+      <div class="twitch-live-popup__body">
+        <h3 class="twitch-live-popup__stream-title" data-twitch-live-target="streamTitle">
+          <%= live_state[:title].presence || live_state[:channel_name] %>
+        </h3>
+        <div class="twitch-live-popup__actions">
+          <%= link_to "Regarder sur Twitch",
+                      live_state[:channel_url],
+                      class: "btn btn-primary btn-sm",
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                      data: { twitch_live_target: "watchLink" } %>
+        </div>
+      </div>
+    </section>
+  </div>
+<% end %>
