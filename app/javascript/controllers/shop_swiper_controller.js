@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["wrapper", "slide", "scrollbar"]
+  static targets = ["wrapper", "slide"]
 
   connect() {
     this.activeIndex = 0
@@ -112,9 +112,6 @@ export default class extends Controller {
         slide.classList.add("is-hidden-right")
       }
     })
-
-    const progress = total > 1 ? this.activeIndex / (total - 1) : 0
-    this.scrollbarTarget.style.setProperty("--shop-swiper-progress", progress)
   }
 
   observeImages() {

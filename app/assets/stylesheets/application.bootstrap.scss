@@ -1093,6 +1093,10 @@ dialog {
   min-width: 0;
 }
 
+.home-blocks__section--shop {
+  overflow-x: hidden;
+}
+
 .home-blocks__section--split {
   padding: 0;
   margin: 0;
@@ -1147,17 +1151,20 @@ dialog {
   --shop-swiper-card-width: min(28rem, 68vw);
   --shop-swiper-offset: min(24rem, 38vw);
   --shop-swiper-offset-far: min(40rem, 58vw);
-  --shop-swiper-progress: 0;
-  padding: 1.5rem 0 2.5rem;
-  overflow: visible;
+  padding: 1.5rem 0 0.75rem;
+  overflow: hidden;
+  isolation: isolate;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
 }
 
 .home-shop-swiper.swiper {
-  overflow: visible;
+  overflow: hidden;
 }
 
 .home-shop-swiper .swiper-wrapper {
   position: relative;
+  overflow: hidden;
 }
 
 .home-shop-swiper .parallax-bg {
@@ -1259,32 +1266,6 @@ dialog {
 .home-shop-swiper .swiper-slide-shadow-left,
 .home-shop-swiper .swiper-slide-shadow-right {
   border-radius: 1rem;
-}
-
-.home-shop-swiper .swiper-scrollbar {
-  position: relative;
-  width: min(21rem, 80%);
-  height: 10px;
-  margin-inline: auto;
-  margin-top: 1.2rem;
-  background: rgba(113, 28, 28, 0.12);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.home-shop-swiper .swiper-scrollbar-drag {
-  background: linear-gradient(90deg, rgba(113, 28, 28, 0.9), rgba(199, 176, 126, 0.9));
-}
-
-.home-shop-swiper .swiper-scrollbar::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: max(18%, 3.75rem);
-  border-radius: inherit;
-  background: linear-gradient(90deg, rgba(113, 28, 28, 0.9), rgba(199, 176, 126, 0.9));
-  transform: translateX(calc(var(--shop-swiper-progress) * (100% - 3.75rem)));
-  transition: transform 0.45s ease;
 }
 
 @media (max-width: 767.98px) {
