@@ -191,8 +191,9 @@ main {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: $color-text;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 p,
@@ -200,8 +201,9 @@ p,
 .card-text,
 .home-split-block-title,
 .home-split-block-content {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 // ====== NAVBAR ======
@@ -310,8 +312,8 @@ p,
   .navbar-brand-text strong {
     display: block;
     font-size: inherit !important;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 }
 
@@ -475,8 +477,8 @@ footer h5{
     font-size: clamp(1.2rem, 7.2vw, 1.48rem) !important;
     line-height: 1.02 !important;
     margin-top: 0.65rem !important;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 
   .hero .container > h4.mt-2,
@@ -1083,9 +1085,9 @@ dialog {
 .home-blocks__section a,
 .home-blocks__section div {
   white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  hyphens: auto;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none;
 }
 
 .home-blocks__section {
@@ -1118,9 +1120,10 @@ dialog {
   margin-bottom: 1.1rem;
   max-width: 100%;
   white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-all !important;
-  line-break: anywhere;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  line-break: auto;
+  hyphens: none;
 }
 
 .home-split-block-content {
@@ -1128,9 +1131,10 @@ dialog {
   line-height: 1.75;
   max-width: 100%;
   white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-all !important;
-  line-break: anywhere;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  line-break: auto;
+  hyphens: none;
 }
 
 .home-split-block-content p:last-child {
@@ -1140,9 +1144,10 @@ dialog {
 .home-blocks .card h2 {
   max-width: 100%;
   white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-all !important;
-  line-break: anywhere;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  line-break: auto;
+  hyphens: none;
   font-size: clamp(1.35rem, 5.6vw, 2.25rem);
 }
 
