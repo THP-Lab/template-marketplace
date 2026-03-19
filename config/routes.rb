@@ -42,8 +42,10 @@ Rails.application.routes.draw do
     get :admin
     get :tabs
     get :footer
+    get :shipping
     patch :update_footer
     patch :update_tabs
+    patch :update_shipping
     get :home_banner
     patch :update_home_banner
     get :streaming

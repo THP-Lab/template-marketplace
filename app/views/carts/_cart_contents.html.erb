@@ -1,11 +1,14 @@
 <div id="cart_contents" class="card p-0">
   <% if cart_products.any? %>
+    <% cart_pricing = CartPricing.new(cart_products).summary %>
     <div class="cart-lines p-4">
       <% cart_products.each do |cart_product| %>
         <% product = cart_product.product %>
         <% quantity = cart_product.quantity.to_i %>
         <% unit_price = (cart_product.unit_price || 0).to_d %>
         <% line_total = unit_price * quantity %>
+        <% unit_weight = cart_product.unit_weight_value %>
+        <% line_weight = cart_product.line_weight %>
         <% selected_options = cart_product.selected_options_list %>
 
         <article id="<%= dom_id(cart_product) %>" class="cart-line py-3">
@@ -41,7 +44,9 @@
 
               <div class="cart-line__details mb-3">
                 <span>Prix unitaire : <strong><%= number_to_currency(unit_price, unit: "€", format: "%n %u") %></strong></span>
+                <span>Poids unitaire : <strong><%= format_weight(unit_weight) %></strong></span>
                 <span>Quantité : <strong><%= quantity %></strong></span>
+                <span>Poids total : <strong><%= format_weight(line_weight) %></strong></span>
               </div>
 
               <div class="cart-line__footer">
@@ -90,14 +95,22 @@
     </div>
 
     <div class="cart-summary d-flex justify-content-between align-items-center p-4">
-      <h5 class="mb-0">
-        Total panier :
-        <span>
-          <%= number_to_currency(
-            cart_products.sum { |cp| cp.quantity.to_i * (cp.unit_price || 0).to_d }, unit: "€", format: "%n %u"
-          ) %>
-        </span>
-      </h5>
+      <div>
+        <h5 class="mb-1">
+          Sous-total produits :
+          <span><%= number_to_currency(cart_pricing.items_total, unit: "€", format: "%n %u") %></span>
+        </h5>
+        <div class="small text-muted">
+          Poids total : <strong><%= format_weight(cart_pricing.total_weight) %></strong>
+        </div>
+        <div class="small text-muted">
+          Frais de port : <strong><%= number_to_currency(cart_pricing.shipping_amount, unit: "€", format: "%n %u") %></strong>
+        </div>
+        <div class="fw-semibold mt-1">
+          Total panier :
+          <span><%= number_to_currency(cart_pricing.total_amount, unit: "€", format: "%n %u") %></span>
+        </div>
+      </div>
 
       <% if defined?(show_checkout_button) ? show_checkout_button : true %>
         <%= button_to "Passer au paiement", checkout_path, method: :post, data: { turbo: false }, class: "btn btn-primary" %>

@@ -137,6 +137,11 @@ module ApplicationHelper
     "#{first_name.to_s.first}*** #{last_name.to_s.first}***".strip
   end
 
+  def format_weight(weight)
+    value = weight.to_d
+    "#{number_with_precision(value, precision: 3, strip_insignificant_zeros: true)} kg"
+  end
+
   def site_name
     CompanyInformation.instance.legal_name.presence || "Template Marketplace"
   end

@@ -36,6 +36,28 @@ class Order < ApplicationRecord
     STATUS_ORDER.map { |status| [STATUS_LABELS[status] || status.humanize, status] }
   end
 
+  def items_amount_value
+    return items_amount.to_d if items_amount.present?
+
+    order_products.sum(&:line_total)
+  end
+
+  def shipping_amount_value
+    shipping_amount.to_d
+  end
+
+  def shipping_weight_value
+    return shipping_weight.to_d if shipping_weight.present?
+
+    order_products.sum(&:line_weight)
+  end
+
+  def total_amount_value
+    return total_amount.to_d if total_amount.present?
+
+    items_amount_value + shipping_amount_value
+  end
+
   private
 
   def notify_status_change

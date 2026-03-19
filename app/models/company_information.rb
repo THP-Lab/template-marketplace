@@ -41,6 +41,11 @@ class CompanyInformation < ApplicationRecord
 
   has_one_attached :home_banner_image
   has_many :company_documents, dependent: :destroy
+  has_many :shipping_rates, -> { order(:max_weight, :id) }, dependent: :destroy
+
+  accepts_nested_attributes_for :shipping_rates,
+                                allow_destroy: true,
+                                reject_if: proc { |attributes| attributes["max_weight"].blank? && attributes["price"].blank? }
 
   validates :twitch_channel_login,
             format: { with: /\A[a-zA-Z0-9_]+\z/, message: "doit contenir uniquement des lettres, chiffres ou _" },
@@ -251,6 +256,24 @@ class CompanyInformation < ApplicationRecord
 
   def twitch_live_configured?
     twitch_live_enabled? && twitch_channel_login.present?
+  end
+
+  def shipping_rates_ordered
+    shipping_rates.ordered
+  end
+
+  def shipping_rate_for(total_weight)
+    weight = total_weight.to_d
+    return if weight <= 0
+
+    ordered_rates = shipping_rates_ordered.to_a
+    return if ordered_rates.empty?
+
+    ordered_rates.find { |rate| rate.max_weight.to_d >= weight } || ordered_rates.last
+  end
+
+  def shipping_amount_for(total_weight)
+    shipping_rate_for(total_weight)&.price.to_d || 0.to_d
   end
 
   private

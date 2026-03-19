@@ -9,6 +9,9 @@ class CompanyInformationsController < ApplicationController
   def footer
   end
 
+  def shipping
+  end
+
   def tabs
   end
 
@@ -33,6 +36,15 @@ class CompanyInformationsController < ApplicationController
     else
       flash.now[:alert] = "Impossible d'enregistrer la description du footer."
       render :footer, status: :unprocessable_entity
+    end
+  end
+
+  def update_shipping
+    if @company_information.update(shipping_params)
+      redirect_to shipping_company_information_path, notice: "Frais de port enregistrés."
+    else
+      flash.now[:alert] = "Impossible d'enregistrer les frais de port."
+      render :shipping, status: :unprocessable_entity
     end
   end
 
@@ -90,6 +102,12 @@ class CompanyInformationsController < ApplicationController
 
   def footer_params
     params.require(:company_information).permit(:footer_description)
+  end
+
+  def shipping_params
+    params.require(:company_information).permit(
+      { shipping_rates_attributes: [:id, :max_weight, :price, :_destroy] }
+    )
   end
 
   def home_banner_params

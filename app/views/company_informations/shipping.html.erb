@@ -1,0 +1,73 @@
+<% content_for :title, "Admin - Frais de port" %>
+
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-4 col-xl-3">
+      <%= render_admin_sidebar %>
+    </div>
+    <div class="col-lg-8 col-xl-9">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <h1 class="mb-0">Frais de port</h1>
+        <div class="d-flex gap-2">
+          <%= link_to "Infos entreprise", admin_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to "Onglets", tabs_company_information_path, class: "btn btn-outline-secondary btn-sm" %>
+        </div>
+      </div>
+
+      <% if notice.present? %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+      <% if @company_information.errors.any? %>
+        <div class="alert alert-danger">
+          <h2 class="h6 mb-2"><%= pluralize(@company_information.errors.count, "erreur") %> empêchent l’enregistrement :</h2>
+          <ul class="mb-0">
+            <% @company_information.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="card shadow-sm">
+        <div class="card-body" data-controller="shipping-rates-form">
+          <p class="text-muted small mb-4">
+            Le poids total du panier est comparé à ces paliers. Le premier palier couvrant le poids est appliqué.
+          </p>
+
+          <%= form_with model: @company_information,
+                        url: update_shipping_company_information_path,
+                        method: :patch,
+                        local: true do |f| %>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <h2 class="h5 mb-0">Paliers de poids</h2>
+              <button type="button"
+                      class="btn btn-outline-primary btn-sm"
+                      data-action="shipping-rates-form#addRate">
+                Ajouter un palier
+              </button>
+            </div>
+
+            <div data-shipping-rates-form-target="list">
+              <%= f.fields_for :shipping_rates do |shipping_rate_fields| %>
+                <%= render "company_informations/shipping_rate_fields", form: shipping_rate_fields %>
+              <% end %>
+            </div>
+
+            <template data-shipping-rates-form-target="template">
+              <%= f.fields_for :shipping_rates, ShippingRate.new, child_index: "NEW_SHIPPING_RATE" do |shipping_rate_fields| %>
+                <%= render "company_informations/shipping_rate_fields", form: shipping_rate_fields %>
+              <% end %>
+            </template>
+
+            <div class="mt-4 d-flex justify-content-end">
+              <%= f.submit "Enregistrer", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -93,7 +93,9 @@
             </p>
             <hr class="my-2">
             <p class="mb-3">
-             <strong>Montant total :</strong> <%= order.total_amount %>
+             <strong>Montant total :</strong> <%= number_to_currency(order.total_amount_value, unit: "€") %><br>
+             <strong>Frais de port :</strong> <%= number_to_currency(order.shipping_amount_value, unit: "€") %><br>
+             <strong>Poids total :</strong> <%= format_weight(order.shipping_weight_value) %>
             </p>
 
             <%= link_to "Télécharger la facture PDF",

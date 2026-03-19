@@ -5,6 +5,7 @@ class CheckoutController < ApplicationController
   def profile
     @cart_products = @cart.cart_products.includes(:product)
     @missing_attributes = current_user.missing_profile_fields
+    @cart_pricing = CartPricing.new(@cart_products).summary
   end
 
   def create
@@ -17,12 +18,15 @@ class CheckoutController < ApplicationController
       redirect_to root_path, alert: "Votre panier est vide." and return
     end
 
+    pricing = CartPricing.new(cart_products).summary
+
     cart_snapshot = cart_products.map do |cp|
       unit_price = cp.unit_price || cp.product.price
       {
         product_id: cp.product_id,
         quantity: cp.quantity.to_i,
-        unit_price: unit_price.to_s,
+        unit_price: unit_price.to_d.to_s("F"),
+        unit_weight: cp.unit_weight_value.to_s("F"),
         selected_options: cp.selected_options_list,
         selected_options_signature: cp.selected_options_signature
       }
@@ -42,6 +46,19 @@ class CheckoutController < ApplicationController
       }
     end
 
+    if pricing.shipping_amount.positive?
+      line_items << {
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: "Frais de port"
+          },
+          unit_amount: (pricing.shipping_amount * 100).to_i
+        },
+        quantity: 1
+      }
+    end
+
     checkout_session = Stripe::Checkout::Session.create(
       payment_method_types: [ "card" ],
       line_items: line_items,
@@ -52,7 +69,13 @@ class CheckoutController < ApplicationController
       cancel_url: root_url + "?canceled=true"
     )
 
-    checkout_snapshots[checkout_session.id] = cart_snapshot
+    checkout_snapshots[checkout_session.id] = {
+      items: cart_snapshot,
+      items_amount: pricing.items_total.to_s("F"),
+      shipping_amount: pricing.shipping_amount.to_s("F"),
+      shipping_weight: pricing.total_weight.to_s("F"),
+      total_amount: pricing.total_amount.to_s("F")
+    }
 
     redirect_to checkout_session.url, allow_other_host: true
   end
@@ -114,18 +137,27 @@ class CheckoutController < ApplicationController
   end
 
   def create_paid_order_from_snapshot(snapshot)
+    snapshot_hash = snapshot.is_a?(Hash) ? snapshot.with_indifferent_access : { items: Array(snapshot) }
+    items = Array(snapshot_hash[:items])
+    pricing = CartPricing.new(items).summary
+    items_amount = snapshot_hash[:items_amount].presence&.to_d || pricing.items_total
+    shipping_amount = snapshot_hash[:shipping_amount].presence&.to_d || pricing.shipping_amount
+    shipping_weight = snapshot_hash[:shipping_weight].presence&.to_d || pricing.total_weight
     order = nil
 
     Order.transaction do
       order = current_user.orders.create!(
         order_date: Time.current,
         status: "paid",
-        total_amount: 0
+        total_amount: 0,
+        items_amount: 0,
+        shipping_amount: shipping_amount,
+        shipping_weight: shipping_weight
       )
 
-      total_amount = 0.to_d
+      computed_items_amount = 0.to_d
 
-      snapshot.each do |item|
+      items.each do |item|
         product = Product.find_by(id: item["product_id"] || item[:product_id])
         next unless product
 
@@ -134,16 +166,18 @@ class CheckoutController < ApplicationController
 
         unit_price_value = item["unit_price"] || item[:unit_price]
         unit_price = unit_price_value.to_d
+        unit_weight = (item["unit_weight"] || item[:unit_weight]).to_d
 
         order.order_products.create!(
           product: product,
           quantity: quantity,
           unit_price: unit_price,
+          unit_weight: unit_weight,
           selected_options: item["selected_options"] || item[:selected_options] || [],
           selected_options_signature: item["selected_options_signature"] || item[:selected_options_signature] || "base"
         )
 
-        total_amount += unit_price * quantity
+        computed_items_amount += unit_price * quantity
       end
 
       if order.order_products.empty?
@@ -151,7 +185,13 @@ class CheckoutController < ApplicationController
         raise ActiveRecord::Rollback
       end
 
-      order.update!(total_amount: total_amount)
+      final_items_amount = items_amount.presence || computed_items_amount
+      order.update!(
+        items_amount: final_items_amount,
+        shipping_amount: shipping_amount,
+        shipping_weight: shipping_weight,
+        total_amount: final_items_amount + shipping_amount
+      )
     end
 
     order

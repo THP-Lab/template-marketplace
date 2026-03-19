@@ -108,6 +108,7 @@ class ProductsController < ApplicationController
         :description,
         :category,
         :price,
+        :weight,
         :stock,
         :image,
         { images: [] },
@@ -139,6 +140,7 @@ class ProductsController < ApplicationController
             :id,
             :label,
             :price_delta,
+            :weight_override,
             :hex_color,
             :_destroy
           ] }
