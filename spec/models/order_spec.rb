@@ -55,4 +55,17 @@ RSpec.describe Order, type: :model do
       user.orders.create!(order_date: Time.current, status: "paid", total_amount: 10)
     }.to change(ActionMailer::Base.deliveries, :count).by(2)
   end
+
+  it "stores a customer snapshot from user data on creation" do
+    order = user.orders.create!(order_date: Time.current, status: "pending", total_amount: 10)
+
+    expect(order.customer_email).to eq(user.email)
+    expect(order.shipping_first_name).to eq(user.first_name)
+    expect(order.shipping_last_name).to eq(user.last_name)
+    expect(order.shipping_address).to eq(user.address)
+    expect(order.shipping_zipcode).to eq(user.zipcode)
+    expect(order.shipping_city).to eq(user.city)
+    expect(order.shipping_country).to eq(user.country)
+    expect(order.shipping_phone).to eq(user.phone)
+  end
 end

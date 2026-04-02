@@ -96,6 +96,7 @@ fr:
         vat_rate: "Taux de TVA"
         vat_number: "Numéro de TVA"
       shipping_rate:
+        destination_zone: "Zone de destination"
         max_weight: "Poids total max"
         price: "Prix du port"
     errors:

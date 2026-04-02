@@ -117,7 +117,7 @@ class CompanyInformationsController < ApplicationController
 
   def shipping_params
     params.require(:company_information).permit(
-      { shipping_rates_attributes: [:id, :max_weight, :price, :_destroy] }
+      { shipping_rates_attributes: [ :id, :destination_zone, :max_weight, :price, :_destroy ] }
     )
   end
 
@@ -178,7 +178,7 @@ class CompanyInformationsController < ApplicationController
       callback_base_url: request.base_url
     )
 
-    flash[:notice] = [flash[:notice], message].compact.join(" ")
+    flash[:notice] = [ flash[:notice], message ].compact.join(" ")
   rescue Twitch::Error => e
     flash[:alert] = e.message
   end

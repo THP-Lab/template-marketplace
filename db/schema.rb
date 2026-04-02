@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_105546) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_02_171000) do
   create_table "about_pages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -194,10 +194,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_105546) do
 
   create_table "orders", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "customer_email"
     t.decimal "items_amount", precision: 10, scale: 2
     t.datetime "order_date"
+    t.string "shipping_address"
     t.decimal "shipping_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "shipping_city"
+    t.string "shipping_country"
+    t.string "shipping_first_name"
+    t.string "shipping_last_name"
+    t.string "shipping_phone"
     t.decimal "shipping_weight", precision: 10, scale: 3, default: "0.0", null: false
+    t.string "shipping_zipcode"
     t.string "status"
     t.decimal "tax_amount", precision: 10, scale: 2, default: "0.0", null: false
     t.decimal "tax_rate", precision: 5, scale: 2, default: "0.0", null: false
@@ -297,10 +305,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_105546) do
   create_table "shipping_rates", force: :cascade do |t|
     t.integer "company_information_id", null: false
     t.datetime "created_at", null: false
+    t.string "destination_zone", default: "france", null: false
     t.decimal "max_weight", precision: 10, scale: 3, null: false
     t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "updated_at", null: false
-    t.index ["company_information_id", "max_weight"], name: "index_shipping_rates_on_company_information_id_and_max_weight", unique: true
+    t.index ["company_information_id", "destination_zone", "max_weight"], name: "index_shipping_rates_on_company_info_zone_and_max_weight", unique: true
     t.index ["company_information_id"], name: "index_shipping_rates_on_company_information_id"
   end
 

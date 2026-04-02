@@ -1,5 +1,7 @@
 <div class="shipping-rate-row border rounded p-3 mb-2" data-shipping-rates-form-item>
   <%= form.hidden_field :id if form.object.persisted? %>
+  <%= form.hidden_field :destination_zone,
+                        value: local_assigns[:destination_zone].presence || form.object.destination_zone || "france" %>
   <%= form.hidden_field :_destroy,
                         value: (form.object.marked_for_destruction? ? "1" : "0"),
                         data: { role: "shipping-rate-destroy" } %>

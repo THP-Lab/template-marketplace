@@ -130,8 +130,13 @@
                         <%= f.text_field :tracking_number,
                                          value: order.tracking_number,
                                          class: "form-control form-control-sm",
-                                         placeholder: "Numéro de suivi",
-                                         data: { action: "input->auto-submit#handle change->auto-submit#handle" } %>
+                                         placeholder: "Numéro de suivi" %>
+                        <button type="submit"
+                                class="btn btn-outline-secondary btn-sm"
+                                title="Sauvegarder le numéro de suivi"
+                                aria-label="Sauvegarder le numéro de suivi">
+                          <i class="bi bi-floppy"></i>
+                        </button>
                         <% if order.tracking_number.present? %>
                           <span class="text-muted small">Envoyé dans l'email</span>
                         <% end %>
@@ -153,16 +158,26 @@
                 </tr>
                 <tr class="d-none" data-toggle-details-target="details">
                   <td colspan="6">
-                    <% if order.user.present? %>
-                      <div class="small text-muted">
-                        Email : <%= order.user.email %> |
-                        Prénom : <%= order.user.first_name.presence || "—" %> |
-                        Nom : <%= order.user.last_name.presence || "—" %> |
-                        ID utilisateur : <%= order.user.id %>
-                      </div>
-                    <% else %>
-                      <div class="small text-muted">Utilisateur introuvable</div>
-                    <% end %>
+                    <% shipping = order.shipping_snapshot %>
+                    <div class="small text-muted">
+                      Email commande : <%= shipping[:email].presence || "—" %> |
+                      Destinataire : <%= order.shipping_recipient_name.presence || "—" %> |
+                      Téléphone : <%= shipping[:phone].presence || "—" %>
+                    </div>
+                    <div class="small text-muted">
+                      Adresse : <%= shipping[:address].presence || "—" %>
+                      <% if order.shipping_location_line.present? %>
+                        , <%= order.shipping_location_line %>
+                      <% end %>
+                    </div>
+                    <div class="small text-muted">
+                      Compte client :
+                      <% if order.user.present? %>
+                        ID <%= order.user.id %> · <%= order.user.email %>
+                      <% else %>
+                        Utilisateur introuvable
+                      <% end %>
+                    </div>
                   </td>
                 </tr>
               </tbody>

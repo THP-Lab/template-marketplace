@@ -8,8 +8,9 @@ Faker::Config.locale = "fr"
 SEED_PASSWORD = ENV.fetch("SEED_PASSWORD", "123456")
 USER_EMAIL_DOMAIN = "mail.com"
 PRODUCT_CATEGORIES = %w[armure bijoux accessoires vetements armes].freeze
-EVENT_CATEGORIES = ["Marché médiéval", "Atelier", "Reconstitution", "En ligne"].freeze
+EVENT_CATEGORIES = [ "Marché médiéval", "Atelier", "Reconstitution", "En ligne" ].freeze
 ORDER_STATUSES = %w[pending paid processing shipped delivered canceled].freeze
+ORDER_SEED_STATUSES = ORDER_STATUSES
 
 def separator(title)
   puts "\n#{'-' * 70}"
@@ -28,8 +29,69 @@ def sanitize_name(value, fallback)
   cleaned.presence || fallback
 end
 
+def shipping_amount_for(weight)
+  case weight.to_d
+  when 0..0.750
+    4.90.to_d
+  when 0.750..1.500
+    6.90.to_d
+  when 1.500..3.000
+    9.90.to_d
+  else
+    14.90.to_d
+  end
+end
+
+def create_fake_order!(user:, products:, status:, order_date:, tax_rate: 20.to_d)
+  tracking_number = %w[shipped delivered].include?(status) ? "TRK-#{SecureRandom.hex(5).upcase}" : nil
+
+  order = user.orders.create!(
+    order_date: order_date,
+    status: "pending",
+    items_amount: 0,
+    shipping_amount: 0,
+    shipping_weight: 0,
+    tax_rate: tax_rate,
+    tax_amount: 0,
+    total_amount: 0,
+    tracking_number: tracking_number
+  )
+
+  line_items = products.sample(rand(1..4)).map do |product|
+    quantity = rand(1..3)
+    unit_weight = product.weight.present? ? product.weight.to_d : rand(0.150..1.800).round(3).to_d
+
+    order.order_products.create!(
+      product: product,
+      quantity: quantity,
+      unit_price: product.price,
+      unit_weight: unit_weight
+    )
+  end
+
+  items_amount = line_items.sum(&:line_total)
+  shipping_weight = line_items.sum(&:line_weight)
+  shipping_amount = shipping_amount_for(shipping_weight)
+  tax_amount = ((items_amount + shipping_amount) * tax_rate / 100).round(2)
+  total_amount = (items_amount + shipping_amount + tax_amount).round(2)
+
+  order.update_columns(
+    status: status,
+    items_amount: items_amount.round(2),
+    shipping_weight: shipping_weight.round(3),
+    shipping_amount: shipping_amount.round(2),
+    tax_rate: tax_rate,
+    tax_amount: tax_amount,
+    total_amount: total_amount,
+    tracking_number: tracking_number,
+    updated_at: Time.current
+  )
+
+  order
+end
+
 separator("Nettoyage de la base")
-[CartProduct, OrderProduct, Cart, Order, Event, Contact, Product, AboutPage, HomePage, PrivacyPage, RepairPage, TermsPage].each do |model|
+[ CartProduct, OrderProduct, Cart, Order, Event, Contact, Product, AboutPage, HomePage, PrivacyPage, RepairPage, TermsPage ].each do |model|
   clean_table(model)
 end
 clean_table(User)
@@ -69,7 +131,7 @@ regular_users = Array.new(8) do |index|
   )
 end
 
-users = [admin] + regular_users
+users = [ admin ] + regular_users
 puts "• Utilisateurs créés : #{users.size} dont #{users.count(&:is_admin)} admin"
 puts "• Les paniers sont générés automatiquement via le callback User#create_cart"
 
@@ -107,31 +169,31 @@ users.each do |user|
   puts format("• %-25s : %2d articles (%6.2f €)", user.email, cart.cart_products.count, total)
 end
 
-separator("Commandes passées")
+separator("Commandes factices (hors Stripe)")
 orders = []
+
+ORDER_SEED_STATUSES.each_with_index do |status, index|
+  user = users[index % users.size]
+  orders << create_fake_order!(
+    user: user,
+    products: products,
+    status: status,
+    order_date: Faker::Date.between(from: 3.months.ago, to: Date.today)
+  )
+end
+
 users.each do |user|
   rand(1..2).times do
-    order = user.orders.create!(
-      order_date: Faker::Date.between(from: 5.months.ago, to: Date.today),
-      status: ORDER_STATUSES.sample,
-      total_amount: 0
+    orders << create_fake_order!(
+      user: user,
+      products: products,
+      status: ORDER_SEED_STATUSES.sample,
+      order_date: Faker::Date.between(from: 5.months.ago, to: Date.today)
     )
-
-    line_items = products.sample(rand(1..4)).map do |product|
-      order.order_products.create!(
-        product: product,
-        quantity: rand(1..3),
-        unit_price: product.price
-      )
-    end
-
-    total = line_items.sum { |li| li.quantity * li.unit_price }
-    tracking = order.status == "shipped" ? "TRK-#{SecureRandom.hex(5).upcase}" : nil
-    order.update!(total_amount: total, tracking_number: tracking)
-    orders << order
   end
 end
-puts "• #{orders.count} commandes générées (statuts : #{ORDER_STATUSES.join(', ')})"
+
+puts "• #{orders.count} commandes factices générées (statuts : #{ORDER_SEED_STATUSES.join(', ')})"
 
 separator("Événements programmés")
 events = Array.new(6) do |index|
