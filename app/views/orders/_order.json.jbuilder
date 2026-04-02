@@ -1,2 +1,18 @@
-json.extract! order, :id, :user_id, :order_date, :total_amount, :status, :tracking_number, :created_at, :updated_at
+json.extract! order,
+              :id,
+              :user_id,
+              :order_date,
+              :total_amount,
+              :status,
+              :tracking_number,
+              :customer_email,
+              :shipping_first_name,
+              :shipping_last_name,
+              :shipping_address,
+              :shipping_zipcode,
+              :shipping_city,
+              :shipping_country,
+              :shipping_phone,
+              :created_at,
+              :updated_at
 json.url order_url(order, format: :json)

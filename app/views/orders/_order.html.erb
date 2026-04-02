@@ -39,6 +39,25 @@
     <%= order.status_label %>
   </div>
 
+  <% shipping = order.shipping_snapshot %>
+  <div>
+    <strong>Destinataire:</strong>
+    <%= order.shipping_recipient_name.presence || "—" %>
+  </div>
+
+  <div>
+    <strong>Adresse de livraison:</strong>
+    <%= shipping[:address].presence || "—" %>
+    <% if order.shipping_location_line.present? %>
+      , <%= order.shipping_location_line %>
+    <% end %>
+  </div>
+
+  <div>
+    <strong>Email / Téléphone:</strong>
+    <%= shipping[:email].presence || "—" %> · <%= shipping[:phone].presence || "—" %>
+  </div>
+
   <% if order.tracking_number.present? %>
     <div>
       <strong>Numéro de suivi:</strong>

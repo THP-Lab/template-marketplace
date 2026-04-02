@@ -1,6 +1,6 @@
 <div id="cart_contents" class="card p-0">
   <% if cart_products.any? %>
-    <% cart_pricing = CartPricing.new(cart_products).summary %>
+    <% cart_pricing = CartPricing.new(cart_products, destination_country: current_user&.country).summary %>
     <div class="cart-lines p-4">
       <% cart_products.each do |cart_product| %>
         <% product = cart_product.product %>

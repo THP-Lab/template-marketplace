@@ -5,7 +5,7 @@ class CheckoutController < ApplicationController
   def profile
     @cart_products = @cart.cart_products.includes(:product)
     @missing_attributes = current_user.missing_profile_fields
-    @cart_pricing = CartPricing.new(@cart_products).summary
+    @cart_pricing = CartPricing.new(@cart_products, destination_country: current_user.country).summary
   end
 
   def create
@@ -18,7 +18,7 @@ class CheckoutController < ApplicationController
       redirect_to root_path, alert: "Votre panier est vide." and return
     end
 
-    pricing = CartPricing.new(cart_products).summary
+    pricing = CartPricing.new(cart_products, destination_country: current_user.country).summary
 
     cart_snapshot = cart_products.map do |cp|
       unit_price = cp.unit_price || cp.product.price
@@ -34,7 +34,7 @@ class CheckoutController < ApplicationController
 
     line_items = cart_products.map.with_index do |cp, index|
       option_suffix = cp.selected_options_label.presence
-      product_name = [cp.product.title, option_suffix].compact.join(" - ")
+      product_name = [ cp.product.title, option_suffix ].compact.join(" - ")
 
       {
         price_data: {
@@ -89,7 +89,16 @@ class CheckoutController < ApplicationController
       tax_rate: pricing.tax_rate.to_s("F"),
       tax_amount: pricing.tax_amount.to_s("F"),
       shipping_weight: pricing.total_weight.to_s("F"),
-      total_amount: pricing.total_amount.to_s("F")
+      total_amount: pricing.total_amount.to_s("F"),
+      destination_country: current_user.country.to_s,
+      customer_email: current_user.email.to_s,
+      shipping_first_name: current_user.first_name.to_s,
+      shipping_last_name: current_user.last_name.to_s,
+      shipping_address: current_user.address.to_s,
+      shipping_zipcode: current_user.zipcode.to_s,
+      shipping_city: current_user.city.to_s,
+      shipping_country: current_user.country.to_s,
+      shipping_phone: current_user.phone.to_s
     }
 
     redirect_to checkout_session.url, allow_other_host: true
@@ -154,7 +163,16 @@ class CheckoutController < ApplicationController
   def create_paid_order_from_snapshot(snapshot)
     snapshot_hash = snapshot.is_a?(Hash) ? snapshot.with_indifferent_access : { items: Array(snapshot) }
     items = Array(snapshot_hash[:items])
-    pricing = CartPricing.new(items).summary
+    destination_country = snapshot_hash[:destination_country].presence || current_user.country
+    pricing = CartPricing.new(items, destination_country: destination_country).summary
+    customer_email = snapshot_hash[:customer_email].presence || current_user.email
+    shipping_first_name = snapshot_hash[:shipping_first_name].presence || current_user.first_name
+    shipping_last_name = snapshot_hash[:shipping_last_name].presence || current_user.last_name
+    shipping_address = snapshot_hash[:shipping_address].presence || current_user.address
+    shipping_zipcode = snapshot_hash[:shipping_zipcode].presence || current_user.zipcode
+    shipping_city = snapshot_hash[:shipping_city].presence || current_user.city
+    shipping_country = snapshot_hash[:shipping_country].presence || current_user.country
+    shipping_phone = snapshot_hash[:shipping_phone].presence || current_user.phone
     items_amount = snapshot_hash[:items_amount].presence&.to_d || pricing.items_total
     shipping_amount = snapshot_hash[:shipping_amount].presence&.to_d || pricing.shipping_amount
     tax_rate = snapshot_hash[:tax_rate].presence&.to_d || pricing.tax_rate
@@ -171,7 +189,15 @@ class CheckoutController < ApplicationController
         shipping_amount: shipping_amount,
         tax_rate: tax_rate,
         tax_amount: tax_amount,
-        shipping_weight: shipping_weight
+        shipping_weight: shipping_weight,
+        customer_email: customer_email,
+        shipping_first_name: shipping_first_name,
+        shipping_last_name: shipping_last_name,
+        shipping_address: shipping_address,
+        shipping_zipcode: shipping_zipcode,
+        shipping_city: shipping_city,
+        shipping_country: shipping_country,
+        shipping_phone: shipping_phone
       )
 
       computed_items_amount = 0.to_d

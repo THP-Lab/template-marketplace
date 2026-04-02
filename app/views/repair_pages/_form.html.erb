@@ -34,6 +34,10 @@
       <div class="mt-2">
         <%= attachment_thumb(repair_page.image, variant_options: { resize_to_limit: [200, 200] }, class: "img-thumbnail") %>
       </div>
+      <div class="form-check mt-2">
+        <%= check_box_tag "repair_page[remove_image]", "1", false, class: "form-check-input", id: "repair_page_remove_image" %>
+        <%= label_tag "repair_page_remove_image", "Supprimer l’image actuelle", class: "form-check-label" %>
+      </div>
     <% end %>
   </div>
 
