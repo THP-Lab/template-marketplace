@@ -1,5 +1,5 @@
 class RepairPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin]
+  before_action :require_admin!, only: [ :new, :create, :edit, :update, :destroy, :admin ]
   before_action :set_repair_page, only: %i[ edit update destroy ]
 
   # GET /repair_pages or /repair_pages.json
@@ -40,6 +40,7 @@ class RepairPagesController < ApplicationController
   def update
     respond_to do |format|
       if @repair_page.update(repair_page_params)
+        purge_repair_page_image_if_requested
         format.html { redirect_to @repair_page, notice: "Repair page was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @repair_page }
       else
@@ -81,5 +82,13 @@ class RepairPagesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def repair_page_params
       params.expect(repair_page: [ :title, :content, :position, :image ])
+    end
+
+    def purge_repair_page_image_if_requested
+      remove_image = ActiveModel::Type::Boolean.new.cast(params.dig(:repair_page, :remove_image))
+      new_image_uploaded = params.dig(:repair_page, :image).present?
+      return unless remove_image && !new_image_uploaded && @repair_page.image.attached?
+
+      @repair_page.image.purge
     end
 end

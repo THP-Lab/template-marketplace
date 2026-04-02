@@ -107,11 +107,11 @@ class CompanyInformation < ApplicationRecord
   end
 
   def address_lines
-    [address_line1.presence, address_line2.presence].compact
+    [ address_line1.presence, address_line2.presence ].compact
   end
 
   def location_line
-    [zipcode.presence, city.presence, country.presence].compact.join(" ")
+    [ zipcode.presence, city.presence, country.presence ].compact.join(" ")
   end
 
   def home_banner_title_or_default
@@ -261,21 +261,37 @@ class CompanyInformation < ApplicationRecord
   end
 
   def shipping_rates_ordered
-    shipping_rates.ordered
+    shipping_rates.for_destination_zone("france").ordered
   end
 
-  def shipping_rate_for(total_weight)
+  def shipping_rates_ordered_for(destination_zone:)
+    shipping_rates.for_destination_zone(destination_zone).ordered
+  end
+
+  def shipping_destination_zone_for(country)
+    normalized_country = I18n.transliterate(country.to_s).strip.downcase
+    return "france" if normalized_country.blank?
+    return "france" if %w[france fr].include?(normalized_country)
+
+    "international"
+  end
+
+  def shipping_rate_for(total_weight, destination_country: nil)
     weight = total_weight.to_d
     return if weight <= 0
 
-    ordered_rates = shipping_rates_ordered.to_a
+    destination_zone = shipping_destination_zone_for(destination_country)
+    ordered_rates = shipping_rates_ordered_for(destination_zone: destination_zone).to_a
+    if ordered_rates.empty? && destination_zone == "international"
+      ordered_rates = shipping_rates_ordered_for(destination_zone: "france").to_a
+    end
     return if ordered_rates.empty?
 
     ordered_rates.find { |rate| rate.max_weight.to_d >= weight } || ordered_rates.last
   end
 
-  def shipping_amount_for(total_weight)
-    shipping_rate_for(total_weight)&.price.to_d || 0.to_d
+  def shipping_amount_for(total_weight, destination_country: nil)
+    shipping_rate_for(total_weight, destination_country: destination_country)&.price.to_d || 0.to_d
   end
 
   def vat_rate_value

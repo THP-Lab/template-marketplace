@@ -51,8 +51,8 @@ RSpec.describe "Checkout", type: :request do
 
     company_information = CompanyInformation.instance
     company_information.update!(vat_rate: 20, vat_number: "FR00123456789")
-    company_information.shipping_rates.create!(max_weight: 1.0, price: 5.0)
-    company_information.shipping_rates.create!(max_weight: 3.0, price: 8.0)
+    company_information.shipping_rates.create!(destination_zone: "france", max_weight: 1.0, price: 5.0)
+    company_information.shipping_rates.create!(destination_zone: "france", max_weight: 3.0, price: 8.0)
 
     user.cart.cart_products.create!(
       product: product,
@@ -114,6 +114,38 @@ RSpec.describe "Checkout", type: :request do
     expect(order.shipping_weight_value).to eq(2.4.to_d)
     expect(order.total_amount_value).to eq(57.6.to_d)
     expect(order.order_products.first.unit_weight_value).to eq(1.2.to_d)
+    expect(order.customer_email).to eq(user.email)
+    expect(order.shipping_first_name).to eq(user.first_name)
+    expect(order.shipping_last_name).to eq(user.last_name)
+    expect(order.shipping_address).to eq(user.address)
+    expect(order.shipping_zipcode).to eq(user.zipcode)
+    expect(order.shipping_city).to eq(user.city)
+    expect(order.shipping_country).to eq(user.country)
+    expect(order.shipping_phone).to eq(user.phone)
     expect(user.cart.cart_products.reload).to be_empty
+  end
+
+  it "uses international shipping tiers when the user country is outside France" do
+    company_information = CompanyInformation.instance
+    company_information.shipping_rates.create!(destination_zone: "international", max_weight: 1.0, price: 12.0)
+    company_information.shipping_rates.create!(destination_zone: "international", max_weight: 3.0, price: 18.0)
+    user.update!(country: "Belgique")
+
+    created_session = nil
+    allow(Stripe::Checkout::Session).to receive(:create) do |payload|
+      created_session = payload
+      OpenStruct.new(id: "sess_weight_int_1", url: "https://stripe.test/checkout")
+    end
+
+    post checkout_path
+
+    expect(response).to redirect_to("https://stripe.test/checkout")
+
+    shipping_line = created_session[:line_items].find do |line|
+      line.dig(:price_data, :product_data, :name) == "Frais de port"
+    end
+
+    expect(shipping_line).to be_present
+    expect(shipping_line.dig(:price_data, :unit_amount)).to eq(1800)
   end
 end

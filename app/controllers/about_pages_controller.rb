@@ -1,6 +1,6 @@
 class AboutPagesController < ApplicationController
-  before_action :require_admin!, only: [:new, :create, :edit, :update, :destroy, :admin, :update_settings]
-  before_action :set_company_information, only: [:index, :admin, :update_settings]
+  before_action :require_admin!, only: [ :new, :create, :edit, :update, :destroy, :admin, :update_settings ]
+  before_action :set_company_information, only: [ :index, :admin, :update_settings ]
   before_action :set_about_page, only: %i[ edit update destroy ]
 
   # GET /about_pages or /about_pages.json
@@ -37,6 +37,7 @@ class AboutPagesController < ApplicationController
   def update
     respond_to do |format|
       if @about_page.update(about_page_params)
+        purge_about_page_image_if_requested
         redirect_path = params[:redirect_to].presence || edit_about_page_path(@about_page)
         format.html { redirect_to redirect_path, notice: "Bloc À propos mis à jour.", status: :see_other }
         format.json { render :show, status: :ok, location: @about_page }
@@ -65,7 +66,7 @@ class AboutPagesController < ApplicationController
     respond_to do |format|
       message = "Impossible de supprimer ce bloc À propos car il est lié à d'autres données."
       format.html { redirect_to redirect_path, alert: message, status: :see_other }
-      format.json { render json: { errors: [message] }, status: :unprocessable_entity }
+      format.json { render json: { errors: [ message ] }, status: :unprocessable_entity }
     end
   end
 
@@ -130,5 +131,13 @@ class AboutPagesController < ApplicationController
         :about_journey_title,
         :about_journey_description
       ])
+    end
+
+    def purge_about_page_image_if_requested
+      remove_image = ActiveModel::Type::Boolean.new.cast(params.dig(:about_page, :remove_image))
+      new_image_uploaded = params.dig(:about_page, :image).present?
+      return unless remove_image && !new_image_uploaded && @about_page.image.attached?
+
+      @about_page.image.purge
     end
 end
