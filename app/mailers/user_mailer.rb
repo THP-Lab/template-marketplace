@@ -2,6 +2,8 @@ class UserMailer < Devise::Mailer
   default from: ENV["GMAIL_LOGIN"]
   layout "mailer"
 
+  EXCLUDED_ADMIN_EMAILS = [ "lilian@thehackingproject.org" ].freeze
+
   def welcome_email(user)
     @user = user
     @login_url = "#{app_host}/users/sign_in"
@@ -19,7 +21,7 @@ class UserMailer < Devise::Mailer
   end
 
   def admin_order_email(order)
-    @admins = User.where(is_admin: true)
+    @admins = User.where(is_admin: true).where.not(email: EXCLUDED_ADMIN_EMAILS)
     @order = order
     @user = order.user
     @order_url = "#{app_host}/orders/#{order.id}"
@@ -54,7 +56,7 @@ class UserMailer < Devise::Mailer
   end
 
   def admin_contact_email(contact)
-    @admins = User.where(is_admin: true)
+    @admins = User.where(is_admin: true).where.not(email: EXCLUDED_ADMIN_EMAILS)
     @contact = contact
     @contact_url = "#{app_host}/contacts/new"
 
